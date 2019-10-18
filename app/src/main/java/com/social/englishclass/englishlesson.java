@@ -1,12 +1,5 @@
 package com.social.englishclass;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -16,10 +9,23 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class englishlesson extends AppCompatActivity {
 
     private final static int LOADER_ID = 0x001;
     private String TAG = "activity_englishlesson";
+    private RecyclerView mRecyclerView;
+    private AudioAdapter mAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +44,14 @@ public class englishlesson extends AppCompatActivity {
         else {
             getAudioListFromMediaDatabase();
         }
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        mAdapter = new AudioAdapter(this, null);
+        mRecyclerView.setAdapter(mAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+
     }
 
 
@@ -73,6 +87,7 @@ public class englishlesson extends AppCompatActivity {
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                mAdapter.swapCursor(data);
                 if (data != null && data.getCount() > 0) {
                     while (data.moveToNext()) {
                         Log.i(TAG, "Title:" + data.getString(data.getColumnIndex(MediaStore.Audio.Media.TITLE)));
@@ -82,7 +97,7 @@ public class englishlesson extends AppCompatActivity {
 
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
-
+                mAdapter.swapCursor(null);
             }
         });
     }
