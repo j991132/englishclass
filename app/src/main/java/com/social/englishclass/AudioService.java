@@ -37,18 +37,21 @@ public class AudioService extends Service {
             public void onPrepared(MediaPlayer mp) {
                 isPrepared = true;
                 mp.start();
+                sendBroadcast(new Intent(BroadcastActions.PREPARED)); // prepared 전송
             }
         });
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 isPrepared = false;
+                sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
             }
         });
         mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 isPrepared = false;
+                sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
                 return false;
             }
         });
@@ -131,12 +134,14 @@ public class AudioService extends Service {
     public void play() {
         if (isPrepared) {
             mMediaPlayer.start();
+            sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
         }
     }
 
     public void pause() {
         if (isPrepared) {
             mMediaPlayer.pause();
+            sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
         }
     }
 
@@ -157,4 +162,12 @@ public class AudioService extends Service {
         }
         play(mCurrentPosition);
     }
+    public AudioAdapter.AudioItem getAudioItem() {
+        return mAudioItem;
+    }
+
+    public boolean isPlaying() {
+        return mMediaPlayer.isPlaying();
+    }
+
 }

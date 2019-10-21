@@ -64,4 +64,28 @@ public class AudioServiceInterface {
             mService.rewind();
         }
     }
+
+    public void togglePlay() {
+        if (isPlaying()) {
+            mService.pause();
+        } else {
+            mService.play();
+        }
+    }
+
+    public boolean isPlaying() {
+        if (mService != null) {
+            return mService.isPlaying();
+        }
+        return false;
+    }
+
+    public AudioAdapter.AudioItem getAudioItem() {
+        if (mService != null) {
+            return mService.getAudioItem();
+        }
+        return null;
+    }
+
+
 }
