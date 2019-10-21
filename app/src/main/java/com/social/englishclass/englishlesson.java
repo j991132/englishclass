@@ -1,6 +1,7 @@
 package com.social.englishclass;
 
 import android.Manifest;
+import android.app.assist.AssistStructure;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +35,10 @@ import com.squareup.picasso.Picasso;
 public class englishlesson extends AppCompatActivity implements View.OnClickListener {
 
     private final static int LOADER_ID = 0x001;
-    public float f;
+    private CheckBox btncheckBox;
+    private float f;
+
+
     private String TAG = "activity_englishlesson";
     private RecyclerView mRecyclerView;
     private AudioAdapter mAdapter;
@@ -76,7 +81,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.btn_rewind).setOnClickListener(this);
         mBtnPlayPause.setOnClickListener(this);
         findViewById(R.id.btn_forward).setOnClickListener(this);
-
+        btncheckBox = (CheckBox) findViewById(R.id.checkBox);
         registerBroadcast();
         updateUI();
 
@@ -146,16 +151,16 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        CheckBox btncheckBox = (CheckBox) findViewById(R.id.checkBox);
-
+        btncheckBox = (CheckBox) findViewById(R.id.checkBox);
         if(btncheckBox.isChecked()){
-           f= (float)0.5;
- //           Toast.makeText(getApplicationContext(), "재생속도 f 값은   "+f, Toast.LENGTH_SHORT).show();
+             f =(float)0.5;
+//            Toast.makeText(getApplicationContext(), "재생속도 f 값은   "+f, Toast.LENGTH_SHORT).show();
         }
         else{
-             f= (float)1;
- //                      Toast.makeText(getApplicationContext(), "재생속도 f 값은   "+f, Toast.LENGTH_SHORT).show();
+             f=(float)1;
+ //           Toast.makeText(getApplicationContext(), "재생속도 f 값은   "+f, Toast.LENGTH_SHORT).show();
         }
+
         switch (v.getId()) {
             case R.id.lin_miniplayer:
                 // 플레이어 화면으로 이동할 코드가 들어갈 예정
@@ -166,7 +171,9 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btn_play_pause:
                 // 재생 또는 일시정지
-                AudioApplication.getInstance().getServiceInterface().togglePlay();
+                AudioApplication.getInstance().getServiceInterface().togglePlay(f);
+
+
                 break;
             case R.id.btn_forward:
                 // 다음곡으로 이동

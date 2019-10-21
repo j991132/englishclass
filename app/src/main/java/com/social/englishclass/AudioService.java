@@ -21,6 +21,7 @@ public class AudioService extends Service {
     private boolean isPrepared;
     private int mCurrentPosition;
     private AudioAdapter.AudioItem mAudioItem;
+    private float f;
 
     public class AudioServiceBinder extends Binder {
         AudioService getService() {
@@ -131,17 +132,28 @@ public class AudioService extends Service {
         stop();
         prepare();
     }
-
     public void play() {
-        englishlesson ff= new englishlesson();
 
-        float f = ff.f;
-        Toast.makeText(getApplicationContext(), "재생속도 f 값은   "+f, Toast.LENGTH_SHORT).show();
+
+
         if (isPrepared) {
 
 
 
-            mMediaPlayer.setPlaybackParams((mMediaPlayer.getPlaybackParams().setSpeed(f)));
+
+            mMediaPlayer.start();
+            sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
+        }
+    }
+    public void play2(float a) {
+
+
+
+        if (isPrepared) {
+
+
+
+            mMediaPlayer.setPlaybackParams((mMediaPlayer.getPlaybackParams().setSpeed(a)));
             mMediaPlayer.start();
             sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
         }

@@ -41,9 +41,9 @@ public class AudioServiceInterface {
         }
     }
 
-    public void play() {
+    public void play2(float a) {
         if (mService != null) {
-            mService.play();
+            mService.play2(a);
         }
     }
 
@@ -65,11 +65,12 @@ public class AudioServiceInterface {
         }
     }
 
-    public void togglePlay() {
+    public void togglePlay(float a) {
         if (isPlaying()) {
             mService.pause();
         } else {
-            mService.play();
+
+            mService.play2(a);
         }
     }
 
