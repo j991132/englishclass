@@ -41,6 +41,13 @@
             android:text="Sample Title"
             android:textColor="@android:color/black"/>
 
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0.5배속" />
+
         <ImageButton
             android:id="@+id/btn_rewind"
             android:layout_width="40dp"
@@ -61,6 +68,8 @@
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/forward"/>
+
+
 
     </LinearLayout>
 

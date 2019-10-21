@@ -10,6 +10,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -132,7 +133,15 @@ public class AudioService extends Service {
     }
 
     public void play() {
+        englishlesson ff= new englishlesson();
+
+        float f = ff.f;
+        Toast.makeText(getApplicationContext(), "재생속도 f 값은   "+f, Toast.LENGTH_SHORT).show();
         if (isPrepared) {
+
+
+
+            mMediaPlayer.setPlaybackParams((mMediaPlayer.getPlaybackParams().setSpeed(f)));
             mMediaPlayer.start();
             sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
         }

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,12 +33,14 @@ import com.squareup.picasso.Picasso;
 public class englishlesson extends AppCompatActivity implements View.OnClickListener {
 
     private final static int LOADER_ID = 0x001;
+    public float f;
     private String TAG = "activity_englishlesson";
     private RecyclerView mRecyclerView;
     private AudioAdapter mAdapter;
     private ImageView mImgAlbumArt;
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
+   
 
 
     @Override
@@ -73,6 +76,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.btn_rewind).setOnClickListener(this);
         mBtnPlayPause.setOnClickListener(this);
         findViewById(R.id.btn_forward).setOnClickListener(this);
+
         registerBroadcast();
         updateUI();
 
@@ -142,6 +146,16 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+        CheckBox btncheckBox = (CheckBox) findViewById(R.id.checkBox);
+
+        if(btncheckBox.isChecked()){
+           f= (float)0.5;
+ //           Toast.makeText(getApplicationContext(), "재생속도 f 값은   "+f, Toast.LENGTH_SHORT).show();
+        }
+        else{
+             f= (float)1;
+ //                      Toast.makeText(getApplicationContext(), "재생속도 f 값은   "+f, Toast.LENGTH_SHORT).show();
+        }
         switch (v.getId()) {
             case R.id.lin_miniplayer:
                 // 플레이어 화면으로 이동할 코드가 들어갈 예정
@@ -160,6 +174,11 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 break;
 
         }
+
+
+
+
+
     }
         public void registerBroadcast(){
             IntentFilter filter = new IntentFilter();
