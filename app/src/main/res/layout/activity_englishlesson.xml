@@ -41,12 +41,13 @@
             android:text="Sample Title"
             android:textColor="@android:color/black"/>
 
-        <CheckBox
-            android:id="@+id/checkBox"
+        <Spinner
+            android:id="@+id/spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="0.5배속" />
+            android:layout_height="wrap_content"></Spinner>
+
+
+
 
         <ImageButton
             android:id="@+id/btn_rewind"

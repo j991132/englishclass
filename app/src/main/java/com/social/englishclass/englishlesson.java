@@ -1,7 +1,6 @@
 package com.social.englishclass;
 
 import android.Manifest;
-import android.app.assist.AssistStructure;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -15,11 +14,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,12 +32,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class englishlesson extends AppCompatActivity implements View.OnClickListener {
 
     private final static int LOADER_ID = 0x001;
-    private CheckBox btncheckBox;
+    private Spinner spinner;
     private float f;
-
+    ArrayList<String> arrayList;
+    ArrayAdapter<String> arrayAdapter;
 
     private String TAG = "activity_englishlesson";
     private RecyclerView mRecyclerView;
@@ -81,7 +84,60 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.btn_rewind).setOnClickListener(this);
         mBtnPlayPause.setOnClickListener(this);
         findViewById(R.id.btn_forward).setOnClickListener(this);
-        btncheckBox = (CheckBox) findViewById(R.id.checkBox);
+        arrayList = new ArrayList<>();
+        arrayList.add("1배속");
+        arrayList.add("0.5배속");
+        arrayList.add("0.75배속");
+        arrayList.add("1.25배속");
+        arrayList.add("1.5배속");
+
+        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                arrayList);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+                switch (arrayList.get(i)) {
+                    case "0.5배속":
+                        f = (float) 0.5;
+                        break;
+                    case "0.75배속":
+                        f = (float) 0.75;
+                        break;
+                    case "1배속":
+                        f = (float) 1;
+                        break;
+                    case "1.25배속":
+                        f = (float) 1.25;
+                        break;
+                    case "1.5배속":
+                        f = (float) 1.5;
+                        break;
+
+                }
+ //               Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다. f값은 " + f, Toast.LENGTH_SHORT).show();
+
+
+
+            }
+
+            @Override
+
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+
+        });
+
+
+
         registerBroadcast();
         updateUI();
 
@@ -151,15 +207,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        btncheckBox = (CheckBox) findViewById(R.id.checkBox);
-        if(btncheckBox.isChecked()){
-             f =(float)0.5;
-//            Toast.makeText(getApplicationContext(), "재생속도 f 값은   "+f, Toast.LENGTH_SHORT).show();
-        }
-        else{
-             f=(float)1;
- //           Toast.makeText(getApplicationContext(), "재생속도 f 값은   "+f, Toast.LENGTH_SHORT).show();
-        }
+//        btncheckBox = (CheckBox) findViewById(R.id.checkBox);
+
 
         switch (v.getId()) {
             case R.id.lin_miniplayer:
