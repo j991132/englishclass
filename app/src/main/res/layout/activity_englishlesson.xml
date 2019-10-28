@@ -74,4 +74,33 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/record"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/darker_gray"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+    <Button
+        android:id= "@+id/btnRecord"
+        android:layout_width= "wrap_content"
+        android:layout_height= "wrap_content"
+        android:layout_marginLeft= "100dp"
+        android:text= "Rec" />
+    <Button
+        android:id= "@+id/btnStop"
+        android:layout_width= "wrap_content"
+        android:layout_height= "wrap_content"
+        android:layout_marginLeft= "20dp"
+        android:text= "Stop" />
+    <Button
+        android:id= "@+id/btnPlay"
+        android:layout_width= "wrap_content"
+        android:layout_height= "wrap_content"
+        android:layout_marginLeft= "20dp"
+        android:text= "Play" />
+
+
+    </LinearLayout>
 </LinearLayout>
