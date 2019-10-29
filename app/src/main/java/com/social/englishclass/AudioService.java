@@ -5,23 +5,31 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class AudioService extends Service {
     private final IBinder mBinder = new AudioServiceBinder();
     private ArrayList<Long> mAudioIds = new ArrayList<>();
     private MediaPlayer mMediaPlayer;
+    private MediaRecorder mRecorder ;
+    private static final String LOG_TAG = "AudioRecording" ;
     private boolean isPrepared;
     private int mCurrentPosition;
     private AudioAdapter.AudioItem mAudioItem;
     private float f;
+    private static String mFileName = null ;
 
     public class AudioServiceBinder extends Binder {
         AudioService getService() {
@@ -32,6 +40,8 @@ public class AudioService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mFileName += "/AudioRecording.3gp" ;
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -183,6 +193,47 @@ public class AudioService extends Service {
         }
         play(mCurrentPosition);
     }
+
+    public void record() {
+        mRecorder = new MediaRecorder();
+        mRecorder .setAudioSource(MediaRecorder.AudioSource. MIC );
+        mRecorder .setOutputFormat(MediaRecorder.OutputFormat. THREE_GPP );
+        mRecorder .setAudioEncoder(MediaRecorder.AudioEncoder. AMR_NB );
+        mRecorder .setOutputFile( mFileName );
+        try {
+            mRecorder .prepare();
+        } catch (IOException e) {
+            Log.e( LOG_TAG , "prepare() failed" );
+        }
+        mRecorder .start();
+        Toast.makeText(getApplicationContext(), "녹음 시작" , Toast. LENGTH_LONG ).show();
+    }
+
+    public void recordstop() {
+        mRecorder .stop();
+        mRecorder .release();
+        mRecorder = null ;
+        Toast.makeText(getApplicationContext(), "Recording Stopped" , Toast. LENGTH_LONG ).show();
+    }
+
+    public void recordplay() {
+        mMediaPlayer = new MediaPlayer();
+        try {
+            mMediaPlayer .setDataSource( mFileName );
+            mMediaPlayer .prepare();
+            mMediaPlayer .start();
+            Toast.makeText(getApplicationContext(), "Recording Started Playing" , Toast. LENGTH_LONG ).show();
+        } catch (IOException e) {
+            Log.e( LOG_TAG , "prepare() failed" );
+        }
+    }
+
+    public void recordstopplay() {
+        mMediaPlayer .release();
+        mMediaPlayer = null ;
+        Toast.makeText(getApplicationContext(), "Playing Audio Stopped" , Toast. LENGTH_SHORT ).show();
+    }
+
     public AudioAdapter.AudioItem getAudioItem() {
         return mAudioItem;
     }

@@ -74,6 +74,30 @@ public class AudioServiceInterface {
         }
     }
 
+    public void record() {
+        if (mService != null) {
+            mService.record();
+        }
+    }
+
+    public void recordstop() {
+        if (mService != null) {
+            mService.recordstop();
+        }
+    }
+
+    public void recordplay() {
+        if (mService != null) {
+            mService.recordplay();
+        }
+    }
+
+    public void recordstopplay() {
+        if (mService != null) {
+            mService.recordstopplay();
+        }
+    }
+
     public boolean isPlaying() {
         if (mService != null) {
             return mService.isPlaying();

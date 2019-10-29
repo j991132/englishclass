@@ -11,19 +11,23 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -33,6 +37,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class englishlesson extends AppCompatActivity implements View.OnClickListener {
 
@@ -48,8 +55,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private ImageView mImgAlbumArt;
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
-   
-
+    private Button startbtn , stopbtn , playbtn,stopplay  ;
+    public static final int REQUEST_AUDIO_PERMISSION_CODE = 1 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +83,16 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
+//녹음버튼 관련
+        startbtn = (Button)findViewById(R.id. btnRecord );
+        stopbtn = (Button)findViewById(R.id. btnStop );
+        playbtn = (Button)findViewById(R.id. btnPlay );
+        stopplay = (Button)findViewById(R.id. btnStopPlay );
+        stopbtn .setEnabled( false );
+        playbtn .setEnabled( false );
+        stopplay .setEnabled( false );
 
+//녹음버튼 끝
         mImgAlbumArt = (ImageView) findViewById(R.id.img_albumart);
         mTxtTitle = (TextView) findViewById(R.id.txt_title);
         mBtnPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
@@ -151,6 +167,19 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // READ_EXTERNAL_STORAGE 에 대한 권한 획득.
             getAudioListFromMediaDatabase();
+        }
+        switch (requestCode) {
+            case REQUEST_AUDIO_PERMISSION_CODE :
+                if (grantResults. length > 0 ) {
+                    boolean permissionToRecord = grantResults[ 0 ] == PackageManager.  PERMISSION_GRANTED ;
+                    boolean permissionToStore = grantResults[ 1 ] == PackageManager.  PERMISSION_GRANTED ;
+                    if (permissionToRecord && permissionToStore) {
+                        Toast.makeText(getApplicationContext(), "Permission Granted" , Toast. LENGTH_LONG ).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Permission Denied" ,Toast. LENGTH_LONG ).show();
+                    }
+                }
+                break ;
         }
     }
 
@@ -228,7 +257,44 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 // 다음곡으로 이동
                 AudioApplication.getInstance().getServiceInterface().forward();
                 break;
-
+            case R.id.btnRecord:
+                // 녹음 시작
+                if (CheckPermissions()) {
+                    stopbtn .setEnabled( true );
+                    startbtn .setEnabled( false );
+                    playbtn .setEnabled( false );
+                    stopplay .setEnabled( false );
+                    AudioApplication.getInstance().getServiceInterface().record();
+                }
+                else
+                {
+                    RequestPermissions();
+                }
+                break;
+            case R.id.btnStop:
+                // 녹음 중지
+                stopbtn .setEnabled( false );
+                startbtn .setEnabled( true );
+                playbtn .setEnabled( true );
+                stopplay .setEnabled( true );
+                AudioApplication.getInstance().getServiceInterface().recordstop();
+                break;
+            case R.id.btnPlay:
+                // 녹음 재생
+                stopbtn .setEnabled( false );
+                startbtn .setEnabled( true );
+                playbtn .setEnabled( false );
+                stopplay .setEnabled( true );
+                AudioApplication.getInstance().getServiceInterface().recordplay();
+                break;
+            case R.id.btnStopPlay:
+                // 녹음 재생중지
+                stopbtn .setEnabled( false );
+                startbtn .setEnabled( true );
+                playbtn .setEnabled( true );
+                stopplay .setEnabled( false );
+                AudioApplication.getInstance().getServiceInterface().recordstopplay();
+                break;
         }
 
 
@@ -236,7 +302,18 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
 
     }
-        public void registerBroadcast(){
+
+
+    public boolean CheckPermissions() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE );
+        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO );
+        return result == PackageManager.  PERMISSION_GRANTED && result1 == PackageManager.  PERMISSION_GRANTED ;
+    }
+    private void RequestPermissions() {
+        ActivityCompat.requestPermissions(englishlesson. this , new String[]{ RECORD_AUDIO , WRITE_EXTERNAL_STORAGE }, REQUEST_AUDIO_PERMISSION_CODE );
+    }
+
+    public void registerBroadcast(){
             IntentFilter filter = new IntentFilter();
             filter.addAction(BroadcastActions.PLAY_STATE_CHANGED);
             registerReceiver(mBroadcastReceiver, filter);

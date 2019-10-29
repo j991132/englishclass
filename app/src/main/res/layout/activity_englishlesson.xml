@@ -86,20 +86,26 @@
         android:id= "@+id/btnRecord"
         android:layout_width= "wrap_content"
         android:layout_height= "wrap_content"
-        android:layout_marginLeft= "100dp"
-        android:text= "Rec" />
+        android:layout_marginLeft= "10dp"
+        android:text= "녹음" />
     <Button
         android:id= "@+id/btnStop"
         android:layout_width= "wrap_content"
         android:layout_height= "wrap_content"
-        android:layout_marginLeft= "20dp"
-        android:text= "Stop" />
+        android:layout_marginLeft= "10dp"
+        android:text= "녹음정지" />
     <Button
         android:id= "@+id/btnPlay"
         android:layout_width= "wrap_content"
         android:layout_height= "wrap_content"
-        android:layout_marginLeft= "20dp"
-        android:text= "Play" />
+        android:layout_marginLeft= "10dp"
+        android:text= "녹음재생" />
+    <Button
+        android:id= "@+id/btnStopPlay"
+        android:layout_width= "wrap_content"
+        android:layout_height= "wrap_content"
+        android:layout_marginLeft= "10dp"
+        android:text= "재생중지" />
 
 
     </LinearLayout>
