@@ -55,7 +55,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private ImageView mImgAlbumArt;
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
-    private Button startbtn , stopbtn , playbtn,stopplay  ;
+    private Button startbtn , stopbtn , playbtn, stopplay  ;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1 ;
 
     @Override
@@ -87,11 +87,14 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         startbtn = (Button)findViewById(R.id. btnRecord );
         stopbtn = (Button)findViewById(R.id. btnStop );
         playbtn = (Button)findViewById(R.id. btnPlay );
-        stopplay = (Button)findViewById(R.id. btnStopPlay );
+        stopplay = (Button)findViewById(R.id.StopPlay);
         stopbtn .setEnabled( false );
         playbtn .setEnabled( false );
         stopplay .setEnabled( false );
-
+        playbtn.setOnClickListener(this);
+        stopbtn.setOnClickListener(this);
+        startbtn.setOnClickListener(this);
+        stopplay.setOnClickListener(this);
 //녹음버튼 끝
         mImgAlbumArt = (ImageView) findViewById(R.id.img_albumart);
         mTxtTitle = (TextView) findViewById(R.id.txt_title);
@@ -257,9 +260,13 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 // 다음곡으로 이동
                 AudioApplication.getInstance().getServiceInterface().forward();
                 break;
+
             case R.id.btnRecord:
                 // 녹음 시작
+
+//                Log.d( "녹음버튼클릭" , "조건문 이전" );
                 if (CheckPermissions()) {
+
                     stopbtn .setEnabled( true );
                     startbtn .setEnabled( false );
                     playbtn .setEnabled( false );
@@ -268,6 +275,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 }
                 else
                 {
+
                     RequestPermissions();
                 }
                 break;
@@ -287,7 +295,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 stopplay .setEnabled( true );
                 AudioApplication.getInstance().getServiceInterface().recordplay();
                 break;
-            case R.id.btnStopPlay:
+            case R.id.StopPlay:
                 // 녹음 재생중지
                 stopbtn .setEnabled( false );
                 startbtn .setEnabled( true );
