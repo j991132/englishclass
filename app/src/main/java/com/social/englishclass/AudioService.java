@@ -117,6 +117,9 @@ public class AudioService extends Service {
 
     private void prepare() {
         try {
+            Log.d("음악파일 위치",mAudioItem.mDataPath );
+
+
             mMediaPlayer.setDataSource(mAudioItem.mDataPath);
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayer.prepareAsync();

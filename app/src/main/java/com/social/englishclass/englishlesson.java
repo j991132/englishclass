@@ -79,6 +79,10 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mAdapter = new AudioAdapter(this, null);
+
+
+
+
         mRecyclerView.setAdapter(mAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
