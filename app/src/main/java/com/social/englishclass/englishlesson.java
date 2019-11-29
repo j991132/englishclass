@@ -197,6 +197,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
                 Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+ //               String folder = "/storage/emulated/0/Music";
                 String[] projection = new String[]{
                         MediaStore.Audio.Media._ID,
                         MediaStore.Audio.Media.TITLE,
@@ -207,8 +208,13 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                         MediaStore.Audio.Media.DATA
                 };
                 String selection = MediaStore.Audio.Media.IS_MUSIC + " = 1";
+//                String[] selectionArgs = new String[]{
+//                        "%" + folder + "%",
+//                        "%" + folder + "/%/%"
+//                };
                 String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
                 return new CursorLoader(getApplicationContext(), uri, projection, selection, null, sortOrder);
+//                return new CursorLoader(getApplicationContext(), uri, projection, selection, selectionArgs, sortOrder);
             }
 
             @Override
