@@ -56,12 +56,16 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
     private Button startbtn , stopbtn , playbtn, stopplay  ;
+    private String folder;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_englishlesson);
+
+        Intent intent = getIntent();
+        folder = intent.getStringExtra("lesson");
 
 // OS가 Marshmallow 이상일 경우 권한체크를 해야 합니다.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -197,7 +201,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
                 Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-               String folder = "/storage/emulated/0/Music";
+//               String folder = "/storage/emulated/0/Music";
                 String[] projection = new String[]{
                         MediaStore.Audio.Media._ID,
                         MediaStore.Audio.Media.TITLE,
