@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -208,13 +207,18 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                         MediaStore.Audio.Media.DURATION,
                         MediaStore.Audio.Media.DATA
                 };
+//쿼리를 위한 조건을 담는 부분 ? 한개당 1개의 아규먼트가 적용된다.
+//해당폴더는 검색하고 하위폴더는 제외하는 내용
                 String selection = MediaStore.Audio.Media.DATA + " LIKE ? AND " + MediaStore.Audio.Media.DATA + " NOT LIKE ? ";
+// 원래는 미디어 ismusic 값이 1인 것(음악파일)은 모두 검색하는 조건이 들어갔었다
+//                String selection = MediaStore.Audio.Media.IS_MUSIC + " = 1";
                 String[] selectionArgs = new String[]{
                         "%" + folder + "%",
                         "%" + folder + "/%/%"
                 };
                 String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
  //               return new CursorLoader(getApplicationContext(), uri, projection, selection, null, sortOrder);
+//검색 쿼리가 들어있는 내장파일 커서로더.java 를 호출한다.
                return new CursorLoader(getApplicationContext(), uri, projection, selection, selectionArgs, sortOrder);
             }
 
