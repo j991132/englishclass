@@ -9,6 +9,8 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity{
 
+    private Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,48 +28,60 @@ public class MainActivity extends AppCompatActivity{
         Button btn10 = (Button) findViewById(R.id.button10);
         Button btn11 = (Button) findViewById(R.id.button11);
         Button btn12 = (Button) findViewById(R.id.button12);
+        intent = new Intent(MainActivity.this, englishlesson.class);
 
         View.OnClickListener Listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.button1:
-                        Intent intent = new Intent(MainActivity.this, englishlesson.class);
+
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson1");
                         startActivity(intent);
                         break;
                     case R.id.button2:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson2");
+                        startActivity(intent);
                         break;
                     case R.id.button3:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson3");
+                        startActivity(intent);
                         break;
                     case R.id.button4:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson4");
+                        startActivity(intent);
                         break;
                     case R.id.button5:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson5");
+                        startActivity(intent);
                         break;
                     case R.id.button6:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson6");
+                        startActivity(intent);
                         break;
                     case R.id.button7:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson7");
+                        startActivity(intent);
                         break;
                     case R.id.button8:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson8");
+                        startActivity(intent);
                         break;
                     case R.id.button9:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson9");
+                        startActivity(intent);
                         break;
                     case R.id.button10:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson10");
+                        startActivity(intent);
                         break;
                     case R.id.button11:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson11");
+                        startActivity(intent);
                         break;
                     case R.id.button12:
-
+                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson12");
+                        startActivity(intent);
                         break;
                 }
             }
