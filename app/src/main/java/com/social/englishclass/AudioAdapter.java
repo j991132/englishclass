@@ -87,8 +87,10 @@ public class AudioAdapter extends CursorRecyclerViewAdapter<RecyclerView.ViewHol
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    AudioApplication.getInstance().getServiceInterface().isPlaying();
                     AudioApplication.getInstance().getServiceInterface().setPlayList(getAudioIds()); // 재생목록등록
                     AudioApplication.getInstance().getServiceInterface().play(mPosition); // 선택한 오디오재생
+
 
                 }
             });
@@ -101,7 +103,7 @@ public class AudioAdapter extends CursorRecyclerViewAdapter<RecyclerView.ViewHol
             mTxtSubTitle.setText(item.mArtist + "(" + item.mAlbum + ")");
             mTxtDuration.setText(DateFormat.format("mm:ss", item.mDuration));
             Uri albumArtUri = ContentUris.withAppendedId(artworkUri, item.mAlbumId);
-            Picasso.with(itemView.getContext()).load(albumArtUri).error(R.drawable.empty_albumart).into(mImgAlbumArt);
+            Picasso.with(itemView.getContext()).load(albumArtUri).error(R.drawable.music).into(mImgAlbumArt);
         }
     }
 }

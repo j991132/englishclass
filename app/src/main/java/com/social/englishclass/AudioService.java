@@ -141,9 +141,11 @@ public class AudioService extends Service {
     }
 
     public void play(int position) {
+
         queryAudioItem(position);
         stop();
         prepare();
+        sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
     }
     public void play() {
 

@@ -359,10 +359,10 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             AudioAdapter.AudioItem audioItem = AudioApplication.getInstance().getServiceInterface().getAudioItem();
             if (audioItem != null) {
                 Uri albumArtUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), audioItem.mAlbumId);
-                Picasso.with(getApplicationContext()).load(albumArtUri).error(R.drawable.empty_albumart).into(mImgAlbumArt);
+                Picasso.with(getApplicationContext()).load(albumArtUri).error(R.drawable.music).into(mImgAlbumArt);
                 mTxtTitle.setText(audioItem.mTitle);
             } else {
-                mImgAlbumArt.setImageResource(R.drawable.empty_albumart);
+                mImgAlbumArt.setImageResource(R.drawable.music);
                 mTxtTitle.setText("재생중인 음악이 없습니다.");
             }
         }
