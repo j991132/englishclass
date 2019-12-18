@@ -150,7 +150,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
                 }
  //               Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다. f값은 " + f, Toast.LENGTH_SHORT).show();
-                AudioApplication.getInstance().getServiceInterface().togglePlay(f);
+                AudioApplication.getInstance().getServiceInterface().play2(f);
 
 
             }
@@ -251,9 +251,17 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     };
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mTxtTitle.setText("재생중인 음악이 없습니다.");
+//        AudioApplication.getInstance().getServiceInterface().pause();
+
+    }
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterBroadcast();
+       unregisterBroadcast();
+
     }
 
     @Override
@@ -366,5 +374,6 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 mTxtTitle.setText("재생중인 음악이 없습니다.");
             }
         }
+
 
     }//메인 종료
