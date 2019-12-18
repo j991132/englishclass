@@ -150,7 +150,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
                 }
  //               Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다. f값은 " + f, Toast.LENGTH_SHORT).show();
-
+                AudioApplication.getInstance().getServiceInterface().togglePlay(f);
 
 
             }

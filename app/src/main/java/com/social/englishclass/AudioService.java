@@ -42,6 +42,7 @@ public class AudioService extends Service {
         super.onCreate();
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/AudioRecording.3gp" ;
+
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -49,7 +50,8 @@ public class AudioService extends Service {
             public void onPrepared(MediaPlayer mp) {
                 isPrepared = true;
                 mp.start();
-                sendBroadcast(new Intent(BroadcastActions.PREPARED)); // prepared 전송
+             sendBroadcast(new Intent(BroadcastActions.PREPARED)); // prepared 전송
+                sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
             }
         });
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -145,16 +147,16 @@ public class AudioService extends Service {
         queryAudioItem(position);
         stop();
         prepare();
-        sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
+
+        //AudioApplication.getInstance().getServiceInterface().isPlaying();
+  //          sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
+
     }
     public void play() {
 
 
 
         if (isPrepared) {
-
-
-
 
             mMediaPlayer.start();
             sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송

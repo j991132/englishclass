@@ -87,7 +87,7 @@ public class AudioAdapter extends CursorRecyclerViewAdapter<RecyclerView.ViewHol
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AudioApplication.getInstance().getServiceInterface().isPlaying();
+
                     AudioApplication.getInstance().getServiceInterface().setPlayList(getAudioIds()); // 재생목록등록
                     AudioApplication.getInstance().getServiceInterface().play(mPosition); // 선택한 오디오재생
 
