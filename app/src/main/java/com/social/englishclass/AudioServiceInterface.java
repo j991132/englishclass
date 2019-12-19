@@ -34,6 +34,11 @@ public class AudioServiceInterface {
             mService.setPlayList(audioIds);
         }
     }
+    public void clearPlayList() {
+        if (mService != null) {
+            mService.clearPlayList();
+        }
+    }
 
     public void play(int position) {
         if (mService != null) {
@@ -51,6 +56,13 @@ public class AudioServiceInterface {
     public void pause() {
         if (mService != null) {
             mService.play();
+        }
+    }
+
+    public void stop() {
+        if (mService != null) {
+            mService.stop();
+            mService.clearPlayList();
         }
     }
 

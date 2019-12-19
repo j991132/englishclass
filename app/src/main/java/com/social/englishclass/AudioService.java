@@ -130,7 +130,7 @@ public class AudioService extends Service {
         }
     }
 
-    private void stop() {
+    public void stop() {
         mMediaPlayer.stop();
         mMediaPlayer.reset();
     }
@@ -141,7 +141,11 @@ public class AudioService extends Service {
             mAudioIds.addAll(audioIds);
         }
     }
+    public void clearPlayList() {
 
+            mAudioIds.clear();
+
+    }
     public void play(int position) {
 
         queryAudioItem(position);
@@ -182,6 +186,8 @@ public class AudioService extends Service {
             sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
         }
     }
+
+
 
     public void forward() {
         if (mAudioIds.size() - 1 > mCurrentPosition) {

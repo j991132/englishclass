@@ -57,6 +57,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private ImageButton mBtnPlayPause;
     private Button startbtn , stopbtn , playbtn, stopplay  ;
     private String folder;
+
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1 ;
 
     @Override
@@ -112,9 +113,10 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         mBtnPlayPause.setOnClickListener(this);
         findViewById(R.id.btn_forward).setOnClickListener(this);
         arrayList = new ArrayList<>();
-        arrayList.add("1배속");
+        arrayList.add("재생속도");
         arrayList.add("0.5배속");
         arrayList.add("0.75배속");
+        arrayList.add("1배속");
         arrayList.add("1.25배속");
         arrayList.add("1.5배속");
 
@@ -134,23 +136,28 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 switch (arrayList.get(i)) {
                     case "0.5배속":
                         f = (float) 0.5;
+                        AudioApplication.getInstance().getServiceInterface().play2(f);
                         break;
                     case "0.75배속":
                         f = (float) 0.75;
+                        AudioApplication.getInstance().getServiceInterface().play2(f);
                         break;
                     case "1배속":
                         f = (float) 1;
+                        AudioApplication.getInstance().getServiceInterface().play2(f);
                         break;
                     case "1.25배속":
                         f = (float) 1.25;
+                        AudioApplication.getInstance().getServiceInterface().play2(f);
                         break;
                     case "1.5배속":
                         f = (float) 1.5;
+                        AudioApplication.getInstance().getServiceInterface().play2(f);
                         break;
 
                 }
  //               Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다. f값은 " + f, Toast.LENGTH_SHORT).show();
-                AudioApplication.getInstance().getServiceInterface().play2(f);
+
 
 
             }
@@ -253,8 +260,11 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onPause() {
         super.onPause();
-        mTxtTitle.setText("재생중인 음악이 없습니다.");
-//        AudioApplication.getInstance().getServiceInterface().pause();
+//        mTxtTitle.setText("재생중인 음악이 없습니다.");
+
+        AudioApplication.getInstance().getServiceInterface().stop();
+        AudioApplication.getInstance().getServiceInterface().clearPlayList();
+        finish();
 
     }
     @Override
