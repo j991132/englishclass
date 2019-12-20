@@ -262,15 +262,15 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         super.onPause();
 //        mTxtTitle.setText("재생중인 음악이 없습니다.");
 
-        AudioApplication.getInstance().getServiceInterface().stop();
-        AudioApplication.getInstance().getServiceInterface().clearPlayList();
-        finish();
 
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
        unregisterBroadcast();
+        AudioApplication.getInstance().getServiceInterface().stop();
+        AudioApplication.getInstance().getServiceInterface().clearPlayList();
+        finish();
 
     }
 

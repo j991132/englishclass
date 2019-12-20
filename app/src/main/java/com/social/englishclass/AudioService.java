@@ -1,5 +1,6 @@
 package com.social.englishclass;
 
+import android.app.Dialog;
 import android.app.Service;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,7 +14,9 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -31,6 +34,7 @@ public class AudioService extends Service {
     private float f;
     private static String mFileName = null ;
 
+
     public class AudioServiceBinder extends Binder {
         AudioService getService() {
             return AudioService.this;
@@ -42,6 +46,9 @@ public class AudioService extends Service {
         super.onCreate();
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/AudioRecording.3gp" ;
+
+ //      Intent intent = getIntent();
+//    String filename = (String)intent.getExtras().get("filename");
 
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
@@ -76,7 +83,12 @@ public class AudioService extends Service {
             }
         });
     }
-
+/*
+    public int onStartCommand (Intent intent, int flags, int startId) {
+        mFileName = intent.getStringExtra("filename");
+        return START_STICKY;
+    }
+ */
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -224,8 +236,13 @@ public class AudioService extends Service {
 
     public void recordstop() {
         mRecorder .stop();
+//      recordname();
+
+//      mRecorder .setOutputFile( mFileName );
+
         mRecorder .release();
         mRecorder = null ;
+
         Toast.makeText(getApplicationContext(), "Recording Stopped" , Toast. LENGTH_LONG ).show();
     }
 
@@ -245,6 +262,12 @@ public class AudioService extends Service {
         mMediaPlayer .release();
         mMediaPlayer = null ;
         Toast.makeText(getApplicationContext(), "Playing Audio Stopped" , Toast. LENGTH_SHORT ).show();
+    }
+
+    public void recordname(){
+        Intent intent = new Intent(this, recorddialog.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     public AudioAdapter.AudioItem getAudioItem() {
