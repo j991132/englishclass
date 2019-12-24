@@ -99,9 +99,9 @@ public class AudioServiceInterface {
         }
     }
 
-    public void recordplay() {
+    public void recordplay(String fname) {
         if (mService != null) {
-            mService.recordplay();
+            mService.recordplay(fname);
         }
     }
 

@@ -45,7 +45,7 @@ public class AudioService extends Service {
     public void onCreate() {
         super.onCreate();
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/AudioRecording.3gp" ;
+        mFileName += "/englishclass/record/AudioRecording.3gp" ;
 
  //      Intent intent = getIntent();
 //    String filename = (String)intent.getExtras().get("filename");
@@ -83,12 +83,7 @@ public class AudioService extends Service {
             }
         });
     }
-/*
-    public int onStartCommand (Intent intent, int flags, int startId) {
-        mFileName = intent.getStringExtra("filename");
-        return START_STICKY;
-    }
- */
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -236,20 +231,16 @@ public class AudioService extends Service {
 
     public void recordstop() {
         mRecorder .stop();
-//      recordname();
-
-//      mRecorder .setOutputFile( mFileName );
-
         mRecorder .release();
         mRecorder = null ;
 
         Toast.makeText(getApplicationContext(), "Recording Stopped" , Toast. LENGTH_LONG ).show();
     }
 
-    public void recordplay() {
+    public void recordplay(String fname) {
         mMediaPlayer = new MediaPlayer();
         try {
-            mMediaPlayer .setDataSource( mFileName );
+            mMediaPlayer .setDataSource( fname );
             mMediaPlayer .prepare();
             mMediaPlayer .start();
             Toast.makeText(getApplicationContext(), "Recording Started Playing" , Toast. LENGTH_LONG ).show();
@@ -262,12 +253,6 @@ public class AudioService extends Service {
         mMediaPlayer .release();
         mMediaPlayer = null ;
         Toast.makeText(getApplicationContext(), "Playing Audio Stopped" , Toast. LENGTH_SHORT ).show();
-    }
-
-    public void recordname(){
-        Intent intent = new Intent(this, recorddialog.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 
     public AudioAdapter.AudioItem getAudioItem() {

@@ -1,6 +1,7 @@
 package com.social.englishclass;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -11,12 +12,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -35,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -56,8 +60,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
     private Button startbtn , stopbtn , playbtn, stopplay  ;
-    private String folder;
-
+    private String folder, fname;
+    private File beforeFileName, afterFileName;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1 ;
 
     @Override
@@ -323,6 +327,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 playbtn .setEnabled( true );
                 stopplay .setEnabled( true );
                 AudioApplication.getInstance().getServiceInterface().recordstop();
+                recordname();
                 break;
             case R.id.btnPlay:
                 // 녹음 재생
@@ -330,7 +335,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 startbtn .setEnabled( true );
                 playbtn .setEnabled( false );
                 stopplay .setEnabled( true );
-                AudioApplication.getInstance().getServiceInterface().recordplay();
+                AudioApplication.getInstance().getServiceInterface().recordplay(fname);
                 break;
             case R.id.StopPlay:
                 // 녹음 재생중지
@@ -385,5 +390,43 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             }
         }
 
+    public void recordname(){
+        //다이얼로그생성
+        final Dialog recordname = new Dialog( this );
+        recordname.setContentView(R.layout.recordname);
+        Button okbtn = (Button) recordname.findViewById(R.id.ok);
+        Button canclebtn = (Button) recordname.findViewById(R.id.cancle);
+        final EditText edit = (EditText) recordname.findViewById(R.id.edittext);
+        //확인버튼
+        okbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               String FileName = edit.getText().toString();
 
-    }//메인 종료
+                beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.3gp");
+                Log.d( "이전파일이름" , String.valueOf(beforeFileName));
+                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName+".3gp");
+                Log.d( "수정된파일이름" , String.valueOf(afterFileName));
+                beforeFileName.renameTo(afterFileName);
+                Log.d( "이름바꾸기" , String.valueOf(beforeFileName));
+                fname = String.valueOf(afterFileName);
+                if (beforeFileName.renameTo(afterFileName))Toast.makeText(getApplicationContext(), "success!" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();
+                else Toast.makeText(getApplicationContext(), "faile"+ FileName + beforeFileName, Toast.LENGTH_SHORT).show();
+
+                recordname.dismiss();
+            }
+        }); //ok버튼 끝
+
+        //취소버튼
+        canclebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recordname.dismiss();
+            }
+        }); //취소버튼 끝
+        recordname.show();
+    }
+
+
+
+}//메인 종료
