@@ -1,6 +1,6 @@
 package com.social.englishclass;
 
-import android.app.Dialog;
+
 import android.app.Service;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,11 +14,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -247,12 +243,22 @@ public class AudioService extends Service {
         } catch (IOException e) {
             Log.e( LOG_TAG , "prepare() failed" );
         }
+        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                recordstopplay();
+            }
+        });
     }
 
     public void recordstopplay() {
-        mMediaPlayer .release();
-        mMediaPlayer = null ;
-        Toast.makeText(getApplicationContext(), "Playing Audio Stopped" , Toast. LENGTH_SHORT ).show();
+        if(mMediaPlayer !=null) {
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+            Toast.makeText(getApplicationContext(), "Playing Audio Stopped", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Playing Audio Stopped", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public AudioAdapter.AudioItem getAudioItem() {
