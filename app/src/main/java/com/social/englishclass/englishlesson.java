@@ -116,6 +116,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.btn_rewind).setOnClickListener(this);
         mBtnPlayPause.setOnClickListener(this);
         findViewById(R.id.btn_forward).setOnClickListener(this);
+//스피너 선택버튼 만들기
         arrayList = new ArrayList<>();
         arrayList.add("재생속도");
         arrayList.add("0.5배속");
@@ -125,8 +126,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         arrayList.add("1.5배속");
 
         arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item,
-                arrayList);
+                android.R.layout.simple_spinner_dropdown_item, arrayList);
 
         spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setAdapter(arrayAdapter);
@@ -335,7 +335,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 startbtn .setEnabled( true );
                 playbtn .setEnabled( false );
                 stopplay .setEnabled( true );
-                AudioApplication.getInstance().getServiceInterface().recordplay(fname);
+                recordlistdialog();
+//                AudioApplication.getInstance().getServiceInterface().recordplay(fname);
                 break;
             case R.id.StopPlay:
                 // 녹음 재생중지
@@ -389,7 +390,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 mTxtTitle.setText("재생중인 음악이 없습니다.");
             }
         }
-
+//녹음중지 버튼 시 이름바꿔저장 매서드 실행
     public void recordname(){
         //다이얼로그생성
         final Dialog recordname = new Dialog( this );
@@ -427,6 +428,31 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         recordname.show();
     }
 
+//녹음재생 버튼 시 녹음파일 목록 다이얼로그 띄우기
+public void recordlistdialog(){
 
+    //다이얼로그생성
+    final Dialog recordlistdialog = new Dialog( this );
+    recordlistdialog.setContentView(R.layout.recordlist);
+    folder = "/storage/emulated/0/englishclass/record";
+    getAudioListFromMediaDatabase();
+
+   RecyclerView recordRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
+    mAdapter = new AudioAdapter(this, null);
+
+    recordRecyclerView.setAdapter(mAdapter);
+    LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    recordRecyclerView.setLayoutManager(layoutManager);
+
+
+
+//            recordlistdialog.dismiss();
+
+
+
+
+    recordlistdialog.show();
+}
 
 }//메인 종료
