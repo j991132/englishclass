@@ -207,7 +207,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
 
 
-    private void getAudioListFromMediaDatabase() {
+    public void getAudioListFromMediaDatabase() {
         getSupportLoaderManager().initLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -335,6 +335,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 startbtn .setEnabled( true );
                 playbtn .setEnabled( false );
                 stopplay .setEnabled( true );
+
                 recordlistdialog();
 //                AudioApplication.getInstance().getServiceInterface().recordplay(fname);
                 break;
@@ -435,11 +436,12 @@ public void recordlistdialog(){
     final Dialog recordlistdialog = new Dialog( this );
     recordlistdialog.setContentView(R.layout.recordlist);
     folder = "/storage/emulated/0/englishclass/record";
+
     getAudioListFromMediaDatabase();
 
    RecyclerView recordRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
-    mAdapter = new AudioAdapter(this, null);
-
+//   AudioAdapter  recordAdapter = new AudioAdapter(this, null);
+    mAdapter = new AudioAdapter(this, null);   //어댑터를 새로지정하면 못읽는다. null 값이라 그런가?
     recordRecyclerView.setAdapter(mAdapter);
     LinearLayoutManager layoutManager = new LinearLayoutManager(this);
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -448,8 +450,6 @@ public void recordlistdialog(){
 
 
 //            recordlistdialog.dismiss();
-
-
 
 
     recordlistdialog.show();

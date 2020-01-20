@@ -3,6 +3,16 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/recordtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_weight="0"
+        android:gravity="center_vertical"
+        android:text="녹음된 파일"
+        android:textColor="@android:color/black" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recordrecyclerview"
         android:layout_width="match_parent"
