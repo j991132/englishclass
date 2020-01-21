@@ -52,7 +52,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private float f;
     ArrayList<String> arrayList;
     ArrayAdapter<String> arrayAdapter;
-
+    private int a=2;
     private String TAG = "activity_englishlesson";
     private RecyclerView mRecyclerView;
     private AudioAdapter mAdapter;
@@ -211,6 +211,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         getSupportLoaderManager().initLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                Log.d("겟리스트메서드", "메서드실생됨"  );
                 Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 //               String folder = "/storage/emulated/0/Music";
                 String[] projection = new String[]{
@@ -231,6 +232,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                         "%" + folder + "%",
                         "%" + folder + "/%/%"
                 };
+                Log.d("겟리스트", "폴더" + selectionArgs );
                 String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
  //               return new CursorLoader(getApplicationContext(), uri, projection, selection, null, sortOrder);
 //검색 쿼리가 들어있는 내장파일 커서로더.java 를 호출한다.
@@ -240,6 +242,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 mAdapter.swapCursor(data);
+                Log.d("커서데이터", "커서데이터" + data );
                 if (data != null && data.getCount() > 0) {
                     while (data.moveToNext()) {
                         Log.i(TAG, "Title:" + data.getString(data.getColumnIndex(MediaStore.Audio.Media.TITLE)));
@@ -337,6 +340,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 stopplay .setEnabled( true );
 
                 recordlistdialog();
+                updateUI();
 //                AudioApplication.getInstance().getServiceInterface().recordplay(fname);
                 break;
             case R.id.StopPlay:
@@ -345,6 +349,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 startbtn .setEnabled( true );
                 playbtn .setEnabled( true );
                 stopplay .setEnabled( false );
+                a=a+1;
+                Log.d("로더 아이디", "로더아이디" + a );
                 AudioApplication.getInstance().getServiceInterface().recordstopplay();
                 break;
         }
@@ -437,12 +443,14 @@ public void recordlistdialog(){
     recordlistdialog.setContentView(R.layout.recordlist);
     folder = "/storage/emulated/0/englishclass/record";
 
-    getAudioListFromMediaDatabase();
+    getAudioListFromMediaDatabase2();
 
    RecyclerView recordRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
 //   AudioAdapter  recordAdapter = new AudioAdapter(this, null);
     mAdapter = new AudioAdapter(this, null);   //어댑터를 새로지정하면 못읽는다. null 값이라 그런가?
+
     recordRecyclerView.setAdapter(mAdapter);
+
     LinearLayoutManager layoutManager = new LinearLayoutManager(this);
     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
     recordRecyclerView.setLayoutManager(layoutManager);
@@ -454,5 +462,57 @@ public void recordlistdialog(){
 
     recordlistdialog.show();
 }
+
+    public void getAudioListFromMediaDatabase2() {
+
+        Log.d("getAudioList2   로더 아이디", "로더아이디" + a );
+        getSupportLoaderManager().initLoader(a, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                Log.d("겟리스트메서드", "메서드실생됨"  );
+                Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+//               String folder = "/storage/emulated/0/Music";
+                String[] projection = new String[]{
+                        MediaStore.Audio.Media._ID,
+                        MediaStore.Audio.Media.TITLE,
+                        MediaStore.Audio.Media.ARTIST,
+                        MediaStore.Audio.Media.ALBUM,
+                        MediaStore.Audio.Media.ALBUM_ID,
+                        MediaStore.Audio.Media.DURATION,
+                        MediaStore.Audio.Media.DATA
+                };
+//쿼리를 위한 조건을 담는 부분 ? 한개당 1개의 아규먼트가 적용된다.
+//해당폴더는 검색하고 하위폴더는 제외하는 내용
+                String selection = MediaStore.Audio.Media.DATA + " LIKE ? AND " + MediaStore.Audio.Media.DATA + " NOT LIKE ? ";
+// 원래는 미디어 ismusic 값이 1인 것(음악파일)은 모두 검색하는 조건이 들어갔었다
+//                String selection = MediaStore.Audio.Media.IS_MUSIC + " = 1";
+                String[] selectionArgs = new String[]{
+                        "%" + folder + "%",
+                        "%" + folder + "/%/%"
+                };
+                Log.d("겟리스트", "폴더" + selectionArgs );
+                String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
+                //               return new CursorLoader(getApplicationContext(), uri, projection, selection, null, sortOrder);
+//검색 쿼리가 들어있는 내장파일 커서로더.java 를 호출한다.
+                return new CursorLoader(getApplicationContext(), uri, projection, selection, selectionArgs, sortOrder);
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                mAdapter.swapCursor(data);
+                Log.d("커서데이터", "커서데이터" + data );
+                if (data != null && data.getCount() > 0) {
+                    while (data.moveToNext()) {
+                        Log.i(TAG, "Title:" + data.getString(data.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+                    }
+                }
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+                mAdapter.swapCursor(null);
+            }
+        });
+    }
 
 }//메인 종료
