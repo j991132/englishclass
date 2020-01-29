@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class AudioAdapter extends CursorRecyclerViewAdapter<RecyclerView.ViewHol
 
     public ArrayList<Long> getAudioIds() {
         int count = getItemCount();
+        Log.d("리사이클뷰 아이탬 갯수", "       " + count );
         ArrayList<Long> audioIds = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             audioIds.add(getItemId(i));

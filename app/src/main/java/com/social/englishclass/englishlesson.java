@@ -464,9 +464,10 @@ public void recordlistdialog(){
 }
 
     public void getAudioListFromMediaDatabase2() {
-
-        Log.d("getAudioList2   로더 아이디", "로더아이디" + a );
-        getSupportLoaderManager().initLoader(a, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+        long currentTime = System.currentTimeMillis();
+        int lid = (int) currentTime;
+        Log.d("getAudioList2   로더 아이디", "로더아이디" + currentTime );
+        getSupportLoaderManager().initLoader(lid, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
                 Log.d("겟리스트메서드", "메서드실생됨"  );
@@ -486,21 +487,24 @@ public void recordlistdialog(){
                 String selection = MediaStore.Audio.Media.DATA + " LIKE ? AND " + MediaStore.Audio.Media.DATA + " NOT LIKE ? ";
 // 원래는 미디어 ismusic 값이 1인 것(음악파일)은 모두 검색하는 조건이 들어갔었다
 //                String selection = MediaStore.Audio.Media.IS_MUSIC + " = 1";
+
                 String[] selectionArgs = new String[]{
                         "%" + folder + "%",
                         "%" + folder + "/%/%"
                 };
-                Log.d("겟리스트", "폴더" + selectionArgs );
+                Log.d("겟리스트", "폴더" + folder );
                 String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
                 //               return new CursorLoader(getApplicationContext(), uri, projection, selection, null, sortOrder);
 //검색 쿼리가 들어있는 내장파일 커서로더.java 를 호출한다.
                 return new CursorLoader(getApplicationContext(), uri, projection, selection, selectionArgs, sortOrder);
+//                mAdapter.notifyDatasetChange()
             }
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 mAdapter.swapCursor(data);
-                Log.d("커서데이터", "커서데이터" + data );
+ //               mAdapter.notifyDatasetChange();
+                Log.d("커서데이터", "커서데이터" + data.getCount() );
                 if (data != null && data.getCount() > 0) {
                     while (data.moveToNext()) {
                         Log.i(TAG, "Title:" + data.getString(data.getColumnIndex(MediaStore.Audio.Media.TITLE)));
