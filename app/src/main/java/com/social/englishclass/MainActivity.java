@@ -3,7 +3,11 @@ package com.social.englishclass;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -100,6 +104,41 @@ public class MainActivity extends AppCompatActivity{
         btn12.setOnClickListener(Listener);
 
 
+        testResolver();
+    }
 
+    private void testResolver(){
+        String folder = "englishclass/record";
+
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+//               String folder = "/storage/emulated/0/Music";
+        String[] projection = new String[]{
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.ALBUM_ID,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.DATA
+        };
+//쿼리를 위한 조건을 담는 부분 ? 한개당 1개의 아규먼트가 적용된다.
+//해당폴더는 검색하고 하위폴더는 제외하는 내용
+//        String selection = MediaStore.Audio.Media.DATA + " LIKE ? AND " + MediaStore.Audio.Media.DATA + " NOT LIKE ? ";
+        String selection = MediaStore.Audio.Media.DATA + " LIKE ? ";
+// 원래는 미디어 ismusic 값이 1인 것(음악파일)은 모두 검색하는 조건이 들어갔었다
+//                String selection = MediaStore.Audio.Media.IS_MUSIC + " = 1";
+
+        String[] selectionArgs = new String[]{
+                "%" + folder + "%",
+//                "%" + folder + "/%/%"
+        };
+        Log.e("겟리스트", "폴더" + folder );
+        String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
+
+        Cursor cur = getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
+
+        Log.e("count", cur.getCount() +"");
+
+        cur.close();
     }
 }

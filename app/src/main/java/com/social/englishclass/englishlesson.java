@@ -4,11 +4,13 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,30 +41,30 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class englishlesson extends AppCompatActivity implements View.OnClickListener
-{
+public class englishlesson extends AppCompatActivity implements View.OnClickListener {
 
     private final static int LOADER_ID = 0x001;
     private Spinner spinner;
     private float f;
     ArrayList<String> arrayList;
     ArrayAdapter<String> arrayAdapter;
-    private int a=2;
+    private int a = 2;
     private String TAG = "activity_englishlesson";
     private RecyclerView mRecyclerView;
     private AudioAdapter mAdapter;
     private ImageView mImgAlbumArt;
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
-    private Button startbtn , stopbtn , playbtn, stopplay  ;
+    private Button startbtn, stopbtn, playbtn, stopplay;
     private String folder, fname;
     private File beforeFileName, afterFileName;
-    public static final int REQUEST_AUDIO_PERMISSION_CODE = 1 ;
+    public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,20 +92,18 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         mAdapter = new AudioAdapter(this, null);
 
 
-
-
         mRecyclerView.setAdapter(mAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
 //녹음버튼 관련
-        startbtn = (Button)findViewById(R.id. btnRecord );
-        stopbtn = (Button)findViewById(R.id. btnStop );
-        playbtn = (Button)findViewById(R.id. btnPlay );
-        stopplay = (Button)findViewById(R.id.StopPlay);
-        stopbtn .setEnabled( false );
-        playbtn .setEnabled( false );
-        stopplay .setEnabled( false );
+        startbtn = (Button) findViewById(R.id.btnRecord);
+        stopbtn = (Button) findViewById(R.id.btnStop);
+        playbtn = (Button) findViewById(R.id.btnPlay);
+        stopplay = (Button) findViewById(R.id.StopPlay);
+        stopbtn.setEnabled(false);
+        playbtn.setEnabled(false);
+        stopplay.setEnabled(false);
         playbtn.setOnClickListener(this);
         stopbtn.setOnClickListener(this);
         startbtn.setOnClickListener(this);
@@ -160,8 +160,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                         break;
 
                 }
- //               Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다. f값은 " + f, Toast.LENGTH_SHORT).show();
-
+                //               Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다. f값은 " + f, Toast.LENGTH_SHORT).show();
 
 
             }
@@ -173,7 +172,6 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             }
 
         });
-
 
 
         registerBroadcast();
@@ -191,27 +189,26 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             getAudioListFromMediaDatabase();
         }
         switch (requestCode) {
-            case REQUEST_AUDIO_PERMISSION_CODE :
-                if (grantResults. length > 0 ) {
-                    boolean permissionToRecord = grantResults[ 0 ] == PackageManager.  PERMISSION_GRANTED ;
-                    boolean permissionToStore = grantResults[ 1 ] == PackageManager.  PERMISSION_GRANTED ;
+            case REQUEST_AUDIO_PERMISSION_CODE:
+                if (grantResults.length > 0) {
+                    boolean permissionToRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean permissionToStore = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (permissionToRecord && permissionToStore) {
-                        Toast.makeText(getApplicationContext(), "Permission Granted" , Toast. LENGTH_LONG ).show();
+                        Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), "Permission Denied" ,Toast. LENGTH_LONG ).show();
+                        Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
                     }
                 }
-                break ;
+                break;
         }
     }
-
 
 
     public void getAudioListFromMediaDatabase() {
         getSupportLoaderManager().initLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                Log.d("겟리스트메서드", "메서드실생됨"  );
+                Log.d("겟리스트메서드", "메서드실생됨");
                 Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 //               String folder = "/storage/emulated/0/Music";
                 String[] projection = new String[]{
@@ -232,17 +229,17 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                         "%" + folder + "%",
                         "%" + folder + "/%/%"
                 };
-                Log.d("겟리스트", "폴더" + selectionArgs );
+                Log.d("겟리스트", "폴더" + selectionArgs);
                 String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
- //               return new CursorLoader(getApplicationContext(), uri, projection, selection, null, sortOrder);
+                //               return new CursorLoader(getApplicationContext(), uri, projection, selection, null, sortOrder);
 //검색 쿼리가 들어있는 내장파일 커서로더.java 를 호출한다.
-               return new CursorLoader(getApplicationContext(), uri, projection, selection, selectionArgs, sortOrder);
+                return new CursorLoader(getApplicationContext(), uri, projection, selection, selectionArgs, sortOrder);
             }
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 mAdapter.swapCursor(data);
-                Log.d("커서데이터", "커서데이터" + data );
+                Log.d("커서데이터", "커서데이터" + data);
                 if (data != null && data.getCount() > 0) {
                     while (data.moveToNext()) {
                         Log.i(TAG, "Title:" + data.getString(data.getColumnIndex(MediaStore.Audio.Media.TITLE)));
@@ -271,10 +268,11 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
 
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-       unregisterBroadcast();
+        unregisterBroadcast();
         AudioApplication.getInstance().getServiceInterface().stop();
         AudioApplication.getInstance().getServiceInterface().clearPlayList();
         finish();
@@ -311,33 +309,31 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //                Log.d( "녹음버튼클릭" , "조건문 이전" );
                 if (CheckPermissions()) {
 
-                    stopbtn .setEnabled( true );
-                    startbtn .setEnabled( false );
-                    playbtn .setEnabled( false );
-                    stopplay .setEnabled( false );
+                    stopbtn.setEnabled(true);
+                    startbtn.setEnabled(false);
+                    playbtn.setEnabled(false);
+                    stopplay.setEnabled(false);
                     AudioApplication.getInstance().getServiceInterface().record();
-                }
-                else
-                {
+                } else {
 
                     RequestPermissions();
                 }
                 break;
             case R.id.btnStop:
                 // 녹음 중지
-                stopbtn .setEnabled( false );
-                startbtn .setEnabled( true );
-                playbtn .setEnabled( true );
-                stopplay .setEnabled( true );
+                stopbtn.setEnabled(false);
+                startbtn.setEnabled(true);
+                playbtn.setEnabled(true);
+                stopplay.setEnabled(true);
                 AudioApplication.getInstance().getServiceInterface().recordstop();
                 recordname();
                 break;
             case R.id.btnPlay:
                 // 녹음 재생
-                stopbtn .setEnabled( false );
-                startbtn .setEnabled( true );
-                playbtn .setEnabled( false );
-                stopplay .setEnabled( true );
+                stopbtn.setEnabled(false);
+                startbtn.setEnabled(true);
+                playbtn.setEnabled(false);
+                stopplay.setEnabled(true);
 
                 recordlistdialog();
                 updateUI();
@@ -345,62 +341,61 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.StopPlay:
                 // 녹음 재생중지
-                stopbtn .setEnabled( false );
-                startbtn .setEnabled( true );
-                playbtn .setEnabled( true );
-                stopplay .setEnabled( false );
-                a=a+1;
-                Log.d("로더 아이디", "로더아이디" + a );
+                stopbtn.setEnabled(false);
+                startbtn.setEnabled(true);
+                playbtn.setEnabled(true);
+                stopplay.setEnabled(false);
+                a = a + 1;
+                Log.d("로더 아이디", "로더아이디" + a);
                 AudioApplication.getInstance().getServiceInterface().recordstopplay();
                 break;
         }
-
-
-
 
 
     }
 
 
     public boolean CheckPermissions() {
-        int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE );
-        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO );
-        return result == PackageManager.  PERMISSION_GRANTED && result1 == PackageManager.  PERMISSION_GRANTED ;
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
+        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
     }
+
     private void RequestPermissions() {
-        ActivityCompat.requestPermissions(englishlesson. this , new String[]{ RECORD_AUDIO , WRITE_EXTERNAL_STORAGE }, REQUEST_AUDIO_PERMISSION_CODE );
+        ActivityCompat.requestPermissions(englishlesson.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, REQUEST_AUDIO_PERMISSION_CODE);
     }
 
-    public void registerBroadcast(){
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(BroadcastActions.PLAY_STATE_CHANGED);
-            registerReceiver(mBroadcastReceiver, filter);
-        }
+    public void registerBroadcast() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BroadcastActions.PLAY_STATE_CHANGED);
+        registerReceiver(mBroadcastReceiver, filter);
+    }
 
-        public void unregisterBroadcast(){
-            unregisterReceiver(mBroadcastReceiver);
-        }
+    public void unregisterBroadcast() {
+        unregisterReceiver(mBroadcastReceiver);
+    }
 
-        private void updateUI() {
-            if (AudioApplication.getInstance().getServiceInterface().isPlaying()) {
-                mBtnPlayPause.setImageResource(R.drawable.pause);
-            } else {
-                mBtnPlayPause.setImageResource(R.drawable.play);
-            }
-            AudioAdapter.AudioItem audioItem = AudioApplication.getInstance().getServiceInterface().getAudioItem();
-            if (audioItem != null) {
-                Uri albumArtUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), audioItem.mAlbumId);
-                Picasso.with(getApplicationContext()).load(albumArtUri).error(R.drawable.music).into(mImgAlbumArt);
-                mTxtTitle.setText(audioItem.mTitle);
-            } else {
-                mImgAlbumArt.setImageResource(R.drawable.music);
-                mTxtTitle.setText("재생중인 음악이 없습니다.");
-            }
+    private void updateUI() {
+        if (AudioApplication.getInstance().getServiceInterface().isPlaying()) {
+            mBtnPlayPause.setImageResource(R.drawable.pause);
+        } else {
+            mBtnPlayPause.setImageResource(R.drawable.play);
         }
-//녹음중지 버튼 시 이름바꿔저장 매서드 실행
-    public void recordname(){
+        AudioAdapter.AudioItem audioItem = AudioApplication.getInstance().getServiceInterface().getAudioItem();
+        if (audioItem != null) {
+            Uri albumArtUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), audioItem.mAlbumId);
+            Picasso.with(getApplicationContext()).load(albumArtUri).error(R.drawable.music).into(mImgAlbumArt);
+            mTxtTitle.setText(audioItem.mTitle);
+        } else {
+            mImgAlbumArt.setImageResource(R.drawable.music);
+            mTxtTitle.setText("재생중인 음악이 없습니다.");
+        }
+    }
+
+    //녹음중지 버튼 시 이름바꿔저장 매서드 실행
+    public void recordname() {
         //다이얼로그생성
-        final Dialog recordname = new Dialog( this );
+        final Dialog recordname = new Dialog(this);
         recordname.setContentView(R.layout.recordname);
         Button okbtn = (Button) recordname.findViewById(R.id.ok);
         Button canclebtn = (Button) recordname.findViewById(R.id.cancle);
@@ -409,17 +404,41 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         okbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               String FileName = edit.getText().toString();
+                String FileName = edit.getText().toString();
 
                 beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.3gp");
-                Log.d( "이전파일이름" , String.valueOf(beforeFileName));
-                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName+".3gp");
-                Log.d( "수정된파일이름" , String.valueOf(afterFileName));
+                Log.d("이전파일이름", String.valueOf(beforeFileName));
+                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName + ".3gp");
+                Log.d("수정된파일이름", String.valueOf(afterFileName));
                 beforeFileName.renameTo(afterFileName);
-                Log.d( "이름바꾸기" , String.valueOf(beforeFileName));
+                Log.d("이름바꾸기", String.valueOf(beforeFileName));
                 fname = String.valueOf(afterFileName);
-                if (beforeFileName.renameTo(afterFileName))Toast.makeText(getApplicationContext(), "success!" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();
-                else Toast.makeText(getApplicationContext(), "faile"+ FileName + beforeFileName, Toast.LENGTH_SHORT).show();
+                if (beforeFileName.renameTo(afterFileName))
+                    Toast.makeText(getApplicationContext(), "success!" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getApplicationContext(), "faile" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();
+
+//                getContentResolver().notifyChange( Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "/englishclass/record")), null);
+//                getContentResolver().notifyChange( MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
+//                sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.fromFile(Environment.getExternalStorageDirectory())));
+//                MediaScannerConnection.scanFile(getApplicationContext(), new String[]{new File(Environment.getExternalStorageDirectory(), "englishclass/record").getPath()}, null, null);
+
+
+//                MediaStore.Audio.Media._ID,
+//                        MediaStore.Audio.Media.TITLE,
+//                        MediaStore.Audio.Media.ARTIST,
+//                        MediaStore.Audio.Media.ALBUM,
+//                        MediaStore.Audio.Media.ALBUM_ID,
+//                        MediaStore.Audio.Media.DURATION,
+//                        MediaStore.Audio.Media.DATA
+
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Audio.Media.DISPLAY_NAME, afterFileName.getName());
+                values.put(MediaStore.Audio.Media.DATA, afterFileName.getPath());
+                values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/*");
+
+//                Uri uri = MediaStore.Audio.Media.getContentUriForPath(afterFileName.getPath());
+                getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
 
                 recordname.dismiss();
             }
@@ -435,42 +454,42 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         recordname.show();
     }
 
-//녹음재생 버튼 시 녹음파일 목록 다이얼로그 띄우기
-public void recordlistdialog(){
+    //녹음재생 버튼 시 녹음파일 목록 다이얼로그 띄우기
+    public void recordlistdialog() {
 
-    //다이얼로그생성
-    final Dialog recordlistdialog = new Dialog( this );
-    recordlistdialog.setContentView(R.layout.recordlist);
-    folder = "/storage/emulated/0/englishclass/record";
+        //다이얼로그생성
+        final Dialog recordlistdialog = new Dialog(this);
+        recordlistdialog.setContentView(R.layout.recordlist);
+        folder = "/storage/emulated/0/englishclass/record";
 
-    getAudioListFromMediaDatabase2();
+        getAudioListFromMediaDatabase2();
 
-   RecyclerView recordRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
+        RecyclerView recordRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
 //   AudioAdapter  recordAdapter = new AudioAdapter(this, null);
-    mAdapter = new AudioAdapter(this, null);   //어댑터를 새로지정하면 못읽는다. null 값이라 그런가?
+        mAdapter = new AudioAdapter(this, null);   //어댑터를 새로지정하면 못읽는다. null 값이라 그런가?
 
-    recordRecyclerView.setAdapter(mAdapter);
+        recordRecyclerView.setAdapter(mAdapter);
 
-    LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-    recordRecyclerView.setLayoutManager(layoutManager);
-
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recordRecyclerView.setLayoutManager(layoutManager);
 
 
 //            recordlistdialog.dismiss();
 
-
-    recordlistdialog.show();
-}
+        Log.e("다이얼로그 쇼 전에 커서데이터", "커서데이터");
+        recordlistdialog.show();
+    }
 
     public void getAudioListFromMediaDatabase2() {
         long currentTime = System.currentTimeMillis();
         int lid = (int) currentTime;
-        Log.d("getAudioList2   로더 아이디", "로더아이디" + currentTime );
-        getSupportLoaderManager().initLoader(lid, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+        Log.e("getAudioList2   로더 아이디", "로더아이디" + currentTime);
+//        getSupportLoaderManager().restartLoader(0, null, this);
+        getSupportLoaderManager().restartLoader(lid, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                Log.d("겟리스트메서드", "메서드실생됨"  );
+                Log.e("겟리스트메서드", "메서드실생됨1");
                 Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 //               String folder = "/storage/emulated/0/Music";
                 String[] projection = new String[]{
@@ -492,29 +511,31 @@ public void recordlistdialog(){
                         "%" + folder + "%",
                         "%" + folder + "/%/%"
                 };
-                Log.d("겟리스트", "폴더" + folder );
+                Log.e("겟리스트", "폴더" + folder);
                 String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
                 //               return new CursorLoader(getApplicationContext(), uri, projection, selection, null, sortOrder);
 //검색 쿼리가 들어있는 내장파일 커서로더.java 를 호출한다.
+
                 return new CursorLoader(getApplicationContext(), uri, projection, selection, selectionArgs, sortOrder);
-//                mAdapter.notifyDatasetChange()
             }
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 mAdapter.swapCursor(data);
- //               mAdapter.notifyDatasetChange();
-                Log.d("커서데이터", "커서데이터" + data.getCount() );
+
+                Log.e("커서데이터 두번째", "커서데이터" + data.getCount());
                 if (data != null && data.getCount() > 0) {
                     while (data.moveToNext()) {
-                        Log.i(TAG, "Title:" + data.getString(data.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+                        Log.e(TAG, "Title:" + data.getString(data.getColumnIndex(MediaStore.Audio.Media.TITLE)));
                     }
                 }
+//               mAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
                 mAdapter.swapCursor(null);
+                Log.e("로더", "리셋");
             }
         });
     }
