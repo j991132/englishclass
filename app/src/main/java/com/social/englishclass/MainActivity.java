@@ -136,7 +136,9 @@ public class MainActivity extends AppCompatActivity{
         String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
 
         Cursor cur = getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
-
+        while (cur.moveToNext()) {
+            Log.e("폴더안 파일 타이틀", "Title:" + cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+        }
         Log.e("count", cur.getCount() +"");
 
         cur.close();

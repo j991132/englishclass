@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -102,7 +103,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         playbtn = (Button) findViewById(R.id.btnPlay);
         stopplay = (Button) findViewById(R.id.StopPlay);
         stopbtn.setEnabled(false);
-        playbtn.setEnabled(false);
+        playbtn.setEnabled(true);
         stopplay.setEnabled(false);
         playbtn.setOnClickListener(this);
         stopbtn.setOnClickListener(this);
@@ -332,7 +333,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 // 녹음 재생
                 stopbtn.setEnabled(false);
                 startbtn.setEnabled(true);
-                playbtn.setEnabled(false);
+//                playbtn.setEnabled(false);
                 stopplay.setEnabled(true);
 
                 recordlistdialog();
@@ -345,9 +346,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 startbtn.setEnabled(true);
                 playbtn.setEnabled(true);
                 stopplay.setEnabled(false);
-                a = a + 1;
-                Log.d("로더 아이디", "로더아이디" + a);
                 AudioApplication.getInstance().getServiceInterface().recordstopplay();
+                mAdapter.swapCursor(null);
                 break;
         }
 
@@ -434,11 +434,17 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Audio.Media.DISPLAY_NAME, afterFileName.getName());
+                values.put(MediaStore.Audio.Media.TITLE, afterFileName.getName());
+                Log.e("녹음 중지 시 저장되는 이름   ", afterFileName.getName());
                 values.put(MediaStore.Audio.Media.DATA, afterFileName.getPath());
+                Log.e("녹음 중지 시 저장되는 경로   ", afterFileName.getPath());
+
                 values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/*");
 
 //                Uri uri = MediaStore.Audio.Media.getContentUriForPath(afterFileName.getPath());
                 getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
+//                    getContentResolver().update(Settings.System.CONTENT_URI, values, null, null);
 
                 recordname.dismiss();
             }
@@ -478,6 +484,14 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //            recordlistdialog.dismiss();
 
         Log.e("다이얼로그 쇼 전에 커서데이터", "커서데이터");
+        Button recordplaycanclebtn = (Button) recordlistdialog.findViewById(R.id.cancle);
+        recordplaycanclebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recordlistdialog.dismiss();
+            }
+        }); //취소버튼 끝
+
         recordlistdialog.show();
     }
 
@@ -489,7 +503,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         getSupportLoaderManager().restartLoader(lid, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                Log.e("겟리스트메서드", "메서드실생됨1");
+                Log.e("겟리스트메서드", "메서드실행됨"  );
                 Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 //               String folder = "/storage/emulated/0/Music";
                 String[] projection = new String[]{
@@ -506,38 +520,32 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 String selection = MediaStore.Audio.Media.DATA + " LIKE ? AND " + MediaStore.Audio.Media.DATA + " NOT LIKE ? ";
 // 원래는 미디어 ismusic 값이 1인 것(음악파일)은 모두 검색하는 조건이 들어갔었다
 //                String selection = MediaStore.Audio.Media.IS_MUSIC + " = 1";
-
                 String[] selectionArgs = new String[]{
                         "%" + folder + "%",
                         "%" + folder + "/%/%"
                 };
-                Log.e("겟리스트", "폴더" + folder);
+                Log.e("겟리스트", "폴더" + selectionArgs );
                 String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
                 //               return new CursorLoader(getApplicationContext(), uri, projection, selection, null, sortOrder);
 //검색 쿼리가 들어있는 내장파일 커서로더.java 를 호출한다.
-
                 return new CursorLoader(getApplicationContext(), uri, projection, selection, selectionArgs, sortOrder);
             }
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 mAdapter.swapCursor(data);
-
-                Log.e("커서데이터 두번째", "커서데이터" + data.getCount());
+                Log.e("커서데이터", "커서데이터" + data );
                 if (data != null && data.getCount() > 0) {
                     while (data.moveToNext()) {
                         Log.e(TAG, "Title:" + data.getString(data.getColumnIndex(MediaStore.Audio.Media.TITLE)));
                     }
                 }
-//               mAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
                 mAdapter.swapCursor(null);
-                Log.e("로더", "리셋");
             }
         });
     }
-
 }//메인 종료

@@ -134,8 +134,12 @@ public class AudioService extends Service {
     }
 
     public void stop() {
+        try {
+
+
         mMediaPlayer.stop();
         mMediaPlayer.reset();
+        }catch (Exception e){e.printStackTrace();}  // englishlesson 액티비티 종료시 null 에러를 잡기위해 예외문 추가
     }
 
     public void setPlayList(ArrayList<Long> audioIds) {
@@ -253,8 +257,9 @@ public class AudioService extends Service {
 
     public void recordstopplay() {
         if(mMediaPlayer !=null) {
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+ //           mMediaPlayer.release();    //객체를 파괴하여 다시 못씀
+            mMediaPlayer.reset();        //객체를 처음으로 되돌려 다시 쓸 수 있음
+//            mMediaPlayer = null;
             Toast.makeText(getApplicationContext(), "Playing Audio Stopped", Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(getApplicationContext(), "Playing Audio Stopped", Toast.LENGTH_SHORT).show();
@@ -266,7 +271,9 @@ public class AudioService extends Service {
     }
 
     public boolean isPlaying() {
-        return mMediaPlayer.isPlaying();
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.isPlaying();
+        }
+        return false;
     }
-
 }
