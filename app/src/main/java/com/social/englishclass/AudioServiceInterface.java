@@ -4,7 +4,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
@@ -102,6 +105,19 @@ public class AudioServiceInterface {
     public void recordplay(String fname) {
         if (mService != null) {
             mService.recordplay(fname);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void recordpause() {
+        if (mService != null) {
+            mService.recordpause();
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void recordresume() {
+        if (mService != null) {
+            mService.recordresume();
         }
     }
 

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -55,7 +57,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private float f;
     ArrayList<String> arrayList;
     ArrayAdapter<String> arrayAdapter;
-    private int a = 2;
+    private int pause;
     private String TAG = "activity_englishlesson";
     private RecyclerView mRecyclerView;
     private AudioAdapter mAdapter;
@@ -66,7 +68,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private String folder, fname;
     private File beforeFileName, afterFileName;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
-
+    boolean isRecording = false;
+    private Long duration;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -280,6 +283,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
 //        btncheckBox = (CheckBox) findViewById(R.id.checkBox);
@@ -309,12 +313,25 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
 //                Log.d( "녹음버튼클릭" , "조건문 이전" );
                 if (CheckPermissions()) {
+                    if (isRecording == false) {
 
-                    stopbtn.setEnabled(true);
-                    startbtn.setEnabled(false);
-                    playbtn.setEnabled(false);
-                    stopplay.setEnabled(false);
-                    AudioApplication.getInstance().getServiceInterface().record();
+                        stopbtn.setEnabled(true);
+                        startbtn.setEnabled(true);
+                        playbtn.setEnabled(true);
+                        stopplay.setEnabled(false);
+                        AudioApplication.getInstance().getServiceInterface().record();
+                        isRecording = true;
+                        pause = 0;
+                        startbtn.setText("일시정지");
+                    }else if(isRecording == true && pause == 0 ){
+                        AudioApplication.getInstance().getServiceInterface().recordpause();
+
+                        startbtn.setText("녹음시작");
+                    }else if (isRecording == true && pause == 1){
+                        AudioApplication.getInstance().getServiceInterface().recordresume();
+                        pause = 0;
+                        startbtn.setText("일시정지");
+                    }
                 } else {
 
                     RequestPermissions();
@@ -325,9 +342,12 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 stopbtn.setEnabled(false);
                 startbtn.setEnabled(true);
                 playbtn.setEnabled(true);
-                stopplay.setEnabled(true);
+                stopplay.setEnabled(false);
+                isRecording = false;
+                startbtn.setText("녹음시작");
                 AudioApplication.getInstance().getServiceInterface().recordstop();
                 recordname();
+
                 break;
             case R.id.btnPlay:
                 // 녹음 재생
@@ -410,9 +430,17 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
                 afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName + ".3gp");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
+                if (afterFileName.exists()){
+                    Log.e("저장되어 있는 파일이름      ", String.valueOf(afterFileName));
+//                    afterFileName.mkdirs();
+                    afterFileName.delete();
+                    Log.e("삭제된 파일이름      ", String.valueOf(afterFileName));
+                }
+
                 beforeFileName.renameTo(afterFileName);
-                Log.d("이름바꾸기", String.valueOf(beforeFileName));
+                Log.e("이름바꾸기", String.valueOf(beforeFileName));
                 fname = String.valueOf(afterFileName);
+                metadata(fname);
                 if (beforeFileName.renameTo(afterFileName))
                     Toast.makeText(getApplicationContext(), "success!" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();
                 else
@@ -434,16 +462,20 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Audio.Media.DISPLAY_NAME, afterFileName.getName());
-                values.put(MediaStore.Audio.Media.TITLE, afterFileName.getName());
+                values.put(MediaStore.Audio.Media.TITLE, FileName);
+
+                values.put(MediaStore.Audio.Media.DURATION, duration);
                 Log.e("녹음 중지 시 저장되는 이름   ", afterFileName.getName());
                 values.put(MediaStore.Audio.Media.DATA, afterFileName.getPath());
                 Log.e("녹음 중지 시 저장되는 경로   ", afterFileName.getPath());
 
                 values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/*");
 
+
+
 //                Uri uri = MediaStore.Audio.Media.getContentUriForPath(afterFileName.getPath());
                 getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
-                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
+//                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
 //                    getContentResolver().update(Settings.System.CONTENT_URI, values, null, null);
 
                 recordname.dismiss();
@@ -494,6 +526,14 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
         recordlistdialog.show();
     }
+
+    public void metadata(String filePath){
+        MediaMetadataRetriever mediaMetadataRetriever= new MediaMetadataRetriever();
+        mediaMetadataRetriever.setDataSource(filePath);
+
+        duration = Long.valueOf(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+    }
+
 
     public void getAudioListFromMediaDatabase2() {
         long currentTime = System.currentTimeMillis();
