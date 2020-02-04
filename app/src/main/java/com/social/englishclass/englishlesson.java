@@ -430,21 +430,46 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
                 afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName + ".3gp");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
+
                 if (afterFileName.exists()){
-                    Log.e("저장되어 있는 파일이름      ", String.valueOf(afterFileName));
+//                    Log.e("저장되어 있는 파일이름      ", String.valueOf(afterFileName));
 //                    afterFileName.mkdirs();
-                    afterFileName.delete();
-                    Log.e("삭제된 파일이름      ", String.valueOf(afterFileName));
+//                    afterFileName.delete();
+                    metadata(String.valueOf(beforeFileName));
+                    Log.e("재생시간",String.valueOf( duration));
+                    beforeFileName.renameTo(afterFileName);
+                    updatadata(FileName);
+//                    Log.e("삭제된 파일이름      ", String.valueOf(afterFileName));
+                }else {
+
+                    Log.e("재생시간", String.valueOf(duration));
+                    beforeFileName.renameTo(afterFileName);
+                    fname = String.valueOf(afterFileName);
+                    metadata(String.valueOf(afterFileName));
+//                metadata(fname);
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Audio.Media.DISPLAY_NAME, afterFileName.getName());
+                    values.put(MediaStore.Audio.Media.TITLE, FileName);
+
+                    values.put(MediaStore.Audio.Media.DURATION, duration);
+                    Log.e("녹음 중지 시 저장되는 이름   ", afterFileName.getName());
+                    values.put(MediaStore.Audio.Media.DATA, afterFileName.getPath());
+                    Log.e("녹음 중지 시 저장되는 경로   ", afterFileName.getPath());
+
+                    values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/*");
+
+
+
+//                Uri uri = MediaStore.Audio.Media.getContentUriForPath(afterFileName.getPath());
+                    getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+//                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
+//                    getContentResolver().update(Settings.System.CONTENT_URI, values, null, null);
                 }
 
-                beforeFileName.renameTo(afterFileName);
-                Log.e("이름바꾸기", String.valueOf(beforeFileName));
-                fname = String.valueOf(afterFileName);
-                metadata(fname);
                 if (beforeFileName.renameTo(afterFileName))
-                    Toast.makeText(getApplicationContext(), "success!" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();
+                { Toast.makeText(getApplicationContext(), "success!" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();}
                 else
-                    Toast.makeText(getApplicationContext(), "faile" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();
+                {  Toast.makeText(getApplicationContext(), "faile" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();}
 
 //                getContentResolver().notifyChange( Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "/englishclass/record")), null);
 //                getContentResolver().notifyChange( MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
@@ -460,7 +485,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //                        MediaStore.Audio.Media.DURATION,
 //                        MediaStore.Audio.Media.DATA
 
-                ContentValues values = new ContentValues();
+/*                ContentValues values = new ContentValues();
                 values.put(MediaStore.Audio.Media.DISPLAY_NAME, afterFileName.getName());
                 values.put(MediaStore.Audio.Media.TITLE, FileName);
 
@@ -477,7 +502,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
 //                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
 //                    getContentResolver().update(Settings.System.CONTENT_URI, values, null, null);
-
+*/
                 recordname.dismiss();
             }
         }); //ok버튼 끝
@@ -534,6 +559,17 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         duration = Long.valueOf(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 
+    public void updatadata(String FileName){
+        ContentValues values = new ContentValues();
+String[] mselectionargs = {"%"+FileName+"%"};
+
+        values.put(MediaStore.Audio.Media.DURATION, duration);
+
+//                Uri uri = MediaStore.Audio.Media.getContentUriForPath(afterFileName.getPath());
+//        getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+//                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
+                    getContentResolver().update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values, MediaStore.Audio.Media.TITLE, mselectionargs);
+    }
 
     public void getAudioListFromMediaDatabase2() {
         long currentTime = System.currentTimeMillis();
