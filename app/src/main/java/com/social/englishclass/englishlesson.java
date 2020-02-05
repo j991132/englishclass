@@ -60,7 +60,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private int pause;
     private String TAG = "activity_englishlesson";
     private RecyclerView mRecyclerView;
-    private AudioAdapter mAdapter;
+    private AudioAdapter mAdapter, recordAdapter;
     private ImageView mImgAlbumArt;
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
@@ -367,7 +367,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 playbtn.setEnabled(true);
                 stopplay.setEnabled(false);
                 AudioApplication.getInstance().getServiceInterface().recordstopplay();
-                mAdapter.swapCursor(null);
+//                mAdapter.swapCursor(null);
                 break;
         }
 
@@ -446,6 +446,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                     beforeFileName.renameTo(afterFileName);
                     fname = String.valueOf(afterFileName);
                     metadata(String.valueOf(afterFileName));
+
 //                metadata(fname);
                     ContentValues values = new ContentValues();
                     values.put(MediaStore.Audio.Media.DISPLAY_NAME, afterFileName.getName());
@@ -528,17 +529,14 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         getAudioListFromMediaDatabase2();
 
         RecyclerView recordRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
-//   AudioAdapter  recordAdapter = new AudioAdapter(this, null);
-        mAdapter = new AudioAdapter(this, null);   //어댑터를 새로지정하면 못읽는다. null 값이라 그런가?
+       recordAdapter = new AudioAdapter(this, null);
+//        mAdapter = new AudioAdapter(this, null);   //어댑터를 새로지정하면 못읽는다. null 값이라 그런가?
 
-        recordRecyclerView.setAdapter(mAdapter);
+        recordRecyclerView.setAdapter(recordAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recordRecyclerView.setLayoutManager(layoutManager);
-
-
-//            recordlistdialog.dismiss();
 
         Log.e("다이얼로그 쇼 전에 커서데이터", "커서데이터");
         Button recordplaycanclebtn = (Button) recordlistdialog.findViewById(R.id.cancle);
@@ -561,15 +559,18 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
     public void updatadata(String FileName){
         ContentValues values = new ContentValues();
-String[] mselectionargs = {"%"+FileName+"%"};
+        String mselection = MediaStore.Audio.Media.TITLE+" LIKE ?";
+//        String[] mselectionargs = {"%"+FileName+"%"};
+        String[] mselectionargs = {FileName};
 
         values.put(MediaStore.Audio.Media.DURATION, duration);
 
 //                Uri uri = MediaStore.Audio.Media.getContentUriForPath(afterFileName.getPath());
 //        getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
 //                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
-                    getContentResolver().update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values, MediaStore.Audio.Media.TITLE, mselectionargs);
-    }
+                    getContentResolver().update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values, mselection, mselectionargs);
+//        getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mselection, mselectionargs);
+  }
 
     public void getAudioListFromMediaDatabase2() {
         long currentTime = System.currentTimeMillis();
@@ -609,7 +610,7 @@ String[] mselectionargs = {"%"+FileName+"%"};
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                mAdapter.swapCursor(data);
+                recordAdapter.swapCursor(data);
                 Log.e("커서데이터", "커서데이터" + data );
                 if (data != null && data.getCount() > 0) {
                     while (data.moveToNext()) {
@@ -620,7 +621,7 @@ String[] mselectionargs = {"%"+FileName+"%"};
 
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
-                mAdapter.swapCursor(null);
+                recordAdapter.swapCursor(null);
             }
         });
     }
