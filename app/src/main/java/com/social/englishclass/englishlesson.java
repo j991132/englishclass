@@ -60,17 +60,18 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private int pause;
     private String TAG = "activity_englishlesson";
     private RecyclerView mRecyclerView;
-    private AudioAdapter mAdapter, recordAdapter;
+    private AudioAdapter mAdapter, recordAdapter, serchAdapter;
     private ImageView mImgAlbumArt;
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
     private Button startbtn, stopbtn, playbtn, stopplay;
     private String folder, fname;
+    public  String serchfilename;
     private File beforeFileName, afterFileName;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private Long duration;
-    public static Dialog recordlistdialog;
+    public static Dialog recordlistdialog, serchlistdialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -527,10 +528,13 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         recordlistdialog = new Dialog(this);
         recordlistdialog.setContentView(R.layout.recordlist);
         folder = "/storage/emulated/0/englishclass/record";
+        EditText serchname = (EditText) recordlistdialog.findViewById(R.id.serchtext);
+
+        Button serchbtn = (Button) recordlistdialog.findViewById(R.id.serchbtn);
 
         getAudioListFromMediaDatabase2();
 
-        RecyclerView recordRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
+       RecyclerView recordRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
        recordAdapter = new AudioAdapter(this, null);
 //        mAdapter = new AudioAdapter(this, null);   //어댑터를 새로지정하면 못읽는다. null 값이라 그런가?
 
@@ -541,6 +545,23 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         recordRecyclerView.setLayoutManager(layoutManager);
 
         Log.e("다이얼로그 쇼 전에 커서데이터", "커서데이터");
+        Log.e("검색버튼 클릭 시 검색어   ", "검색어 "+serchfilename);
+        serchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText serchname = (EditText) recordlistdialog.findViewById(R.id.serchtext);
+                serchfilename = serchname.getText().toString();
+                getSerchAudioListFromMediaDatabase();
+                RecyclerView serchRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
+                serchAdapter = new AudioAdapter(getApplicationContext(), null);
+                serchRecyclerView.setAdapter(serchAdapter);
+                Log.e("검색버튼 클릭 시 검색어   ", "버튼 안 로그" + serchfilename);
+//                recordlistdialog.dismiss();
+
+ //               serchlistdialog();
+            }
+        });
+
         Button recordplaycanclebtn = (Button) recordlistdialog.findViewById(R.id.cancle);
         recordplaycanclebtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -550,6 +571,36 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         }); //취소버튼 끝
 
         recordlistdialog.show();
+    }
+ //녹음파일 검색 시 녹음파일 목록 다이얼로그 띄우기
+    public void serchlistdialog() {
+
+        //다이얼로그생성
+        serchlistdialog = new Dialog(this);
+        serchlistdialog.setContentView(R.layout.recordlist);
+        folder = "/storage/emulated/0/englishclass/record";
+
+        getSerchAudioListFromMediaDatabase();
+
+        RecyclerView sRecyclerView = (RecyclerView)  serchlistdialog.findViewById(R.id.recordrecyclerview);
+        serchAdapter = new AudioAdapter(this, null);
+
+        sRecyclerView.setAdapter(serchAdapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        sRecyclerView.setLayoutManager(layoutManager);
+
+        Log.e("검색다이얼로그", "커서데이터");
+        Button  serchlistdialogcanclebtn = (Button)  serchlistdialog.findViewById(R.id.cancle);
+        serchlistdialogcanclebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                serchlistdialog.dismiss();
+            }
+        }); //취소버튼 끝
+
+        serchlistdialog.show();
     }
 
     public void metadata(String filePath){
@@ -573,7 +624,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                     getContentResolver().update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values, mselection, mselectionargs);
 //        getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mselection, mselectionargs);
   }
-
+// 녹음파일 리스트 어답터
     public void getAudioListFromMediaDatabase2() {
         long currentTime = System.currentTimeMillis();
         int lid = (int) currentTime;
@@ -624,6 +675,58 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
                 recordAdapter.swapCursor(null);
+            }
+        });
+    }
+// 녹음파일 검색 어답터
+    public void getSerchAudioListFromMediaDatabase() {
+        long currentTime = System.currentTimeMillis();
+        int lid = (int) currentTime;
+        getSupportLoaderManager().restartLoader(lid, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+                Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+                String[] projection = new String[]{
+                        MediaStore.Audio.Media._ID,
+                        MediaStore.Audio.Media.TITLE,
+                        MediaStore.Audio.Media.ARTIST,
+                        MediaStore.Audio.Media.ALBUM,
+                        MediaStore.Audio.Media.ALBUM_ID,
+                        MediaStore.Audio.Media.DURATION,
+                        MediaStore.Audio.Media.DATA
+                };
+//쿼리를 위한 조건을 담는 부분 ? 한개당 1개의 아규먼트가 적용된다.
+//해당폴더는 검색하고 하위폴더는 제외하는 내용
+                String selection = MediaStore.Audio.Media.DATA + " LIKE ? AND " + MediaStore.Audio.Media.TITLE + " LIKE ? ";
+// 원래는 미디어 ismusic 값이 1인 것(음악파일)은 모두 검색하는 조건이 들어갔었다
+//                String selection = MediaStore.Audio.Media.IS_MUSIC + " = 1";
+                String[] selectionArgs = new String[]{
+                        "%" + folder + "%",
+                        "%" + serchfilename + "%"
+                };
+
+                String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
+
+//검색 쿼리가 들어있는 내장파일 커서로더.java 를 호출한다.
+                return new CursorLoader(getApplicationContext(), uri, projection, selection, selectionArgs, sortOrder);
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                serchAdapter.swapCursor(data);
+
+                if (data != null && data.getCount() > 0) {
+                    while (data.moveToNext()) {
+                        Log.e(TAG, "Title:" + data.getString(data.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+                    }
+                }
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+                serchAdapter.swapCursor(null);
             }
         });
     }

@@ -1,17 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/recordtitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:layout_weight="0"
-        android:gravity="center_vertical"
-        android:text="녹음된 파일"
-        android:textColor="@android:color/black" />
+        android:gravity="right|left"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/recordtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="녹음된 파일"
+            android:textColor="@android:color/black" />
+
+        <EditText
+            android:id="@+id/serchtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="검색어를 입력하세요." />
+
+        <Button
+            android:id="@+id/serchbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@android:drawable/ic_search_category_default" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recordrecyclerview"
