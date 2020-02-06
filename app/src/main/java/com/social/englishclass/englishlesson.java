@@ -70,6 +70,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private Long duration;
+    public static Dialog recordlistdialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -522,7 +524,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     public void recordlistdialog() {
 
         //다이얼로그생성
-        final Dialog recordlistdialog = new Dialog(this);
+        recordlistdialog = new Dialog(this);
         recordlistdialog.setContentView(R.layout.recordlist);
         folder = "/storage/emulated/0/englishclass/record";
 
