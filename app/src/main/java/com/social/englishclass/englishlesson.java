@@ -45,6 +45,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -428,10 +429,12 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 String FileName = edit.getText().toString();
-
+//파일명에 날짜시간 넣기
+                SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
+                String time = format.format(System.currentTimeMillis());
                 beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.3gp");
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
-                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName + ".3gp");
+                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName + time+".3gp");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
 
                 if (afterFileName.exists()){
@@ -441,7 +444,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                     metadata(String.valueOf(beforeFileName));
                     Log.e("재생시간",String.valueOf( duration));
                     beforeFileName.renameTo(afterFileName);
-                    updatadata(FileName);
+                    updatadata(FileName+time);
 //                    Log.e("삭제된 파일이름      ", String.valueOf(afterFileName));
                 }else {
 
@@ -453,7 +456,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //                metadata(fname);
                     ContentValues values = new ContentValues();
                     values.put(MediaStore.Audio.Media.DISPLAY_NAME, afterFileName.getName());
-                    values.put(MediaStore.Audio.Media.TITLE, FileName);
+                    values.put(MediaStore.Audio.Media.TITLE, FileName+time);
 
                     values.put(MediaStore.Audio.Media.DURATION, duration);
                     Log.e("녹음 중지 시 저장되는 이름   ", afterFileName.getName());
