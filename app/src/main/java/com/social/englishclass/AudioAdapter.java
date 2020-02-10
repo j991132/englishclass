@@ -99,6 +99,15 @@ public class AudioAdapter extends CursorRecyclerViewAdapter<RecyclerView.ViewHol
 
                 }
             });
+
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+//   롱클릭시 이벤트
+//                    englishlesson.deletedialog();
+                    return true;
+                }
+            });
         }
 
         public void setAudioItem(AudioItem item, int position) {

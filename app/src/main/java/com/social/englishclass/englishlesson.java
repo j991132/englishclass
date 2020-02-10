@@ -72,7 +72,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private Long duration;
-    public static Dialog recordlistdialog, serchlistdialog;
+    public static Dialog recordlistdialog, deletedialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -576,34 +576,28 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         recordlistdialog.show();
     }
  //녹음파일 검색 시 녹음파일 목록 다이얼로그 띄우기
-    public void serchlistdialog() {
+    public void deletedialog() {
 
         //다이얼로그생성
-        serchlistdialog = new Dialog(this);
-        serchlistdialog.setContentView(R.layout.recordlist);
-        folder = "/storage/emulated/0/englishclass/record";
-
-        getSerchAudioListFromMediaDatabase();
-
-        RecyclerView sRecyclerView = (RecyclerView)  serchlistdialog.findViewById(R.id.recordrecyclerview);
-        serchAdapter = new AudioAdapter(this, null);
-
-        sRecyclerView.setAdapter(serchAdapter);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        sRecyclerView.setLayoutManager(layoutManager);
-
-        Log.e("검색다이얼로그", "커서데이터");
-        Button  serchlistdialogcanclebtn = (Button)  serchlistdialog.findViewById(R.id.cancle);
-        serchlistdialogcanclebtn.setOnClickListener(new View.OnClickListener() {
+        deletedialog = new Dialog(this);
+        deletedialog.setContentView(R.layout.delete);
+//        folder = "/storage/emulated/0/englishclass/record";
+        Button  deletebtn = (Button)  deletedialog.findViewById(R.id.deletebtn);
+        Button  deletecanclebtn = (Button)  deletedialog.findViewById(R.id.deletecanclebtn);
+        deletebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                serchlistdialog.dismiss();
+//                삭제시 지우기
+            }
+        }); //삭제버튼 끝
+        deletecanclebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deletedialog.dismiss();
             }
         }); //취소버튼 끝
 
-        serchlistdialog.show();
+        deletedialog.show();
     }
 
     public void metadata(String filePath){
