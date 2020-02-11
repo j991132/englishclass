@@ -265,6 +265,9 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("deletedialog")){
+                deletedialog();
+            }
             updateUI();
         }
     };
@@ -392,6 +395,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     public void registerBroadcast() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BroadcastActions.PLAY_STATE_CHANGED);
+        filter.addAction(BroadcastActions.DELETE_DIALOG);
         registerReceiver(mBroadcastReceiver, filter);
     }
 

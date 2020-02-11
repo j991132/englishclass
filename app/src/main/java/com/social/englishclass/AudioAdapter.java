@@ -2,6 +2,7 @@ package com.social.englishclass;
 
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
@@ -104,6 +105,8 @@ public class AudioAdapter extends CursorRecyclerViewAdapter<RecyclerView.ViewHol
                 @Override
                 public boolean onLongClick(View v) {
 //   롱클릭시 이벤트
+                    AudioApplication.getInstance().getServiceInterface().deletedialog(mPosition);
+                    Log.e("롱클릭 실행됨", "   롱클릭    " );
 //                    englishlesson.deletedialog();
                     return true;
                 }

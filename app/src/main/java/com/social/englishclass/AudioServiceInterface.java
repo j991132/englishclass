@@ -127,6 +127,10 @@ public class AudioServiceInterface {
         }
     }
 
+    public  void deletedialog(int position){
+        mService.deletedialog(position);
+    }
+
     public boolean isPlaying() {
         if (mService != null) {
             return mService.isPlaying();

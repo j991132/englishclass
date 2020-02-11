@@ -274,6 +274,12 @@ public class AudioService extends Service {
         }
     }
 
+    public void deletedialog(int position){
+        queryAudioItem(position);
+        sendBroadcast(new Intent(BroadcastActions.DELETE_DIALOG));
+        Log.e("다이얼로그 출력시 타이틀 정보", " "+mAudioItem.mTitle);
+    }
+
     public AudioAdapter.AudioItem getAudioItem() {
         return mAudioItem;
     }
