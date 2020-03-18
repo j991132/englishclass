@@ -266,7 +266,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("deletedialog")){
-                deletedialog();
+                String filenamevalue = intent.getStringExtra("filenamevalue");
+                deletedialog(filenamevalue);
             }
             updateUI();
         }
@@ -580,18 +581,27 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         recordlistdialog.show();
     }
  //녹음파일 검색 시 녹음파일 목록 다이얼로그 띄우기
-    public void deletedialog() {
+    public void deletedialog(final String filenamevalue) {
 
         //다이얼로그생성
         deletedialog = new Dialog(this);
         deletedialog.setContentView(R.layout.delete);
+        TextView deletedialogtitle = (TextView) deletedialog.findViewById(R.id.deleltedialogtitle);
+        deletedialogtitle.setText("선택하신 ( "+filenamevalue+ " ) 파일을 삭제하시겠습니까?");
 //        folder = "/storage/emulated/0/englishclass/record";
         Button  deletebtn = (Button)  deletedialog.findViewById(R.id.deletebtn);
         Button  deletecanclebtn = (Button)  deletedialog.findViewById(R.id.deletecanclebtn);
+        Log.e("지워질 파일이름   ", filenamevalue);
         deletebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                삭제시 지우기
+                File  deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue+".3gp");
+                if (deletefile.delete()){
+                    deletedata(filenamevalue);
+                    Toast.makeText(getApplicationContext(), "녹음파일  " + filenamevalue+".3gp 가 삭제되었습니다." , Toast.LENGTH_SHORT).show();
+                    deletedialog.dismiss();
+                }
             }
         }); //삭제버튼 끝
         deletecanclebtn.setOnClickListener(new View.OnClickListener() {
@@ -600,6 +610,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 deletedialog.dismiss();
             }
         }); //취소버튼 끝
+
 
         deletedialog.show();
     }
@@ -625,6 +636,20 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                     getContentResolver().update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values, mselection, mselectionargs);
 //        getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mselection, mselectionargs);
   }
+    public void deletedata(String FileName){
+        ContentValues values = new ContentValues();
+        String mselection = MediaStore.Audio.Media.TITLE+" LIKE ?";
+//        String[] mselectionargs = {"%"+FileName+"%"};
+        String[] mselectionargs = {FileName};
+
+
+
+//                Uri uri = MediaStore.Audio.Media.getContentUriForPath(afterFileName.getPath());
+//        getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+//                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
+//        getContentResolver().update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values, mselection, mselectionargs);
+        getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mselection, mselectionargs);
+    }
 // 녹음파일 리스트 어답터
     public void getAudioListFromMediaDatabase2() {
         long currentTime = System.currentTimeMillis();

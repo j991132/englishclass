@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/deleltedialogtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="이 파일을 삭제하시겠습니까?" />

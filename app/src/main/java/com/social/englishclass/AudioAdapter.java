@@ -105,6 +105,7 @@ public class AudioAdapter extends CursorRecyclerViewAdapter<RecyclerView.ViewHol
                 @Override
                 public boolean onLongClick(View v) {
 //   롱클릭시 이벤트
+                    AudioApplication.getInstance().getServiceInterface().setPlayList(getAudioIds()); // 재생목록등록
                     AudioApplication.getInstance().getServiceInterface().deletedialog(mPosition);
                     Log.e("롱클릭 실행됨", "   롱클릭    " );
 //                    englishlesson.deletedialog();

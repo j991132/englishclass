@@ -276,7 +276,10 @@ public class AudioService extends Service {
 
     public void deletedialog(int position){
         queryAudioItem(position);
-        sendBroadcast(new Intent(BroadcastActions.DELETE_DIALOG));
+
+        Intent intent = new Intent(BroadcastActions.DELETE_DIALOG);
+        intent .putExtra("filenamevalue",mAudioItem.mTitle );
+        sendBroadcast(intent);
         Log.e("다이얼로그 출력시 타이틀 정보", " "+mAudioItem.mTitle);
     }
 
