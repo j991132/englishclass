@@ -124,64 +124,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.btn_rewind).setOnClickListener(this);
         mBtnPlayPause.setOnClickListener(this);
         findViewById(R.id.btn_forward).setOnClickListener(this);
-//스피너 선택버튼 만들기
-        arrayList = new ArrayList<>();
-        arrayList.add("재생속도");
-        arrayList.add("0.5배속");
-        arrayList.add("0.75배속");
-        arrayList.add("1배속");
-        arrayList.add("1.25배속");
-        arrayList.add("1.5배속");
 
-        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
-                android.R.layout.simple_spinner_dropdown_item, arrayList);
-
-        spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setAdapter(arrayAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-
-                switch (arrayList.get(i)) {
-                    case "0.5배속":
-                        f = (float) 0.5;
-                        AudioApplication.getInstance().getServiceInterface().play2(f);
-                        break;
-                    case "0.75배속":
-                        f = (float) 0.75;
-                        AudioApplication.getInstance().getServiceInterface().play2(f);
-                        break;
-                    case "1배속":
-                        f = (float) 1;
-                        AudioApplication.getInstance().getServiceInterface().play2(f);
-                        break;
-                    case "1.25배속":
-                        f = (float) 1.25;
-                        AudioApplication.getInstance().getServiceInterface().play2(f);
-                        break;
-                    case "1.5배속":
-                        f = (float) 1.5;
-                        AudioApplication.getInstance().getServiceInterface().play2(f);
-                        break;
-
-                }
-                //               Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다. f값은 " + f, Toast.LENGTH_SHORT).show();
-
-
-            }
-
-            @Override
-
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-
-        });
-
-
+        speedselect();
         registerBroadcast();
         updateUI();
 
@@ -418,6 +362,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         } else {
             mImgAlbumArt.setImageResource(R.drawable.music);
             mTxtTitle.setText("재생중인 음악이 없습니다.");
+            speedselect();
         }
     }
 
@@ -754,6 +699,64 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             public void onLoaderReset(Loader<Cursor> loader) {
                 serchAdapter.swapCursor(null);
             }
+        });
+    }
+    //스피너 선택버튼 만들기
+    public void speedselect() {
+        arrayList = new ArrayList<>();
+        arrayList.add("재생속도");
+        arrayList.add("0.5배속");
+        arrayList.add("0.75배속");
+        arrayList.add("1배속");
+        arrayList.add("1.25배속");
+        arrayList.add("1.5배속");
+
+        arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item, arrayList);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+                switch (arrayList.get(i)) {
+                    case "0.5배속":
+                        f = (float) 0.5;
+                        AudioApplication.getInstance().getServiceInterface().play2(f);
+                        break;
+                    case "0.75배속":
+                        f = (float) 0.75;
+                        AudioApplication.getInstance().getServiceInterface().play2(f);
+                        break;
+                    case "1배속":
+                        f = (float) 1;
+                        AudioApplication.getInstance().getServiceInterface().play2(f);
+                        break;
+                    case "1.25배속":
+                        f = (float) 1.25;
+                        AudioApplication.getInstance().getServiceInterface().play2(f);
+                        break;
+                    case "1.5배속":
+                        f = (float) 1.5;
+                        AudioApplication.getInstance().getServiceInterface().play2(f);
+                        break;
+
+                }
+                //               Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다. f값은 " + f, Toast.LENGTH_SHORT).show();
+
+
+            }
+
+            @Override
+
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+
         });
     }
 }//메인 종료

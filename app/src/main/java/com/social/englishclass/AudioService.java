@@ -66,6 +66,7 @@ public class AudioService extends Service {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 isPrepared = false;
+                mAudioItem=null;
                 sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
             }
         });
