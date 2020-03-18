@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity{
         btn12.setOnClickListener(Listener);
 
 
-        testResolver();
+//        testResolver();
     }
 
     private void testResolver(){
