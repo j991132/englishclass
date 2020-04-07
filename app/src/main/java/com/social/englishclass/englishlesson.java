@@ -2,6 +2,7 @@ package com.social.englishclass;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -41,6 +42,12 @@ import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -73,6 +80,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     boolean isRecording = false;
     private Long duration;
     public static Dialog recordlistdialog, deletedialog;
+    private StorageReference mStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +89,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
         Intent intent = getIntent();
         folder = intent.getStringExtra("lesson");
+
+        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
 // OS가 Marshmallow 이상일 경우 권한체크를 해야 합니다.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -211,7 +221,10 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("deletedialog")){
                 String filenamevalue = intent.getStringExtra("filenamevalue");
-                deletedialog(filenamevalue);
+
+                Uri filepathvalue = Uri.parse("file:/"+intent.getStringExtra("filepathvalue"));
+                Log.e("다이얼로그 출력시 Uri 정보", " "+ filepathvalue);
+                deletedialog(filenamevalue, filepathvalue);
             }
             updateUI();
         }
@@ -526,17 +539,35 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         recordlistdialog.show();
     }
  //녹음파일 검색 시 녹음파일 목록 다이얼로그 띄우기
-    public void deletedialog(final String filenamevalue) {
+    public void deletedialog(final String filenamevalue, final Uri filepathvalue) {
 
         //다이얼로그생성
         deletedialog = new Dialog(this);
         deletedialog.setContentView(R.layout.delete);
         TextView deletedialogtitle = (TextView) deletedialog.findViewById(R.id.deleltedialogtitle);
-        deletedialogtitle.setText("선택하신 ( "+filenamevalue+ " ) 파일을 삭제하시겠습니까?");
+        deletedialogtitle.setText("선택된 파일  : "+filenamevalue);
 //        folder = "/storage/emulated/0/englishclass/record";
+        Button  btn_send_firebase = (Button) deletedialog.findViewById(R.id.btn_send_firebase);
+        Button  btn_send_test = (Button) deletedialog.findViewById(R.id.btn_send_test);
         Button  deletebtn = (Button)  deletedialog.findViewById(R.id.deletebtn);
         Button  deletecanclebtn = (Button)  deletedialog.findViewById(R.id.deletecanclebtn);
         Log.e("지워질 파일이름   ", filenamevalue);
+//파이어베이스 업로드
+        btn_send_firebase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadfile(filenamevalue, filepathvalue);
+            }
+        }); //파이어베이스 업로드 끝
+//영어발음평가 전송
+        btn_send_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });  //영어발음평가 전송 끝
+
+//녹음파일 삭제
         deletebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -549,6 +580,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 }
             }
         }); //삭제버튼 끝
+//취소버튼
         deletecanclebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -581,6 +613,47 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                     getContentResolver().update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values, mselection, mselectionargs);
 //        getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mselection, mselectionargs);
   }
+
+    //파이어베이스 업로드
+    public void uploadfile(String FileName, Uri filepathvalue){
+        if(filepathvalue !=null) {
+//업로드 진행 Dialog 보이기
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("업로드중...");
+            progressDialog.show();
+
+//스토리지 지정
+            StorageReference filereference = mStorageRef.child(FileName + "3gp");
+            filereference.putFile(filepathvalue)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            @SuppressWarnings("VisibleForTests")
+                            double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                            //dialog에 진행률을 퍼센트로 출력해 준다
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
+                        }
+                    });
+        }else{
+            Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     public void deletedata(String FileName){
         ContentValues values = new ContentValues();
         String mselection = MediaStore.Audio.Media.TITLE+" LIKE ?";
@@ -701,6 +774,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+
+
     //스피너 선택버튼 만들기
     public void speedselect() {
         arrayList = new ArrayList<>();

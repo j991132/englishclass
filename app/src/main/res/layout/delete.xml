@@ -7,23 +7,39 @@
         android:id="@+id/deleltedialogtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="이 파일을 삭제하시겠습니까?" />
+        android:gravity="center"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_send_firebase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="선생님께 전송하기" />
+
+        <Button
+            android:id="@+id/btn_send_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="영어발음평가" />
 
         <Button
             android:id="@+id/deletebtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="삭제" />
+            android:text="삭제하기" />
 
         <Button
             android:id="@+id/deletecanclebtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="취소" />

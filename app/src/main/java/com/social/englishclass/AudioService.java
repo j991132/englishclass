@@ -105,6 +105,7 @@ public class AudioService extends Service {
         mCurrentPosition = position;
         long audioId = mAudioIds.get(position);
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
         String[] projection = new String[]{
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.TITLE,
@@ -121,6 +122,8 @@ public class AudioService extends Service {
             if (cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 mAudioItem = AudioAdapter.AudioItem.bindCursor(cursor);
+
+
             }
             cursor.close();
         }
@@ -280,8 +283,11 @@ public class AudioService extends Service {
 
         Intent intent = new Intent(BroadcastActions.DELETE_DIALOG);
         intent .putExtra("filenamevalue",mAudioItem.mTitle );
+        intent .putExtra("filepathvalue",mAudioItem.mDataPath );
         sendBroadcast(intent);
         Log.e("다이얼로그 출력시 타이틀 정보", " "+mAudioItem.mTitle);
+        Log.e("다이얼로그 출력시 파일경로 정보", " "+mAudioItem.mDataPath);
+
     }
 
     public AudioAdapter.AudioItem getAudioItem() {
