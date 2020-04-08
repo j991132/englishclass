@@ -397,7 +397,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 String time = format.format(System.currentTimeMillis());
                 beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.3gp");
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
-                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName + time+".3gp");
+                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".3gp");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
 
                 if (afterFileName.exists()){
@@ -556,7 +556,10 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         btn_send_firebase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadfile(filenamevalue, filepathvalue);
+                File  deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue+".3gp");
+                Uri fileuri = Uri.fromFile(deletefile);
+                Log.e("파일패스에서 얻어지는 uri   ", ""+fileuri);
+                uploadfile(filenamevalue, fileuri);
             }
         }); //파이어베이스 업로드 끝
 //영어발음평가 전송
@@ -573,6 +576,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             public void onClick(View view) {
 //                삭제시 지우기
                 File  deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue+".3gp");
+               Uri fileuri = Uri.fromFile(deletefile);
+                Log.e("파일패스에서 얻어지는 uri   ", ""+fileuri);
                 if (deletefile.delete()){
                     deletedata(filenamevalue);
                     Toast.makeText(getApplicationContext(), "녹음파일  " + filenamevalue+".3gp 가 삭제되었습니다." , Toast.LENGTH_SHORT).show();
@@ -623,7 +628,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             progressDialog.show();
 
 //스토리지 지정
-            StorageReference filereference = mStorageRef.child(FileName + "3gp");
+            StorageReference filereference = mStorageRef.child(FileName + ".3gp");
             filereference.putFile(filepathvalue)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
