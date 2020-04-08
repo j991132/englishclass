@@ -82,30 +82,35 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-    <Button
-        android:id= "@+id/btnRecord"
-        android:layout_width= "wrap_content"
-        android:layout_height= "wrap_content"
-        android:layout_marginLeft= "5dp"
-        android:text= "녹음" />
+        <Button
+            android:id="@+id/btnRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="녹음" />
     <Button
         android:id= "@+id/btnStop"
         android:layout_width= "wrap_content"
         android:layout_height= "wrap_content"
-        android:layout_marginLeft= "5dp"
+
         android:text= "녹음정지" />
     <Button
         android:id= "@+id/btnPlay"
         android:layout_width= "wrap_content"
         android:layout_height= "wrap_content"
-        android:layout_marginLeft= "5dp"
+
         android:text= "녹음재생" />
     <Button
         android:id= "@+id/StopPlay"
         android:layout_width= "wrap_content"
         android:layout_height= "wrap_content"
-        android:layout_marginLeft= "5dp"
+
         android:text= "재생중지" />
+
+        <Button
+            android:id="@+id/btn_server"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="서버" />
 
 
     </LinearLayout>

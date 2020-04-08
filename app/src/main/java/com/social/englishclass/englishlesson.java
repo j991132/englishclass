@@ -46,6 +46,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -72,7 +73,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private ImageView mImgAlbumArt;
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
-    private Button startbtn, stopbtn, playbtn, stopplay;
+    private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
     private String folder, fname;
     public  String serchfilename;
     private File beforeFileName, afterFileName;
@@ -119,6 +120,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         stopbtn = (Button) findViewById(R.id.btnStop);
         playbtn = (Button) findViewById(R.id.btnPlay);
         stopplay = (Button) findViewById(R.id.StopPlay);
+        btn_server = (Button) findViewById(R.id.btn_server);
         stopbtn.setEnabled(false);
         playbtn.setEnabled(true);
         stopplay.setEnabled(false);
@@ -126,6 +128,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         stopbtn.setOnClickListener(this);
         startbtn.setOnClickListener(this);
         stopplay.setOnClickListener(this);
+        btn_server.setOnClickListener(this);
 //녹음버튼 끝
         mImgAlbumArt = (ImageView) findViewById(R.id.img_albumart);
         mTxtTitle = (TextView) findViewById(R.id.txt_title);
@@ -333,6 +336,24 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 stopplay.setEnabled(false);
                 AudioApplication.getInstance().getServiceInterface().recordstopplay();
 //                mAdapter.swapCursor(null);
+                break;
+
+            case R.id.btn_server:
+                // 파이어베이스에서 가져오기
+                mStorageRef.child("12020년 04월 02일.3gp").getMetadata()
+                        .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+                            @Override
+                            public void onSuccess(StorageMetadata storageMetadata) {
+                                String name = String.valueOf(storageMetadata.getName());
+                                Log.e("파이어베이스에서 불러온 이름  ", name);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e("조회 실패  ", "조회실패");
+                            }
+                        });
                 break;
         }
 
