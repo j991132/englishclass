@@ -354,6 +354,9 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                                 Log.e("조회 실패  ", "조회실패");
                             }
                         });
+// 녹음서버 목록 보여주는 엑티비티 띄우기
+                Intent intent = new Intent(this, recordserver.class);
+                startActivity(intent);
                 break;
         }
 
