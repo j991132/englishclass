@@ -47,30 +47,30 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
     }
 
     public static class AudioItem {
-        public long mId; // 오디오 고유 ID
-        public long mAlbumId; // 오디오 앨범아트 ID
+//        public long mId; // 오디오 고유 ID
+//        public long mAlbumId; // 오디오 앨범아트 ID
         public String mTitle; // 타이틀 정보
-        public String mArtist; // 아티스트 정보
-        public String mAlbum; // 앨범 정보
-        public long mDuration; // 재생시간
-        public String mDataPath; // 실제 데이터위치
+//        public String mArtist; // 아티스트 정보
+//        public String mAlbum; // 앨범 정보
+//        public long mDuration; // 재생시간
+//        public String mDataPath; // 실제 데이터위치
     }
 
     public class AudioViewHolder extends RecyclerView.ViewHolder {
         private final Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
-        private ImageView mImgAlbumArt;
+//        private ImageView mImgAlbumArt;
         private TextView mTxtTitle;
-        private TextView mTxtSubTitle;
-        private TextView mTxtDuration;
-        private AudioAdapter.AudioItem mItem;
+//        private TextView mTxtSubTitle;
+//        private TextView mTxtDuration;
+        private recordserverAdapter.AudioItem mItem;
         private int mPosition;
 
         private AudioViewHolder(View view) {
             super(view);
-            mImgAlbumArt = (ImageView) view.findViewById(R.id.img_albumart);
+//            mImgAlbumArt = (ImageView) view.findViewById(R.id.img_albumart);
             mTxtTitle = (TextView) view.findViewById(R.id.txt_title);
-            mTxtSubTitle = (TextView) view.findViewById(R.id.txt_sub_title);
-            mTxtDuration = (TextView) view.findViewById(R.id.txt_duration);
+//            mTxtSubTitle = (TextView) view.findViewById(R.id.txt_sub_title);
+//            mTxtDuration = (TextView) view.findViewById(R.id.txt_duration);
 /*            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -99,14 +99,14 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
 */
         }
 
-        public void setAudioItem(AudioAdapter.AudioItem item, int position) {
+        public void setAudioItem(recordserverAdapter.AudioItem item, int position) {
             mItem = item;
             mPosition = position;
             mTxtTitle.setText(item.mTitle);
-            mTxtSubTitle.setText(item.mArtist + "(" + item.mAlbum + ")");
-            mTxtDuration.setText(DateFormat.format("mm:ss", item.mDuration));
-            Uri albumArtUri = ContentUris.withAppendedId(artworkUri, item.mAlbumId);
-            Picasso.with(itemView.getContext()).load(albumArtUri).error(R.drawable.music).into(mImgAlbumArt);
+//            mTxtSubTitle.setText(item.mArtist + "(" + item.mAlbum + ")");
+//            mTxtDuration.setText(DateFormat.format("mm:ss", item.mDuration));
+ //           Uri albumArtUri = ContentUris.withAppendedId(artworkUri, item.mAlbumId);
+ //           Picasso.with(itemView.getContext()).load(albumArtUri).error(R.drawable.music).into(mImgAlbumArt);
         }
     }
 }

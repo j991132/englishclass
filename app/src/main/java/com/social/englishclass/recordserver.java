@@ -33,9 +33,13 @@ public class recordserver extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_englishlesson);
 
-        mRecyclerView = findViewById(R.id.recyclerview);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+
+
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
 
 //        mProgressCircle = findViewById(R.id.progress_circle);
 
@@ -50,7 +54,9 @@ public class recordserver extends AppCompatActivity {
                     public void onSuccess(StorageMetadata storageMetadata) {
                         String name = String.valueOf(storageMetadata.getName());
                         Log.e("2  파이어베이스에서 불러온 이름  ", name);
-                        Upload upload = new Upload(name);
+                        Upload upload = new Upload();
+                        upload.setName(name);
+//                        Upload upload = new Upload(name);
                         mUploads.add(upload);
                         Log.e("리스트  ", " "+mUploads);
                     }
@@ -63,11 +69,9 @@ public class recordserver extends AppCompatActivity {
                 });
 
 
+        mAdapter = new recordserverAdapter(this, mUploads);
 
-
-                mAdapter = new recordserverAdapter(recordserver.this, mUploads);
-
-                mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 //                mProgressCircle.setVisibility(View.INVISIBLE);
 
 
