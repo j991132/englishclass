@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "263655081282",
+    "firebase_url": "https://englishclass-30b0c.firebaseio.com",
+    "project_id": "englishclass-30b0c",
+    "storage_bucket": "englishclass-30b0c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263655081282:android:48e818ecf91fbcfa5bb4db",
+        "android_client_info": {
+          "package_name": "com.social.englishclass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263655081282-5ieah978fjigni73c2ukmdggbpr6d63d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.social.englishclass",
+            "certificate_hash": "8db2d2c6ec20637bebf5449bbf327f528ad1773e"
+          }
+        },
+        {
+          "client_id": "263655081282-lmu2am10263eobdbkle3ria8j0j2i0rs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.social.englishclass",
+            "certificate_hash": "cbede28e156b4f1cb99dfe66b7b040ea135e4b8b"
+          }
+        },
+        {
+          "client_id": "263655081282-64rm13d19b2hctoro5hfa7mo5iimv801.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU75qp8xKFbsAlUiZT_2akOF1qAWr_vow"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263655081282-64rm13d19b2hctoro5hfa7mo5iimv801.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
