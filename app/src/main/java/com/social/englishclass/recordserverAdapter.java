@@ -38,7 +38,9 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
     @Override
     public void onBindViewHolder( AudioViewHolder holder, int position) {
         Upload uploadCurrent = mUploads.get(position);
+
         holder. mTxtTitle.setText(uploadCurrent.getName());
+
     }
 
     @Override
@@ -60,6 +62,7 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
         private final Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
 //        private ImageView mImgAlbumArt;
         private TextView mTxtTitle;
+
 //        private TextView mTxtSubTitle;
 //        private TextView mTxtDuration;
         private recordserverAdapter.AudioItem mItem;

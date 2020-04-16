@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -44,10 +46,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
@@ -82,6 +87,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private Long duration;
     public static Dialog recordlistdialog, deletedialog;
     private StorageReference mStorageRef;
+    private DatabaseReference mDatabaseRef;
+    private StorageTask mUploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +99,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         folder = intent.getStringExtra("lesson");
 
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
 // OS가 Marshmallow 이상일 경우 권한체크를 해야 합니다.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -339,8 +347,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btn_server:
-                // 파이어베이스에서 가져오기
-                mStorageRef.child("12020년 04월 02일.3gp").getMetadata()
+ /*               // 파이어베이스에서 가져오기
+                mStorageRef.child("1_2020년 04월 16일.3gp").getMetadata()
                         .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
                             @Override
                             public void onSuccess(StorageMetadata storageMetadata) {
@@ -354,6 +362,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                                 Log.e("조회 실패  ", "조회실패");
                             }
                         });
+
+  */
 // 녹음서버 목록 보여주는 엑티비티 띄우기
                 Intent intent = new Intent(this, recordserver.class);
                 startActivity(intent);
@@ -642,9 +652,13 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                     getContentResolver().update(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values, mselection, mselectionargs);
 //        getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mselection, mselectionargs);
   }
-
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
     //파이어베이스 업로드
-    public void uploadfile(String FileName, Uri filepathvalue){
+    public void uploadfile(final String FileName, Uri filepathvalue){
         if(filepathvalue !=null) {
 //업로드 진행 Dialog 보이기
             final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -652,12 +666,16 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             progressDialog.show();
 
 //스토리지 지정
-            StorageReference filereference = mStorageRef.child(FileName + ".3gp");
-            filereference.putFile(filepathvalue)
+            StorageReference filereference = mStorageRef.child(FileName + "." + getFileExtension(filepathvalue));
+            mUploadTask = filereference.putFile(filepathvalue)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
+                            Upload upload = new Upload(FileName, taskSnapshot.getUploadSessionUri().toString());
+                            String uploadId = mDatabaseRef.push().getKey();
+                            mDatabaseRef.child(uploadId).setValue(upload);
+
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                         }
                     })
