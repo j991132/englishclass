@@ -453,7 +453,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //                metadata(fname);
                     ContentValues values = new ContentValues();
                     values.put(MediaStore.Audio.Media.DISPLAY_NAME, afterFileName.getName());
-                    values.put(MediaStore.Audio.Media.TITLE, FileName+time);
+                    values.put(MediaStore.Audio.Media.TITLE, FileName+"_"+time);
 
                     values.put(MediaStore.Audio.Media.DURATION, duration);
                     Log.e("녹음 중지 시 저장되는 이름   ", afterFileName.getName());
