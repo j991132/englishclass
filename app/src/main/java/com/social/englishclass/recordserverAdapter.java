@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
@@ -29,7 +30,8 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
     private Context mContext;
     private List<Upload> mUploads;
     private MediaPlayer mMediaplayer;
-    private Uri uri;
+    private Uri uri, muri;
+    private StorageReference mStorageRef;
 
     public recordserverAdapter(Context context, List<Upload> uploads){
         mContext = context;
@@ -39,13 +41,13 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
 
 
     @Override
-    public AudioViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public recordserverAdapter.AudioViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.listitem_audio, parent, false);
         return new AudioViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder( AudioViewHolder holder, int position) {
+    public void onBindViewHolder( recordserverAdapter.AudioViewHolder holder, int position) {
         Upload uploadCurrent = mUploads.get(position);
 
         holder. mTxtTitle.setText(uploadCurrent.getName());
@@ -87,26 +89,17 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Log.e("파이어베이스에서 불러온 이름  ", mTxtTitle.getText().toString());
                     Log.e("파이어베이스에서 불러온 uri  ", uri.toString());
                     mMediaplayer = new MediaPlayer();
                     mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    try {
-                        mMediaplayer.setDataSource(uri.toString());
-                        mMediaplayer.prepareAsync();
-                        mMediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
-                            @Override
-                            public void onPrepared(MediaPlayer mp) {
-                                mp.start();
-                            }
-                        });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    getaudiourl(mTxtTitle.getText().toString());
 
 
-//                    fetchAudioUrlFromFirebase(mTxtTitle.getText().toString());
+
+
 
 //                    AudioApplication.getInstance().getServiceInterface().setPlayList(getAudioIds()); // 재생목록등록
 //                    AudioApplication.getInstance().getServiceInterface().play(mPosition); // 선택한 오디오재생
@@ -143,6 +136,39 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
         }
     }
 
+public void getaudiourl(String Filename){
+    mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
+    // 파이어베이스에서 가져오기
+    mStorageRef.child(Filename+".3gp").getDownloadUrl()
+            .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+
+                   muri = uri;
+                    Log.e("2  파이어베이스에서 불러온 url  ", ""+ muri);
+                    try {
+                        mMediaplayer.setDataSource(muri.toString());
+                        mMediaplayer.prepareAsync();
+                        mMediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                mp.start();
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("조회 실패2  ", "조회실패2");
+                }
+            });
+}
 
 }

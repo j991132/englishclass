@@ -660,13 +660,17 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     //파이어베이스 업로드
     public void uploadfile(final String FileName, Uri filepathvalue){
         if(filepathvalue !=null) {
+            Log.e("업로드시 얻어지는 파일 uri   ", ""+filepathvalue);
+
+            String ext = filepathvalue.toString().substring(filepathvalue.toString().lastIndexOf("."));
+            Log.e("업로드시 얻어지는 파일 확장자   ", ""+ext);
 //업로드 진행 Dialog 보이기
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("업로드중...");
             progressDialog.show();
 
 //스토리지 지정
-            StorageReference filereference = mStorageRef.child(FileName + "." + getFileExtension(filepathvalue));
+            StorageReference filereference = mStorageRef.child(FileName + ext);
             mUploadTask = filereference.putFile(filepathvalue)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
