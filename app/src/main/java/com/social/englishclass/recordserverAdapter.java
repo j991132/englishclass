@@ -2,6 +2,7 @@ package com.social.englishclass;
 
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -29,7 +30,7 @@ import java.util.List;
 public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapter.AudioViewHolder> {
     private Context mContext;
     private List<Upload> mUploads;
-    private MediaPlayer mMediaplayer;
+    public static MediaPlayer mMediaplayer;
     private Uri uri, muri;
     private StorageReference mStorageRef;
 

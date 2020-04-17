@@ -30,7 +30,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
             android:scaleType="fitXY"
-            android:src="@drawable/empty_albumart"/>
+            android:src="@drawable/empty_albumart_old"/>
 
         <TextView
             android:id="@+id/txt_title"

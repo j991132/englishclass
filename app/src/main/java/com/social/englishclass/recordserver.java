@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class recordserver extends AppCompatActivity {
+public class recordserver extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView mRecyclerView;
     private recordserverAdapter mAdapter;
 
@@ -33,13 +34,15 @@ public class recordserver extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private StorageReference mStorageRef;
     private List<Upload> mUploads;
+    private ImageButton mBtnPlayPause;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_englishlesson);
-
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        setContentView(R.layout.activity_recordserver);
+        mBtnPlayPause = (ImageButton) findViewById(R.id.rec_btn_play_pause);
+        mBtnPlayPause.setOnClickListener(this);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rec_recyclerview);
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -104,6 +107,25 @@ public class recordserver extends AppCompatActivity {
 
 
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.rec_btn_play_pause:
+                updateUI();
+                // 플레이어 화면으로 이동할 코드가 들어갈 예정
+                break;
+        }
+    }
+
+    private void updateUI() {
+        if (recordserverAdapter.mMediaplayer.isPlaying()) {
+//        if (AudioApplication.getInstance().getServiceInterface().isPlaying()) {
+            mBtnPlayPause.setImageResource(R.drawable.pause);
+        } else {
+            mBtnPlayPause.setImageResource(R.drawable.play);
+        }
     }
 }
 
