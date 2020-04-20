@@ -5,11 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +43,8 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
     private StorageReference mStorageRef;
     private List<Upload> mUploads;
     private ImageButton mBtnPlayPause;
+    private TextView rec_mTxtTitle;
+    String filename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +58,9 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
+        rec_mTxtTitle = (TextView) findViewById(R.id.rec_txt_title);
 
+        registerBroadcast();
 //        mProgressCircle = findViewById(R.id.progress_circle);
 
         mUploads = new ArrayList<>();
@@ -113,7 +125,7 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rec_btn_play_pause:
-                updateUI();
+                togglePlay((float) 1.00);
                 // 플레이어 화면으로 이동할 코드가 들어갈 예정
                 break;
         }
@@ -121,11 +133,47 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
     private void updateUI() {
         if (recordserverAdapter.mMediaplayer.isPlaying()) {
-//        if (AudioApplication.getInstance().getServiceInterface().isPlaying()) {
+
             mBtnPlayPause.setImageResource(R.drawable.pause);
         } else {
             mBtnPlayPause.setImageResource(R.drawable.play);
         }
+        if (rec_mTxtTitle.toString() == "재생중인 파일이 없습니다."){
+        rec_mTxtTitle.setText(filename);}
+
+
+//            speedselect();
+
+    }
+
+    public void registerBroadcast() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BroadcastActions.PLAY_STATE_CHANGED);
+
+        registerReceiver(receiver, filter);
+    }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("PLAY_STATE_CHANGED")) {
+                filename = intent.getStringExtra("filename");
+                updateUI();
+
+            }
+
+
+        }
+    };
+
+    public void togglePlay(float a) {
+        if (recordserverAdapter.mMediaplayer.isPlaying()) {
+            recordserverAdapter.pause();
+        } else {
+
+            recordserverAdapter.play(a);
+        }
     }
 }
+
 

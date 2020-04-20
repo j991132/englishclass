@@ -28,11 +28,12 @@ import java.io.IOException;
 import java.util.List;
 
 public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapter.AudioViewHolder> {
-    private Context mContext;
+    private static Context mContext;
     private List<Upload> mUploads;
     public static MediaPlayer mMediaplayer;
     private Uri uri, muri;
     private StorageReference mStorageRef;
+    private static boolean isPrepared;
 
     public recordserverAdapter(Context context, List<Upload> uploads){
         mContext = context;
@@ -111,6 +112,7 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
 
                 }
             });
+
 /*
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -137,7 +139,7 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
         }
     }
 
-public void getaudiourl(String Filename){
+public void getaudiourl(final String Filename){
     mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
     // 파이어베이스에서 가져오기
@@ -155,7 +157,32 @@ public void getaudiourl(String Filename){
 
                             @Override
                             public void onPrepared(MediaPlayer mp) {
+                                isPrepared = true;
                                 mp.start();
+
+                                Intent intent = new Intent(BroadcastActions.PLAY_STATE_CHANGED);
+                                intent .putExtra("filename",Filename );
+
+                                mContext.sendBroadcast(intent);
+//                                mContext.sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED));
+
+                                //녹음재생 완료후 정지
+                                mMediaplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                    @Override
+                                    public void onCompletion(MediaPlayer mp) {
+                                        if(mMediaplayer !=null) {
+                                            isPrepared = false;
+//                                          mMediaplayer.release();    //객체를 파괴하여 다시 못씀
+                                            mMediaplayer.reset();
+                                            Intent intent = new Intent(BroadcastActions.PLAY_STATE_CHANGED);
+                                            intent .putExtra("filename","재생중인 파일이 없습니다." );
+
+                                            mContext.sendBroadcast(intent);
+
+                                        }
+                                    }
+                                });
+
                             }
                         });
                     } catch (IOException e) {
@@ -172,4 +199,20 @@ public void getaudiourl(String Filename){
             });
 }
 
+
+    public static void pause() {
+        if (isPrepared) {
+            mMediaplayer.pause();
+            mContext.sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
+        }
+    }
+    public static void play(float a) {
+
+        if (isPrepared) {
+
+            mMediaplayer.setPlaybackParams((mMediaplayer.getPlaybackParams().setSpeed(a)));
+            mMediaplayer.start();
+            mContext.sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
+        }
+    }
 }
