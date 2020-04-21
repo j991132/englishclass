@@ -35,6 +35,7 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
     private StorageReference mStorageRef;
     private static boolean isPrepared ;
     public static boolean reset;
+    private String ext1, ext;
 
     public recordserverAdapter(Context context, List<Upload> uploads){
         mContext = context;
@@ -55,7 +56,9 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
 
         holder. mTxtTitle.setText(uploadCurrent.getName());
         uri = Uri.parse(uploadCurrent.getUrl());
-
+        ext1 = uri.toString().substring(uri.toString().lastIndexOf("."));
+        ext = ext1.substring(0,4);
+        Log.e("리사이클뷰에서 얻어지는 파일 확장자   ", ""+ext);
     }
 
     @Override
@@ -144,7 +147,7 @@ public void getaudiourl(final String Filename){
     mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
     // 파이어베이스에서 가져오기
-    mStorageRef.child(Filename+".3gp").getDownloadUrl()
+    mStorageRef.child(Filename+ext).getDownloadUrl()
             .addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
