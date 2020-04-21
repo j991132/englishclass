@@ -30,9 +30,8 @@
             android:id="@+id/txt_sub_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sample Subtitle"
             android:textColor="@android:color/darker_gray"
-            android:textSize="12sp"/>
+            android:textSize="12sp" />
 
     </LinearLayout>
 
@@ -41,6 +40,5 @@
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="03:00"
-        android:textSize="12sp"/>
+        android:textSize="12sp" />
 </LinearLayout>

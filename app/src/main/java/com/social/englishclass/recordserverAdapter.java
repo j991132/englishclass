@@ -33,7 +33,8 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
     public static MediaPlayer mMediaplayer;
     private Uri uri, muri;
     private StorageReference mStorageRef;
-    private static boolean isPrepared;
+    private static boolean isPrepared ;
+    public static boolean reset;
 
     public recordserverAdapter(Context context, List<Upload> uploads){
         mContext = context;
@@ -158,9 +159,10 @@ public void getaudiourl(final String Filename){
                             @Override
                             public void onPrepared(MediaPlayer mp) {
                                 isPrepared = true;
+                                reset = false;
                                 mp.start();
 
-                                Intent intent = new Intent(BroadcastActions.PLAY_STATE_CHANGED);
+                                Intent intent = new Intent(BroadcastActions.START);
                                 intent .putExtra("filename",Filename );
 
                                 mContext.sendBroadcast(intent);
@@ -172,10 +174,12 @@ public void getaudiourl(final String Filename){
                                     public void onCompletion(MediaPlayer mp) {
                                         if(mMediaplayer !=null) {
                                             isPrepared = false;
+
 //                                          mMediaplayer.release();    //객체를 파괴하여 다시 못씀
                                             mMediaplayer.reset();
+                                            reset = true;
                                             Intent intent = new Intent(BroadcastActions.PLAY_STATE_CHANGED);
-                                            intent .putExtra("filename","재생중인 파일이 없습니다." );
+//                                            intent .putExtra("filename","재생중인 파일이 없습니다." );
 
                                             mContext.sendBroadcast(intent);
 

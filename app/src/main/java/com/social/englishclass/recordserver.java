@@ -138,8 +138,10 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
         } else {
             mBtnPlayPause.setImageResource(R.drawable.play);
         }
-        if (rec_mTxtTitle.toString() == "재생중인 파일이 없습니다."){
-        rec_mTxtTitle.setText(filename);}
+if(recordserverAdapter.reset == true){
+    rec_mTxtTitle.setText("재생중인 파일이 없습니다.");
+} rec_mTxtTitle.setText(filename);
+
 
 
 //            speedselect();
@@ -148,6 +150,7 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
     public void registerBroadcast() {
         IntentFilter filter = new IntentFilter();
+        filter.addAction(BroadcastActions.START);
         filter.addAction(BroadcastActions.PLAY_STATE_CHANGED);
 
         registerReceiver(receiver, filter);
@@ -156,12 +159,13 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("PLAY_STATE_CHANGED")) {
-                filename = intent.getStringExtra("filename");
-                updateUI();
 
+            if(intent.getAction().equals("START")){
+                filename = intent.getStringExtra("filename");
+                Log.e("재생목록 파일 이름  ", " " +  filename);
             }
 
+            updateUI();
 
         }
     };
