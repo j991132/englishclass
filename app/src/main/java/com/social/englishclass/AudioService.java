@@ -5,7 +5,9 @@ import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -27,14 +29,18 @@ public class AudioService extends Service {
     private final IBinder mBinder = new AudioServiceBinder();
     private ArrayList<Long> mAudioIds = new ArrayList<>();
     private MediaPlayer mMediaPlayer;
-    private MediaRecorder mRecorder ;
-    private static final String LOG_TAG = "AudioRecording" ;
+    private MediaRecorder mRecorder;
+    private static final String LOG_TAG = "AudioRecording";
     private boolean isPrepared;
     private int mCurrentPosition;
     private AudioAdapter.AudioItem mAudioItem;
     private float f;
-    private static String mFileName = null ;
-
+    private static String mFileName = null;
+    int lenSpeech = 0;
+    boolean isRecording = false;
+    boolean forceStop = false;
+    int maxLenSpeech = 16000 * 45;
+    byte[] speechData = new byte[maxLenSpeech * 2];
 
     public class AudioServiceBinder extends Binder {
         AudioService getService() {
@@ -46,9 +52,9 @@ public class AudioService extends Service {
     public void onCreate() {
         super.onCreate();
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/englishclass/record/AudioRecording.3gp" ;
+        mFileName += "/englishclass/record/AudioRecording.3gp";
 
- //      Intent intent = getIntent();
+        //      Intent intent = getIntent();
 //    String filename = (String)intent.getExtras().get("filename");
 
         mMediaPlayer = new MediaPlayer();
@@ -58,7 +64,7 @@ public class AudioService extends Service {
             public void onPrepared(MediaPlayer mp) {
                 isPrepared = true;
                 mp.start();
-             sendBroadcast(new Intent(BroadcastActions.PREPARED)); // prepared 전송
+                sendBroadcast(new Intent(BroadcastActions.PREPARED)); // prepared 전송
                 sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
             }
         });
@@ -66,7 +72,7 @@ public class AudioService extends Service {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 isPrepared = false;
-                mAudioItem=null;
+                mAudioItem = null;
                 sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
             }
         });
@@ -131,7 +137,7 @@ public class AudioService extends Service {
 
     private void prepare() {
         try {
-            Log.d("음악파일 위치",mAudioItem.mDataPath );
+            Log.d("음악파일 위치", mAudioItem.mDataPath);
 
 
             mMediaPlayer.setDataSource(mAudioItem.mDataPath);
@@ -146,9 +152,11 @@ public class AudioService extends Service {
         try {
 
 
-        mMediaPlayer.stop();
-        mMediaPlayer.reset();
-        }catch (Exception e){e.printStackTrace();}  // englishlesson 액티비티 종료시 null 에러를 잡기위해 예외문 추가
+            mMediaPlayer.stop();
+            mMediaPlayer.reset();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }  // englishlesson 액티비티 종료시 null 에러를 잡기위해 예외문 추가
     }
 
     public void setPlayList(ArrayList<Long> audioIds) {
@@ -157,11 +165,13 @@ public class AudioService extends Service {
             mAudioIds.addAll(audioIds);
         }
     }
+
     public void clearPlayList() {
 
-            mAudioIds.clear();
+        mAudioIds.clear();
 
     }
+
     public void play(int position) {
 
         queryAudioItem(position);
@@ -169,11 +179,11 @@ public class AudioService extends Service {
         prepare();
 
         //AudioApplication.getInstance().getServiceInterface().isPlaying();
-  //          sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
+        //          sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
 
     }
-    public void play() {
 
+    public void play() {
 
 
         if (isPrepared) {
@@ -182,12 +192,11 @@ public class AudioService extends Service {
             sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
         }
     }
+
     public void play2(float a) {
 
 
-
         if (isPrepared) {
-
 
 
             mMediaPlayer.setPlaybackParams((mMediaPlayer.getPlaybackParams().setSpeed(a)));
@@ -202,7 +211,6 @@ public class AudioService extends Service {
             sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
         }
     }
-
 
 
     public void forward() {
@@ -225,38 +233,40 @@ public class AudioService extends Service {
 
     public void record() {
         initAudioRecorder();
-        mRecorder .start();
-        Toast.makeText(getApplicationContext(), "녹음 시작" , Toast. LENGTH_LONG ).show();
+        mRecorder.start();
+        Toast.makeText(getApplicationContext(), "녹음 시작", Toast.LENGTH_LONG).show();
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void recordpause() {
-        mRecorder .pause();
-        Toast.makeText(getApplicationContext(), "녹음 일시정지" , Toast. LENGTH_LONG ).show();
+        mRecorder.pause();
+        Toast.makeText(getApplicationContext(), "녹음 일시정지", Toast.LENGTH_LONG).show();
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void recordresume() {
-        mRecorder .resume();
-        Toast.makeText(getApplicationContext(), "녹음 재개" , Toast. LENGTH_LONG ).show();
+        mRecorder.resume();
+        Toast.makeText(getApplicationContext(), "녹음 재개", Toast.LENGTH_LONG).show();
     }
 
     public void recordstop() {
-        mRecorder .stop();
+        mRecorder.stop();
 
-        mRecorder .release();
-        mRecorder = null ;
+        mRecorder.release();
+        mRecorder = null;
 
-        Toast.makeText(getApplicationContext(), "Recording Stopped" , Toast. LENGTH_LONG ).show();
+        Toast.makeText(getApplicationContext(), "Recording Stopped", Toast.LENGTH_LONG).show();
     }
 
     public void recordplay(String fname) {
         mMediaPlayer = new MediaPlayer();
         try {
-            mMediaPlayer .setDataSource( fname );
-            mMediaPlayer .prepare();
-            mMediaPlayer .start();
-            Toast.makeText(getApplicationContext(), "Recording Started Playing" , Toast. LENGTH_LONG ).show();
+            mMediaPlayer.setDataSource(fname);
+            mMediaPlayer.prepare();
+            mMediaPlayer.start();
+            Toast.makeText(getApplicationContext(), "Recording Started Playing", Toast.LENGTH_LONG).show();
         } catch (IOException e) {
-            Log.e( LOG_TAG , "prepare() failed" );
+            Log.e(LOG_TAG, "prepare() failed");
         }
 //녹음재생 완료후 정지
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -268,25 +278,25 @@ public class AudioService extends Service {
     }
 
     public void recordstopplay() {
-        if(mMediaPlayer !=null) {
- //           mMediaPlayer.release();    //객체를 파괴하여 다시 못씀
+        if (mMediaPlayer != null) {
+            //           mMediaPlayer.release();    //객체를 파괴하여 다시 못씀
             mMediaPlayer.reset();        //객체를 처음으로 되돌려 다시 쓸 수 있음
 //            mMediaPlayer = null;
             Toast.makeText(getApplicationContext(), "Playing Audio Stopped", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             Toast.makeText(getApplicationContext(), "Playing Audio Stopped", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void deletedialog(int position){
+    public void deletedialog(int position) {
         queryAudioItem(position);
 
         Intent intent = new Intent(BroadcastActions.DELETE_DIALOG);
-        intent .putExtra("filenamevalue",mAudioItem.mTitle );
-        intent .putExtra("filepathvalue",mAudioItem.mDataPath );
+        intent.putExtra("filenamevalue", mAudioItem.mTitle);
+        intent.putExtra("filepathvalue", mAudioItem.mDataPath);
         sendBroadcast(intent);
-        Log.e("다이얼로그 출력시 타이틀 정보", " "+mAudioItem.mTitle);
-        Log.e("다이얼로그 출력시 파일경로 정보", " "+mAudioItem.mDataPath);
+        Log.e("다이얼로그 출력시 타이틀 정보", " " + mAudioItem.mTitle);
+        Log.e("다이얼로그 출력시 파일경로 정보", " " + mAudioItem.mDataPath);
 
     }
 
@@ -300,7 +310,50 @@ public class AudioService extends Service {
         }
         return false;
     }
-    public void initAudioRecorder() {
+
+    public void initAudioRecorder() throws RuntimeException{
+        try {
+        int bufferSize = AudioRecord.getMinBufferSize(
+                16000, // sampling frequency
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT);
+        AudioRecord audio = new AudioRecord(
+                MediaRecorder.AudioSource.VOICE_RECOGNITION,
+                16000, // sampling frequency
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSize);
+
+        lenSpeech = 0;
+        if (audio.getState() != AudioRecord.STATE_INITIALIZED) {
+            throw new RuntimeException("ERROR: Failed to initialize audio device. Allow app to access microphone");
+        } else {
+            short[] inBuffer = new short[bufferSize];
+            forceStop = false;
+            isRecording = true;
+            audio.startRecording();
+            while (!forceStop) {
+                int ret = audio.read(inBuffer, 0, bufferSize);
+                for (int i = 0; i < ret; i++) {
+                    if (lenSpeech >= maxLenSpeech) {
+                        forceStop = true;
+                        break;
+                    }
+                    speechData[lenSpeech * 2] = (byte) (inBuffer[i] & 0x00FF);
+                    speechData[lenSpeech * 2 + 1] = (byte) ((inBuffer[i] & 0xFF00) >> 8);
+                    lenSpeech++;
+                }
+            }
+            audio.stop();
+            audio.release();
+            isRecording = false;
+        }
+    } catch(Throwable t)  {
+        throw new RuntimeException(t.toString());
+    }
+    }
+
+/*
         mRecorder = new MediaRecorder();
         mRecorder .setAudioSource(MediaRecorder.AudioSource. MIC );
         mRecorder .setOutputFormat(MediaRecorder.OutputFormat. THREE_GPP );
@@ -311,5 +364,6 @@ public class AudioService extends Service {
         } catch (IOException e) {
             Log.e( LOG_TAG , "prepare() failed" );
         }
+*/
     }
-}
+
