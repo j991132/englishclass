@@ -120,7 +120,14 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
         });
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterBroadcast();
 
+        finish();
+
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -138,9 +145,11 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
         } else {
             mBtnPlayPause.setImageResource(R.drawable.play);
         }
-if(recordserverAdapter.reset == true){
+if(recordserverAdapter.reset ){
+
     rec_mTxtTitle.setText("재생중인 파일이 없습니다.");
-} rec_mTxtTitle.setText(filename);
+    Log.e("reset 상태  ", " " + recordserverAdapter.reset );
+} else{rec_mTxtTitle.setText(filename);}
 
 
 
@@ -155,7 +164,9 @@ if(recordserverAdapter.reset == true){
 
         registerReceiver(receiver, filter);
     }
-
+    public void unregisterBroadcast() {
+        unregisterReceiver(receiver);
+    }
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -163,6 +174,7 @@ if(recordserverAdapter.reset == true){
             if(intent.getAction().equals("START")){
                 filename = intent.getStringExtra("filename");
                 Log.e("재생목록 파일 이름  ", " " +  filename);
+                updateUI();
             }
 
             updateUI();
