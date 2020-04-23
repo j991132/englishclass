@@ -17,12 +17,19 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class AudioService extends Service {
@@ -41,6 +48,7 @@ public class AudioService extends Service {
     boolean forceStop = false;
     int maxLenSpeech = 16000 * 45;
     byte[] speechData = new byte[maxLenSpeech * 2];
+    public Thread mRecordThread = null;
 
     public class AudioServiceBinder extends Binder {
         AudioService getService() {
@@ -51,6 +59,22 @@ public class AudioService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mRecordThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    recordSpeech();
+
+                } catch (RuntimeException e) {
+
+                    return;
+                }
+
+            }
+        });
+
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/englishclass/record/AudioRecording.3gp";
 
@@ -232,8 +256,56 @@ public class AudioService extends Service {
     }
 
     public void record() {
+
+   /*
+        //영어발음평가 전송용 녹음파일 만들기
+        if (isRecording) {
+            forceStop = true;
+        } else {
+            try {
+                new Thread(new Runnable() {
+                    public void run() {
+
+                        try {
+                            recordSpeech();
+
+                        } catch (RuntimeException e) {
+
+                            return;
+                        }
+
+                        Thread threadRecog = new Thread(new Runnable() {
+                            public void run() {
+                                result = sendDataAndGetResult();
+                            }
+                        });
+                        threadRecog.start();
+                        try {
+                            threadRecog.join(20000);
+                            if (threadRecog.isAlive()) {
+                                threadRecog.interrupt();
+
+                            } else {
+
+                            }
+                        } catch (InterruptedException e) {
+
+                        }
+
+                    }
+                }).start();
+            } catch (Throwable t) {
+//                textResult.setText("ERROR: " + t.toString());
+                forceStop = false;
+                isRecording = false;
+            }
+        }
+        */
         initAudioRecorder();
+        mRecordThread.start();
         mRecorder.start();
+
+
         Toast.makeText(getApplicationContext(), "녹음 시작", Toast.LENGTH_LONG).show();
     }
 
@@ -250,8 +322,9 @@ public class AudioService extends Service {
     }
 
     public void recordstop() {
+        forceStop = false;
+        isRecording = false;
         mRecorder.stop();
-
         mRecorder.release();
         mRecorder = null;
 
@@ -311,59 +384,90 @@ public class AudioService extends Service {
         return false;
     }
 
-    public void initAudioRecorder() throws RuntimeException{
-        try {
-        int bufferSize = AudioRecord.getMinBufferSize(
-                16000, // sampling frequency
-                AudioFormat.CHANNEL_IN_MONO,
-                AudioFormat.ENCODING_PCM_16BIT);
-        AudioRecord audio = new AudioRecord(
-                MediaRecorder.AudioSource.VOICE_RECOGNITION,
-                16000, // sampling frequency
-                AudioFormat.CHANNEL_IN_MONO,
-                AudioFormat.ENCODING_PCM_16BIT,
-                bufferSize);
+    public void initAudioRecorder() {
 
-        lenSpeech = 0;
-        if (audio.getState() != AudioRecord.STATE_INITIALIZED) {
-            throw new RuntimeException("ERROR: Failed to initialize audio device. Allow app to access microphone");
-        } else {
-            short[] inBuffer = new short[bufferSize];
-            forceStop = false;
-            isRecording = true;
-            audio.startRecording();
-            while (!forceStop) {
-                int ret = audio.read(inBuffer, 0, bufferSize);
-                for (int i = 0; i < ret; i++) {
-                    if (lenSpeech >= maxLenSpeech) {
-                        forceStop = true;
-                        break;
-                    }
-                    speechData[lenSpeech * 2] = (byte) (inBuffer[i] & 0x00FF);
-                    speechData[lenSpeech * 2 + 1] = (byte) ((inBuffer[i] & 0xFF00) >> 8);
-                    lenSpeech++;
-                }
-            }
-            audio.stop();
-            audio.release();
-            isRecording = false;
-        }
-    } catch(Throwable t)  {
-        throw new RuntimeException(t.toString());
-    }
-    }
 
-/*
         mRecorder = new MediaRecorder();
-        mRecorder .setAudioSource(MediaRecorder.AudioSource. MIC );
-        mRecorder .setOutputFormat(MediaRecorder.OutputFormat. THREE_GPP );
-        mRecorder .setAudioEncoder(MediaRecorder.AudioEncoder. AMR_NB );
-        mRecorder .setOutputFile( mFileName );
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mRecorder.setOutputFile(mFileName);
         try {
-            mRecorder .prepare();
+            mRecorder.prepare();
         } catch (IOException e) {
-            Log.e( LOG_TAG , "prepare() failed" );
+            Log.e(LOG_TAG, "prepare() failed");
         }
-*/
+
+    }
+
+
+
+        public void recordSpeech() throws RuntimeException {
+            try {
+                int bufferSize = AudioRecord.getMinBufferSize(
+                        16000, // sampling frequency
+                        AudioFormat.CHANNEL_IN_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT);
+                AudioRecord audio = new AudioRecord(
+                        MediaRecorder.AudioSource.VOICE_RECOGNITION,
+                        16000, // sampling frequency
+                        AudioFormat.CHANNEL_IN_MONO,
+                        AudioFormat.ENCODING_PCM_16BIT,
+                        bufferSize);
+                lenSpeech = 0;
+                if (audio.getState() != AudioRecord.STATE_INITIALIZED) {
+                    throw new RuntimeException("ERROR: Failed to initialize audio device. Allow app to access microphone");
+                }
+                else {
+                    short [] inBuffer = new short [bufferSize];
+                    forceStop = false;
+                    isRecording = true;
+                    audio.startRecording();
+                    while (!forceStop) {
+                        int ret = audio.read(inBuffer, 0, bufferSize);
+                        for (int i = 0; i < ret ; i++ ) {
+                            if (lenSpeech >= maxLenSpeech) {
+                                forceStop = true;
+                                break;
+                            }
+                            speechData[lenSpeech*2] = (byte)(inBuffer[i] & 0x00FF);
+                            speechData[lenSpeech*2+1] = (byte)((inBuffer[i] & 0xFF00) >> 8);
+                            lenSpeech++;
+                        }
+                    }
+                    String  audioContents = Base64.encodeToString(
+                            speechData, 0, lenSpeech*2, Base64.NO_WRAP);
+                    File savefolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record");
+                    if (!savefolder.exists()){
+                        savefolder.mkdir();
+                    }
+                    String sendtestfileuri = Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record/sendtest.txt";
+//                    String filename = Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record/AudioRecording.pcm";
+
+
+                    try {
+//                        OutputStream  os  = new FileOutputStream(filename);
+//                        os.write(speechData);
+//                        os.close();
+
+                        BufferedWriter buf = new BufferedWriter(new FileWriter(sendtestfileuri, true));
+
+                        buf.append(audioContents); // 파일 쓰기
+                        buf.newLine(); // 개행
+                        buf.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    audio.stop();
+                    audio.release();
+                    isRecording = false;
+                }
+            } catch(Throwable t) {
+                throw new RuntimeException(t.toString());
+            }
+        }
     }
 

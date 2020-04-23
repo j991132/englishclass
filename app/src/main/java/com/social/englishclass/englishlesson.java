@@ -81,7 +81,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
     private String folder, fname;
     public  String serchfilename;
-    private File beforeFileName, afterFileName;
+    private File beforeFileName, afterFileName, beforesendtest, aftersendtest;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private Long duration;
@@ -430,8 +430,10 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
                 String time = format.format(System.currentTimeMillis());
                 beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.3gp");
+//                beforesendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "sendtest.txt");
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
                 afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".3gp");
+//                aftersendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".txt");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
 
                 if (afterFileName.exists()){
@@ -441,12 +443,14 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                     metadata(String.valueOf(beforeFileName));
                     Log.e("재생시간",String.valueOf( duration));
                     beforeFileName.renameTo(afterFileName);
-                    updatadata(FileName+time);
+//                    beforesendtest.renameTo(aftersendtest);
+                    updatadata(FileName+"_"+time);
 //                    Log.e("삭제된 파일이름      ", String.valueOf(afterFileName));
                 }else {
 
                     Log.e("재생시간", String.valueOf(duration));
                     beforeFileName.renameTo(afterFileName);
+//                    beforesendtest.renameTo(aftersendtest);
                     fname = String.valueOf(afterFileName);
                     metadata(String.valueOf(afterFileName));
 
