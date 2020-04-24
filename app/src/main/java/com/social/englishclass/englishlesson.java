@@ -429,22 +429,22 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //파일명에 날짜시간 넣기
                 SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
                 String time = format.format(System.currentTimeMillis());
-                beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.3gp");
-//                beforesendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "sendtest.txt");
+                beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.pcm");
+                beforesendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "sendtest.txt");
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
-                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".3gp");
-//                aftersendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".txt");
+                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".pcm");
+                aftersendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".txt");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
 
                 if (afterFileName.exists()){
 //                    Log.e("저장되어 있는 파일이름      ", String.valueOf(afterFileName));
 //                    afterFileName.mkdirs();
 //                    afterFileName.delete();
-                    metadata(String.valueOf(beforeFileName));
+//                    metadata(String.valueOf(beforeFileName));
                     Log.e("재생시간",String.valueOf( duration));
                     beforeFileName.renameTo(afterFileName);
 //                    beforesendtest.renameTo(aftersendtest);
-                    updatadata(FileName+"_"+time);
+//                    updatadata(FileName+"_"+time);
 //                    Log.e("삭제된 파일이름      ", String.valueOf(afterFileName));
                 }else {
 
@@ -452,14 +452,14 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                     beforeFileName.renameTo(afterFileName);
 //                    beforesendtest.renameTo(aftersendtest);
                     fname = String.valueOf(afterFileName);
-                    metadata(String.valueOf(afterFileName));
+//                    metadata(String.valueOf(afterFileName));
 
 //                metadata(fname);
                     ContentValues values = new ContentValues();
                     values.put(MediaStore.Audio.Media.DISPLAY_NAME, afterFileName.getName());
                     values.put(MediaStore.Audio.Media.TITLE, FileName+"_"+time);
 
-                    values.put(MediaStore.Audio.Media.DURATION, duration);
+//                    values.put(MediaStore.Audio.Media.DURATION, duration);
                     Log.e("녹음 중지 시 저장되는 이름   ", afterFileName.getName());
                     values.put(MediaStore.Audio.Media.DATA, afterFileName.getPath());
                     Log.e("녹음 중지 시 저장되는 경로   ", afterFileName.getPath());

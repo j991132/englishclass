@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
+import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -24,7 +25,9 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -49,6 +52,15 @@ public class AudioService extends Service {
     int maxLenSpeech = 16000 * 45;
     byte[] speechData = new byte[maxLenSpeech * 2];
     public Thread mRecordThread = null;
+    public Thread mPlayThread = null;
+    private int mAudioSource = MediaRecorder.AudioSource.MIC;
+    private int mSampleRate = 16000;
+    private int mChannelCount = AudioFormat.CHANNEL_OUT_MONO;
+    private int mAudioFormat = AudioFormat.ENCODING_PCM_16BIT;
+    private int mBufferSize = AudioTrack.getMinBufferSize(mSampleRate, mChannelCount, mAudioFormat);
+    public AudioTrack mAudioTrack = null;
+    public boolean isPlaying = false;
+    private String ext;
 
     public class AudioServiceBinder extends Binder {
         AudioService getService() {
@@ -60,6 +72,7 @@ public class AudioService extends Service {
     public void onCreate() {
         super.onCreate();
 
+//녹음스레드
         mRecordThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -199,8 +212,26 @@ public class AudioService extends Service {
     public void play(int position) {
 
         queryAudioItem(position);
+        ext = mAudioItem.mDataPath.substring(mAudioItem.mDataPath.length()-3, mAudioItem.mDataPath.length());
+        Log.e("선택된 음악파일 확장자", ""+ext);
         stop();
-        prepare();
+        if(ext.equals("pcm")) {
+            Log.e("선택된 음악파일", ""+mAudioItem.mDataPath);
+if (mMediaPlayer != null) {
+    mMediaPlayer.release();
+    mMediaPlayer = null;
+}
+//            playthread(mAudioItem.mDataPath);
+            a(mAudioItem.mDataPath);
+        }else {
+
+            prepare();
+            Log.e("선택된 음악파일2", ""+mAudioItem.mDataPath);
+
+
+        }
+
+
 
         //AudioApplication.getInstance().getServiceInterface().isPlaying();
         //          sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
@@ -210,11 +241,15 @@ public class AudioService extends Service {
     public void play() {
 
 
-        if (isPrepared) {
+    if (isPrepared) {
+        Log.e("선택된 음악파일1", ""+mAudioItem.mDataPath);
+        mMediaPlayer.start();
 
-            mMediaPlayer.start();
-            sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
-        }
+
+
+
+}
+        sendBroadcast(new Intent(BroadcastActions.PLAY_STATE_CHANGED)); // 재생상태 변경 전송
     }
 
     public void play2(float a) {
@@ -301,9 +336,9 @@ public class AudioService extends Service {
             }
         }
         */
-        initAudioRecorder();
+//        initAudioRecorder();
         mRecordThread.start();
-        mRecorder.start();
+//        mRecorder.start();
 
 
         Toast.makeText(getApplicationContext(), "녹음 시작", Toast.LENGTH_LONG).show();
@@ -322,11 +357,12 @@ public class AudioService extends Service {
     }
 
     public void recordstop() {
-        forceStop = false;
-        isRecording = false;
-        mRecorder.stop();
-        mRecorder.release();
-        mRecorder = null;
+        forceStop = true;
+
+//        isRecording = false;
+//        mRecorder.stop();
+//        mRecorder.release();
+//        mRecorder = null;
 
         Toast.makeText(getApplicationContext(), "Recording Stopped", Toast.LENGTH_LONG).show();
     }
@@ -442,13 +478,13 @@ public class AudioService extends Service {
                         savefolder.mkdir();
                     }
                     String sendtestfileuri = Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record/sendtest.txt";
-//                    String filename = Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record/AudioRecording.pcm";
+                    String filename = Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record/AudioRecording.pcm";
 
 
                     try {
-//                        OutputStream  os  = new FileOutputStream(filename);
-//                        os.write(speechData);
-//                        os.close();
+                        OutputStream  os  = new FileOutputStream(filename);
+                        os.write(speechData);
+                        os.close();
 
                         BufferedWriter buf = new BufferedWriter(new FileWriter(sendtestfileuri, true));
 
@@ -469,5 +505,101 @@ public class AudioService extends Service {
                 throw new RuntimeException(t.toString());
             }
         }
+    //오디오트랙 재생 스레드
+    public void playthread(final String mFile){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, mSampleRate, mChannelCount, mAudioFormat, mBufferSize, AudioTrack.MODE_STREAM);
+                byte[] writeData = new byte[mBufferSize];
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(mFile);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                DataInputStream dis = new DataInputStream(fis);
+                mAudioTrack.play();
+
+                while (isPlaying) {
+                    try {
+                        int ret = dis.read(writeData, 0, mBufferSize);
+                        if (ret <= 0) {
+//                            (englishlesson.class).runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+                            isPlaying = false;
+
+//                                }
+//                            });
+
+                            break;
+                        }
+                        mAudioTrack.write(writeData, 0, ret);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                mAudioTrack.stop();
+                mAudioTrack.release();
+                mAudioTrack = null;
+
+                try {
+                    dis.close();
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+    }
+public void a(String mFile){
+    mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, mSampleRate, mChannelCount, mAudioFormat, mBufferSize, AudioTrack.MODE_STREAM);
+    byte[] writeData = new byte[mBufferSize];
+    FileInputStream fis = null;
+    try {
+        fis = new FileInputStream(mFile);
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+    }
+
+    DataInputStream dis = new DataInputStream(fis);
+    mAudioTrack.play();
+
+    while (isPlaying) {
+        try {
+            int ret = dis.read(writeData, 0, mBufferSize);
+            if (ret <= 0) {
+//                            (englishlesson.class).runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+                isPlaying = false;
+
+//                                }
+//                            });
+
+                break;
+            }
+            mAudioTrack.write(writeData, 0, ret);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    mAudioTrack.stop();
+    mAudioTrack.release();
+    mAudioTrack = null;
+
+    try {
+        dis.close();
+        fis.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
     }
 
