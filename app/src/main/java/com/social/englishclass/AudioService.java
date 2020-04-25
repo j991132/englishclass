@@ -214,18 +214,22 @@ public class AudioService extends Service {
         queryAudioItem(position);
         ext = mAudioItem.mDataPath.substring(mAudioItem.mDataPath.length()-3, mAudioItem.mDataPath.length());
         Log.e("선택된 음악파일 확장자", ""+ext);
+
         stop();
         if(ext.equals("pcm")) {
             Log.e("선택된 음악파일", ""+mAudioItem.mDataPath);
-if (mMediaPlayer != null) {
-    mMediaPlayer.release();
-    mMediaPlayer = null;
-}
-//            playthread(mAudioItem.mDataPath);
-            a(mAudioItem.mDataPath);
-        }else {
+//            if (mMediaPlayer != null) {
+//                mMediaPlayer.release();
+//                mMediaPlayer=null;
 
+//            }
+            isPlaying = true;
+            playthread(mAudioItem.mDataPath);
+//            a(mAudioItem.mDataPath);
+        }else {
+//            mPlayThread.interrupt();
             prepare();
+
             Log.e("선택된 음악파일2", ""+mAudioItem.mDataPath);
 
 
@@ -512,6 +516,7 @@ if (mMediaPlayer != null) {
             @Override
             public void run() {
                 mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, mSampleRate, mChannelCount, mAudioFormat, mBufferSize, AudioTrack.MODE_STREAM);
+
                 byte[] writeData = new byte[mBufferSize];
                 FileInputStream fis = null;
                 try {
@@ -526,7 +531,10 @@ if (mMediaPlayer != null) {
                 while (isPlaying) {
                     try {
                         int ret = dis.read(writeData, 0, mBufferSize);
+                        Log.e("오디오트랙", "ret"+ret);
                         if (ret <= 0) {
+                            Log.e("오디오트랙", "ret2"+ret);
+                            Log.e("오디오트랙", "재생중");
 //                            (englishlesson.class).runOnUiThread(new Runnable() {
 //                                @Override
 //                                public void run() {
@@ -538,14 +546,18 @@ if (mMediaPlayer != null) {
                             break;
                         }
                         mAudioTrack.write(writeData, 0, ret);
+                        Log.e("오디오트랙", "ret3"+ret);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
                 }
+                Log.e("오디오트랙", "와일문 종료");
+
                 mAudioTrack.stop();
                 mAudioTrack.release();
                 mAudioTrack = null;
+                Log.e("오디오트랙", "널");
 
                 try {
                     dis.close();
@@ -557,49 +569,6 @@ if (mMediaPlayer != null) {
         }).start();
 
     }
-public void a(String mFile){
-    mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, mSampleRate, mChannelCount, mAudioFormat, mBufferSize, AudioTrack.MODE_STREAM);
-    byte[] writeData = new byte[mBufferSize];
-    FileInputStream fis = null;
-    try {
-        fis = new FileInputStream(mFile);
-    } catch (FileNotFoundException e) {
-        e.printStackTrace();
-    }
 
-    DataInputStream dis = new DataInputStream(fis);
-    mAudioTrack.play();
-
-    while (isPlaying) {
-        try {
-            int ret = dis.read(writeData, 0, mBufferSize);
-            if (ret <= 0) {
-//                            (englishlesson.class).runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-                isPlaying = false;
-
-//                                }
-//                            });
-
-                break;
-            }
-            mAudioTrack.write(writeData, 0, ret);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-    mAudioTrack.stop();
-    mAudioTrack.release();
-    mAudioTrack = null;
-
-    try {
-        dis.close();
-        fis.close();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
     }
 
