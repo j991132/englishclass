@@ -51,6 +51,7 @@ public class AudioService extends Service {
     boolean forceStop = false;
     int maxLenSpeech = 16000 * 45;
     byte[] speechData = new byte[maxLenSpeech * 2];
+//    byte[] speechData2;
     public Thread mRecordThread = null;
     public Thread mPlayThread = null;
     private int mAudioSource = MediaRecorder.AudioSource.MIC;
@@ -341,7 +342,10 @@ public class AudioService extends Service {
         }
         */
 //        initAudioRecorder();
-        mRecordThread.start();
+        if(mRecordThread.isAlive()) {
+            mRecordThread.interrupt();
+
+        }mRecordThread.start();
 //        mRecorder.start();
 
 
@@ -460,11 +464,13 @@ public class AudioService extends Service {
                 }
                 else {
                     short [] inBuffer = new short [bufferSize];
+//                    speechData2 = new byte[16000 * 2];
                     forceStop = false;
                     isRecording = true;
                     audio.startRecording();
                     while (!forceStop) {
                         int ret = audio.read(inBuffer, 0, bufferSize);
+
                         for (int i = 0; i < ret ; i++ ) {
                             if (lenSpeech >= maxLenSpeech) {
                                 forceStop = true;
@@ -472,6 +478,8 @@ public class AudioService extends Service {
                             }
                             speechData[lenSpeech*2] = (byte)(inBuffer[i] & 0x00FF);
                             speechData[lenSpeech*2+1] = (byte)((inBuffer[i] & 0xFF00) >> 8);
+//                            speechData2[lenSpeech*2] = (byte)(inBuffer[i] & 0x00FF);
+//                            speechData2[lenSpeech*2+1] = (byte)((inBuffer[i] & 0xFF00) >> 8);
                             lenSpeech++;
                         }
                     }
