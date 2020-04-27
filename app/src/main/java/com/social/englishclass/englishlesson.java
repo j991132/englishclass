@@ -68,6 +68,11 @@ import java.nio.ByteOrder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
+import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
+import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
+import cafe.adriel.androidaudioconverter.model.AudioFormat;
+
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -156,7 +161,19 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         speedselect();
         registerBroadcast();
         updateUI();
-
+//오디오파일 변환 라이브러리 로드
+        AndroidAudioConverter.load(this, new ILoadCallback() {
+            @Override
+            public void onSuccess() {
+                // Great!
+                Log.e("라이브러리", "로드성공"  );
+            }
+            @Override
+            public void onFailure(Exception error) {
+                // FFmpeg is not supported by device
+                Log.e("라이브러리", "로드실패"  );
+            }
+        });
 
     }
 
@@ -439,7 +456,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.pcm");
                 beforesendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "sendtest.txt");
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
-                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".pcm");
+                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".wav");
                 aftersendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".txt");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
 
@@ -449,24 +466,28 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //                    afterFileName.delete();
 //                    metadata(String.valueOf(beforeFileName));
                     Log.e("재생시간",String.valueOf( duration));
-//                    try {
-//                        rawToWave(beforeFileName, afterFileName);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-                    beforeFileName.renameTo(afterFileName);
+                    try {
+                        rawToWave(beforeFileName, afterFileName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+//                      wavtomp3(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "1.wav"));
+                    wavtomp3(afterFileName);
+//                    beforeFileName.renameTo(afterFileName);
                     beforesendtest.renameTo(aftersendtest);
 //                    updatadata(FileName+"_"+time);
 //                    Log.e("삭제된 파일이름      ", String.valueOf(afterFileName));
                 }else {
 
                     Log.e("재생시간", String.valueOf(duration));
-//                    try {
-//                        rawToWave(beforeFileName, afterFileName);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-                    beforeFileName.renameTo(afterFileName);
+                    try {
+                        rawToWave(beforeFileName, afterFileName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+//                    wavtomp3(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "1.wav"));
+                    wavtomp3(afterFileName);
+//                    beforeFileName.renameTo(afterFileName);
                     beforesendtest.renameTo(aftersendtest);
                     fname = String.valueOf(afterFileName);
 //                    metadata(String.valueOf(afterFileName));
@@ -907,6 +928,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 
         });
     }
+//    pcm 을 wav로 바꾸기
     private void rawToWave(final File rawFile, final File waveFile) throws IOException {
 
         byte[] rawData = new byte[(int) rawFile.length()];
@@ -994,4 +1016,34 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             output.write(value.charAt(i));
         }
     }
+//    wav를 mp3로 바꾸기
+    private void wavtomp3(File file){
+        IConvertCallback callback = new IConvertCallback() {
+            @Override
+            public void onSuccess(File convertedFile) {
+                // So fast? Love it!
+
+                Log.e("mp3변환", "성공"  );
+            }
+            @Override
+            public void onFailure(Exception error) {
+                // Oops! Something went wrong
+                Log.e("mp3변환", "실패" + error);
+            }
+        };
+        AndroidAudioConverter.with(this)
+                // Your current audio file
+                .setFile(file)
+
+                // Your desired audio format
+                .setFormat(AudioFormat.MP3)
+
+                // An callback to know when conversion is finished
+                .setCallback(callback)
+
+                // Start conversion
+                .convert();
+        Log.e("mp3변환", "변환했음 마지막부분"  );
+    }
+
 }//메인 종료

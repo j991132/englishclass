@@ -74,20 +74,7 @@ public class AudioService extends Service {
         super.onCreate();
 
 //녹음스레드
-        mRecordThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-                try {
-                    recordSpeech();
-
-                } catch (RuntimeException e) {
-
-                    return;
-                }
-
-            }
-        });
 
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/englishclass/record/AudioRecording.3gp";
@@ -342,10 +329,16 @@ public class AudioService extends Service {
         }
         */
 //        initAudioRecorder();
-        if(mRecordThread.isAlive()) {
-            mRecordThread.interrupt();
+//        if (mRecordThread.isAlive()) {
+//            mRecordThread.interrupt();
+//            Log.e("스레드 인터럽트", "중단");
+//        }
+//        Log.e("스레드 상태1", ""+mRecordThread.getState());
+        recordtthread();
+        Log.e("스레드 상태2", ""+mRecordThread.getState());
+//        if(mRecordThread.getState() == Thread.State.NEW){
+//        mRecordThread.start();}
 
-        }mRecordThread.start();
 //        mRecorder.start();
 
 
@@ -517,6 +510,24 @@ public class AudioService extends Service {
                 throw new RuntimeException(t.toString());
             }
         }
+//        녹음 스레드
+    public void recordtthread(){
+        mRecordThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    recordSpeech();
+
+                } catch (RuntimeException e) {
+
+                    return;
+                }
+
+            }
+        });
+        mRecordThread.start();
+    }
     //오디오트랙 재생 스레드
     public void playthread(final String mFile){
 
