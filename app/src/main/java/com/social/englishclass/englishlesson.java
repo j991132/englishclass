@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioRecord;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -60,6 +61,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -101,6 +103,9 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -456,7 +461,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.pcm");
                 beforesendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "sendtest.txt");
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
-                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".wav");
+                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".pcm");
                 aftersendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".txt");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
 
@@ -466,28 +471,28 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //                    afterFileName.delete();
 //                    metadata(String.valueOf(beforeFileName));
                     Log.e("재생시간",String.valueOf( duration));
-                    try {
-                        rawToWave(beforeFileName, afterFileName);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        rawToWave(beforeFileName, afterFileName);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
 //                      wavtomp3(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "1.wav"));
-                    wavtomp3(afterFileName);
-//                    beforeFileName.renameTo(afterFileName);
+//                    wavtomp3(afterFileName);
+                    beforeFileName.renameTo(afterFileName);
                     beforesendtest.renameTo(aftersendtest);
 //                    updatadata(FileName+"_"+time);
 //                    Log.e("삭제된 파일이름      ", String.valueOf(afterFileName));
                 }else {
 
                     Log.e("재생시간", String.valueOf(duration));
-                    try {
-                        rawToWave(beforeFileName, afterFileName);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        rawToWave(beforeFileName, afterFileName);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
 //                    wavtomp3(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "1.wav"));
-                    wavtomp3(afterFileName);
-//                    beforeFileName.renameTo(afterFileName);
+//                    wavtomp3(afterFileName);
+                    beforeFileName.renameTo(afterFileName);
                     beforesendtest.renameTo(aftersendtest);
                     fname = String.valueOf(afterFileName);
 //                    metadata(String.valueOf(afterFileName));

@@ -51,7 +51,7 @@ public class AudioService extends Service {
     boolean forceStop = false;
     int maxLenSpeech = 16000 * 45;
     byte[] speechData = new byte[maxLenSpeech * 2];
-//    byte[] speechData2;
+    byte[] speechData2;
     public Thread mRecordThread = null;
     public Thread mPlayThread = null;
     private int mAudioSource = MediaRecorder.AudioSource.MIC;
@@ -457,10 +457,13 @@ public class AudioService extends Service {
                 }
                 else {
                     short [] inBuffer = new short [bufferSize];
-//                    speechData2 = new byte[16000 * 2];
+//                    speechData2 = new byte[inBuffer.length*2];
                     forceStop = false;
                     isRecording = true;
                     audio.startRecording();
+//                    try {
+//                        String filename = Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record/AudioRecording.pcm";
+//                        OutputStream  os  = new FileOutputStream(filename);
                     while (!forceStop) {
                         int ret = audio.read(inBuffer, 0, bufferSize);
 
@@ -475,7 +478,14 @@ public class AudioService extends Service {
 //                            speechData2[lenSpeech*2+1] = (byte)((inBuffer[i] & 0xFF00) >> 8);
                             lenSpeech++;
                         }
+//                        os.write(speechData);
                     }
+//                        os.close();
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
                     String  audioContents = Base64.encodeToString(
                             speechData, 0, lenSpeech*2, Base64.NO_WRAP);
                     File savefolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record");
@@ -488,7 +498,8 @@ public class AudioService extends Service {
 
                     try {
                         OutputStream  os  = new FileOutputStream(filename);
-                        os.write(speechData);
+// 말한길이만큼 파일에 써준다
+                        os.write(speechData,0,lenSpeech*2);
                         os.close();
 
                         BufferedWriter buf = new BufferedWriter(new FileWriter(sendtestfileuri, true));
