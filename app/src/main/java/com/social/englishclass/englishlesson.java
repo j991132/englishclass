@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -55,8 +56,13 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -64,11 +70,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
 import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
@@ -94,7 +106,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private ImageButton mBtnPlayPause;
     private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
     private String folder, fname;
-    public  String serchfilename;
+    public  String serchfilename, ext ;
+    public  String audioContents = "";
     private File beforeFileName, afterFileName, beforesendtest, aftersendtest;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
@@ -105,6 +118,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private StorageTask mUploadTask;
 
 
+    String result;
 
 
     @Override
@@ -628,6 +642,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         deletedialog.setContentView(R.layout.delete);
         TextView deletedialogtitle = (TextView) deletedialog.findViewById(R.id.deleltedialogtitle);
         deletedialogtitle.setText("선택된 파일  : "+filenamevalue);
+        ext = filepathvalue.toString().substring(filepathvalue.toString().lastIndexOf("."));
+        Log.e("롱클릭시 넘겨진자   ", ""+ext);
 //        folder = "/storage/emulated/0/englishclass/record";
         Button  btn_send_firebase = (Button) deletedialog.findViewById(R.id.btn_send_firebase);
         Button  btn_send_test = (Button) deletedialog.findViewById(R.id.btn_send_test);
@@ -638,7 +654,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         btn_send_firebase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File  deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue+".3gp");
+                File  deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue+ext);
                 Uri fileuri = Uri.fromFile(deletefile);
                 Log.e("파일패스에서 얻어지는 uri   ", ""+fileuri);
                 uploadfile(filenamevalue, fileuri);
@@ -648,6 +664,14 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         btn_send_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+             //   deletedialog.dismiss();
+
+
+                String  sendtestfile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record/"+ filenamevalue+".txt";
+                Log.e("영어평가전송버튼 누를 때 선택된 파일   ", ""+ sendtestfile);
+                sendtest(sendtestfile);
+                sendtestThread();
+
 
             }
         });  //영어발음평가 전송 끝
@@ -723,11 +747,11 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
+
                             Upload upload = new Upload(FileName, taskSnapshot.getUploadSessionUri().toString());
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(uploadId).setValue(upload);
-
+                            progressDialog.dismiss();
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -1050,5 +1074,146 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 .convert();
         Log.e("mp3변환", "변환했음 마지막부분"  );
     }
+public void sendtest(String file){
+    StringBuffer strBuffer = new StringBuffer();
+    try{
+        InputStream is = new FileInputStream(file);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String line="";
+        while ((line=reader.readLine())!=null){
+            strBuffer.append(line);
+        }
+        reader.close();
+        is.close();
+    }catch (IOException e){
+        e.printStackTrace();
+        return;
+    }
+    audioContents= strBuffer.toString();
+    Log.e("txt 파일 읽어오기  ", ""+audioContents  );
+}
+//영어평가 보내기 스레드
+    public void sendtestThread(){
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("업로드중...");
+        progressDialog.show();
 
+
+        Thread threadRecog = new Thread(new Runnable() {
+            public void run() {
+
+                result = sendDataAndGetResult();
+            }
+        });
+        threadRecog.start();
+        try {
+            threadRecog.join(20000);
+            if (threadRecog.isAlive()) {
+                threadRecog.interrupt();
+//                        SendMessage("No response from server for 20 secs", 4);
+            } else {
+//                        SendMessage("OK", 5);
+                progressDialog.dismiss();
+//영어평가 결과 다이얼로그 띄우기
+                final Dialog sendtestdialog = new Dialog(englishlesson.this);
+                sendtestdialog.setContentView(R.layout.sendtestdialog);
+                TextView textResult = (TextView) sendtestdialog.findViewById(R.id.textresult);
+                TextView scoreResult = (TextView) sendtestdialog.findViewById(R.id.scoreresult);
+                Button test_cancle = (Button)sendtestdialog.findViewById(R.id.test_cancle);
+                ImageView imageresult = (ImageView)sendtestdialog.findViewById(R.id.imageresult);
+
+                test_cancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sendtestdialog.dismiss();
+                    }
+                });
+
+                String r = StringEscapeUtils.unescapeJava(result);
+                String target1 = "\"recognized\":\"";
+                int target1num = r.indexOf(target1);
+                String target2 = "\",\"score\":";
+                int target2num = r.indexOf(target2);
+                String text = r.substring(target1num+14,target2num);
+                String score = r.substring(target2num+10, target2num+14);
+                float s = Float.parseFloat(score)*100/5;
+                Log.e("평가결과 다이얼로그   ", ""+ r);
+                Log.e("평가결과 텍스트   ", ""+ text);
+                Log.e("평가결과 점수   ", ""+ score);
+                textResult.setText(text);
+                scoreResult.setText(Float.toString(s)+"%");
+                if(s<40){
+                    imageresult.setImageResource(R.drawable.star1);
+                }else if(40<=s && s<70 ){
+                    imageresult.setImageResource(R.drawable.star2);
+                }else {imageresult.setImageResource(R.drawable.star3);}
+
+                sendtestdialog.show();
+            }
+        } catch (InterruptedException e) {
+//                    SendMessage("Interrupted", 4);
+        }
+    }
+    public String sendDataAndGetResult () {
+        String openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";
+        String accessKey = "68c063de-3739-4796-ba10-5c6c3152d760";
+//        String accessKey = editID.getText().toString().trim();
+        String languageCode = "english";
+
+
+        Gson gson = new Gson();
+
+//                languageCode = "english";
+//                openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";
+
+
+        Map<String, Object> request = new HashMap<>();
+        Map<String, String> argument = new HashMap<>();
+
+
+
+        argument.put("language_code", languageCode);
+        argument.put("audio", audioContents);
+
+        request.put("access_key", accessKey);
+        request.put("argument", argument);
+
+        URL url;
+        Integer responseCode;
+        String responBody;
+        try {
+            url = new URL(openApiURL);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.write(gson.toJson(request).getBytes("UTF-8"));
+            wr.flush();
+            wr.close();
+            Log.e("보내기  ", ""+wr  );
+            responseCode = con.getResponseCode();
+            if ( responseCode == 200 ) {
+                InputStream is = new BufferedInputStream(con.getInputStream());
+                responBody = readStream(is);
+                Log.e("받기  ", ""+responBody  );
+                return responBody;
+
+            }
+
+            else
+                return "ERROR: " + Integer.toString(responseCode);
+        } catch (Throwable t) {
+            return "ERROR: " + t.toString();
+        }
+    }
+    public static String readStream(InputStream in) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader r = new BufferedReader(new InputStreamReader(in),1000);
+        for (String line = r.readLine(); line != null; line =r.readLine()){
+            sb.append(line);
+        }
+        in.close();
+        return sb.toString();
+    }
 }//메인 종료
