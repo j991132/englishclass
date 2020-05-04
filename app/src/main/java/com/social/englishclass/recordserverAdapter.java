@@ -1,5 +1,6 @@
 package com.social.englishclass;
 
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -27,11 +28,13 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.List;
 
+import static java.security.AccessController.getContext;
+
 public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapter.AudioViewHolder> {
     private static Context mContext;
     private List<Upload> mUploads;
     public static MediaPlayer mMediaplayer;
-    private Uri uri, muri;
+    public Uri uri, muri;
     private StorageReference mStorageRef;
     private static boolean isPrepared ;
     public static boolean reset;
@@ -55,7 +58,9 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
         Upload uploadCurrent = mUploads.get(position);
 
         holder. mTxtTitle.setText(uploadCurrent.getName());
+        Log.e("바인드된 파일이름   ", ""+mUploads);
         uri = Uri.parse(uploadCurrent.getUrl());
+        Log.e("바인드된 uri   ", ""+uri);
         ext1 = uri.toString().substring(uri.toString().lastIndexOf("."));
         ext = ext1.substring(0,4);
         Log.e("리사이클뷰에서 얻어지는 파일 확장자   ", ""+ext);
@@ -78,7 +83,9 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
 
     public class AudioViewHolder extends RecyclerView.ViewHolder {
         private final Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
-//        private ImageView mImgAlbumArt;
+
+
+        //        private ImageView mImgAlbumArt;
         private TextView mTxtTitle;
 
 //        private TextView mTxtSubTitle;
@@ -86,22 +93,31 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
         private recordserverAdapter.AudioItem mItem;
         private int mPosition;
 
-        private AudioViewHolder(View view) {
+        private AudioViewHolder(final View view) {
             super(view);
 //            mImgAlbumArt = (ImageView) view.findViewById(R.id.img_albumart);
             mTxtTitle = (TextView) view.findViewById(R.id.txt_title);
 //            mTxtSubTitle = (TextView) view.findViewById(R.id.txt_sub_title);
 //            mTxtDuration = (TextView) view.findViewById(R.id.txt_duration);
+          
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     Log.e("파이어베이스에서 불러온 이름  ", mTxtTitle.getText().toString());
                     Log.e("파이어베이스에서 불러온 uri  ", uri.toString());
-                    mMediaplayer = new MediaPlayer();
-                    mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    Log.e(" 파일 확장자   ", ""+ext);
+                    String file_name_ext = mTxtTitle.getText().toString()+ext;
+//리사이클뷰 어댑터안의 뷰에서 인텐트 전달
+                    Intent intent = new Intent(view.getContext(), recordserverplay.class);
+                    intent.putExtra("filename", mTxtTitle.getText().toString());
+                    intent.putExtra("ext", ext);
+                    mContext.startActivity(intent);
 
-                    getaudiourl(mTxtTitle.getText().toString());
+//                    mMediaplayer = new MediaPlayer();
+//                    mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+//                    getaudiourl(mTxtTitle.getText().toString());
 
 
 

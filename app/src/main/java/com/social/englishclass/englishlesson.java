@@ -495,12 +495,14 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 }else {
 
                     Log.e("재생시간", String.valueOf(duration));
+//pcm to wav
                     try {
                         rawToWave(beforeFileName, afterFileName);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 //                    wavtomp3(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "1.wav"));
+//wav to mp3
                     wavtomp3(afterFileName);
 //                    beforeFileName.renameTo(afterFileName);
                     beforesendtest.renameTo(aftersendtest);
