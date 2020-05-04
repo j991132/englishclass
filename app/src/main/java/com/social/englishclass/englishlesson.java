@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioRecord;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -470,7 +471,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.pcm");
                 beforesendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "sendtest.txt");
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
-                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".pcm");
+                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".wav");
                 aftersendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".txt");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
 
@@ -480,40 +481,45 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //                    afterFileName.delete();
 //                    metadata(String.valueOf(beforeFileName));
                     Log.e("재생시간",String.valueOf( duration));
-//                    try {
-//                        rawToWave(beforeFileName, afterFileName);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
+                    try {
+                        rawToWave(beforeFileName, afterFileName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 //                      wavtomp3(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "1.wav"));
-//                    wavtomp3(afterFileName);
-                    beforeFileName.renameTo(afterFileName);
+                    wavtomp3(afterFileName);
+//                    beforeFileName.renameTo(afterFileName);
                     beforesendtest.renameTo(aftersendtest);
 //                    updatadata(FileName+"_"+time);
 //                    Log.e("삭제된 파일이름      ", String.valueOf(afterFileName));
                 }else {
 
                     Log.e("재생시간", String.valueOf(duration));
-//                    try {
-//                        rawToWave(beforeFileName, afterFileName);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
+                    try {
+                        rawToWave(beforeFileName, afterFileName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 //                    wavtomp3(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "1.wav"));
-//                    wavtomp3(afterFileName);
-                    beforeFileName.renameTo(afterFileName);
+                    wavtomp3(afterFileName);
+//                    beforeFileName.renameTo(afterFileName);
                     beforesendtest.renameTo(aftersendtest);
                     fname = String.valueOf(afterFileName);
 //                    metadata(String.valueOf(afterFileName));
 
+
 //                metadata(fname);
                     ContentValues values = new ContentValues();
-                    values.put(MediaStore.Audio.Media.DISPLAY_NAME, afterFileName.getName());
+                    String mp3ext = afterFileName.getName().toString().substring(0,afterFileName.getName().toString().lastIndexOf("."))+".mp3";
+                    String mp3extpath = afterFileName.getPath().toString().substring(0,afterFileName.getPath().toString().lastIndexOf("."))+".mp3";
+                    File mp3 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", mp3ext);
+                    Log.e("mp3 확장자 얻기 위한 이름   ", ""+mp3ext);
+                    values.put(MediaStore.Audio.Media.DISPLAY_NAME, mp3.getName());
                     values.put(MediaStore.Audio.Media.TITLE, FileName+"_"+time);
 
 //                    values.put(MediaStore.Audio.Media.DURATION, duration);
                     Log.e("녹음 중지 시 저장되는 이름   ", afterFileName.getName());
-                    values.put(MediaStore.Audio.Media.DATA, afterFileName.getPath());
+                    values.put(MediaStore.Audio.Media.DATA, mp3.getPath());
                     Log.e("녹음 중지 시 저장되는 경로   ", afterFileName.getPath());
 
                     values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/*");
@@ -564,6 +570,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
 //                    getContentResolver().update(Settings.System.CONTENT_URI, values, null, null);
 */
+                afterFileName.delete();
                 recordname.dismiss();
             }
         }); //ok버튼 끝
@@ -680,12 +687,12 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View view) {
 //                삭제시 지우기
-                File  deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue+".3gp");
+                File  deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue+ext);
                Uri fileuri = Uri.fromFile(deletefile);
                 Log.e("파일패스에서 얻어지는 uri   ", ""+fileuri);
                 if (deletefile.delete()){
                     deletedata(filenamevalue);
-                    Toast.makeText(getApplicationContext(), "녹음파일  " + filenamevalue+".3gp 가 삭제되었습니다." , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "녹음파일  " + filenamevalue+ext+" 가 삭제되었습니다." , Toast.LENGTH_SHORT).show();
                     deletedialog.dismiss();
                 }
             }
@@ -982,21 +989,21 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             writeInt(output, 16); // subchunk 1 size
             writeShort(output, (short) 1); // audio format (1 = PCM)
             writeShort(output, (short) 1); // number of channels
-            writeInt(output, 44100); // sample rate
+            writeInt(output, 16000); // sample rate
             writeInt(output, 16000 * 2); // byte rate
             writeShort(output, (short) 2); // block align
             writeShort(output, (short) 16); // bits per sample
             writeString(output, "data"); // subchunk 2 id
             writeInt(output, rawData.length); // subchunk 2 size
             // Audio data (conversion big endian -> little endian)
-            short[] shorts = new short[rawData.length / 2];
-            ByteBuffer.wrap(rawData).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shorts);
-            ByteBuffer bytes = ByteBuffer.allocate(shorts.length * 2);
-            for (short s : shorts) {
-                bytes.putShort(s);
-            }
-
-            output.write(fullyReadFileToBytes(rawFile));
+//            short[] shorts = new short[rawData.length / 2];
+//            ByteBuffer.wrap(rawData).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shorts);
+//            ByteBuffer bytes = ByteBuffer.allocate(shorts.length * 2);
+//            for (short s : shorts) {
+//                bytes.putShort(s);
+//            }
+            output.write(rawData);
+//            output.write(fullyReadFileToBytes(rawFile));
         } finally {
             if (output != null) {
                 output.close();
