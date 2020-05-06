@@ -103,7 +103,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private String folder, fname;
     public  String serchfilename, ext ;
     public  String audioContents = "";
-    private File beforeFileName, afterFileName, beforesendtest, aftersendtest;
+    private File beforeFileName, afterFileName, beforesendtest, aftersendtest, exisitFileName;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private Long duration;
@@ -472,6 +472,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                 beforesendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "sendtest.txt");
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
                 afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".wav");
+                exisitFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".pcm");
                 aftersendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".txt");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
 
@@ -480,9 +481,10 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //                    afterFileName.mkdirs();
 //                    afterFileName.delete();
 //                    metadata(String.valueOf(beforeFileName));
+                    beforeFileName.renameTo(exisitFileName);
                     Log.e("재생시간",String.valueOf( duration));
                     try {
-                        rawToWave(beforeFileName, afterFileName);
+                        rawToWave(exisitFileName, afterFileName);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -572,7 +574,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
 //                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
 //                    getContentResolver().update(Settings.System.CONTENT_URI, values, null, null);
 */
-                afterFileName.delete();
+//                afterFileName.delete();
                 recordname.dismiss();
             }
         }); //ok버튼 끝
