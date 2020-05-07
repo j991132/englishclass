@@ -14,11 +14,16 @@ import android.widget.Button;
 public class SelectLesson extends AppCompatActivity {
 
     private Intent intent;
-
+    private String login_name, token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_lesson);
+
+        Intent login_intent = getIntent();
+        login_name = login_intent.getStringExtra("login_name");
+        token = login_intent.getStringExtra("token");
+
         Button btn1 = (Button) findViewById(R.id.button1);
         Button btn2 = (Button) findViewById(R.id.button2);
         Button btn3 = (Button) findViewById(R.id.button3);
@@ -38,51 +43,74 @@ public class SelectLesson extends AppCompatActivity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.button1:
-
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson1");
                         startActivity(intent);
                         break;
                     case R.id.button2:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson2");
                         startActivity(intent);
                         break;
                     case R.id.button3:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson3");
                         startActivity(intent);
                         break;
                     case R.id.button4:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson4");
                         startActivity(intent);
                         break;
                     case R.id.button5:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson5");
                         startActivity(intent);
                         break;
                     case R.id.button6:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson6");
                         startActivity(intent);
                         break;
                     case R.id.button7:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson7");
                         startActivity(intent);
                         break;
                     case R.id.button8:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson8");
                         startActivity(intent);
                         break;
                     case R.id.button9:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson9");
                         startActivity(intent);
                         break;
                     case R.id.button10:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson10");
                         startActivity(intent);
                         break;
                     case R.id.button11:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson11");
                         startActivity(intent);
                         break;
                     case R.id.button12:
+                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson12");
                         startActivity(intent);
                         break;
@@ -103,8 +131,7 @@ public class SelectLesson extends AppCompatActivity {
         btn12.setOnClickListener(Listener);
 
 
-//        testResolver();
-        //        testResolver();
+
     }
 
     private void testResolver(){

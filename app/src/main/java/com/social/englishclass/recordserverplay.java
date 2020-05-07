@@ -27,15 +27,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class recordserverplay extends AppCompatActivity implements View.OnClickListener{
 
-    private String filename, ext, stress, accent, speed, pronunciation;
+    private String filename, ext, stress, accent, speed, pronunciation, login_name;
     public static MediaPlayer mMediaplayer;
     private Uri uri, muri;
     private StorageReference mStorageRef;
@@ -53,7 +59,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     private ListView chat_view;
-
+    private static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
+    private static final String SERVER_KEY = "AAAAPWMRRUI:APA91bGaqqUJuVclBGOynB4TiyWFDyVFqGs1l_blyaxaHI7oaUKecEgXG5bx5WQ7B4Nq22kwFwf4fH3YfzHccdt4Sy2ux2Yx-DvBmEYgKRmefBVOhWzVsensa_zIe5pOVVCeymi3D5DK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +69,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 
 // 인텐트 값 받기
         Intent intent = getIntent();
+        login_name = intent.getStringExtra("login_name");
         filename = intent.getStringExtra("filename");
         ext = intent.getStringExtra("ext");
 //화면 뷰 매칭
@@ -85,7 +93,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         up_mid_down_select("eng_speed");
         up_mid_down_select("eng_pronunciation");
         openChat();
-    }
+    }//메인 끝
 
     @Override
     public void onClick(View v) {
@@ -111,13 +119,18 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.save_btn:
                 if(comment.getText().toString().equals(""))
+
                     return;
+                sendPostToFCM(comment.getText().toString());
+                Log.e("코멘트 메세지  ", ""+comment.getText().toString());
 //4종류 평가 전송
                 umd_test umd = new umd_test(stress, accent, speed, pronunciation);
                 databaseReference.child("umd_test").child(filename).push().setValue(umd);
 //이름과 코멘트 챗 전송
-                ChatDTO chat = new ChatDTO("test", comment.getText().toString());
+                ChatDTO chat = new ChatDTO(login_name, comment.getText().toString());
                 databaseReference.child("chat").child(filename).push().setValue(chat);
+
+
                 comment.setText("");
 
 
@@ -126,6 +139,56 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }//클릭 끝
+//푸쉬 알림 보내기
+    private  void  sendPostToFCM(final String msg){
+
+
+            firebaseDatabase.getReference("users")
+                    .child(login_name)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            final UserData userData = dataSnapshot.getValue(UserData.class);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        // FMC 메시지 생성 start
+                                        JSONObject root = new JSONObject();
+                                        JSONObject notification = new JSONObject();
+                                        notification.put("body", msg);
+                                        Log.e("전송하는 메세지  ", ""+notification+msg);
+
+                                        notification.put("title", getString(R.string.app_name));
+                                        root.put("notification", notification);
+                                        root.put("to", userData.fcmToken);
+                                        // FMC 메시지 생성 end
+
+                                        URL Url = new URL(FCM_MESSAGE_URL);
+                                        HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                                        conn.setRequestMethod("POST");
+                                        conn.setDoOutput(true);
+                                        conn.setDoInput(true);
+                                        conn.addRequestProperty("Authorization", "key=" + SERVER_KEY);
+                                        conn.setRequestProperty("Accept", "application/json");
+                                        conn.setRequestProperty("Content-type", "application/json");
+                                        OutputStream os = conn.getOutputStream();
+                                        os.write(root.toString().getBytes("utf-8"));
+                                        os.flush();
+                                        conn.getResponseCode();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+        }
 
 //메세지 추가 메서드
 private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
@@ -137,7 +200,7 @@ private void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapt
     ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
     adapter.remove(chatDTO.getUserName() + " : " + chatDTO.getMessage());
 }
-    //메세지 추가 메서드
+    //평가 셋팅 메서드
     private void add_umd_test(DataSnapshot dataSnapshot) {
         umd_test umd_data = dataSnapshot.getValue(umd_test.class);
         text_stress.setText(umd_data.getstress());
@@ -195,7 +258,7 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
 
     @Override
     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+        add_umd_test(dataSnapshot);
     }
 
     @Override

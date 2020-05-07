@@ -14,115 +14,66 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="Interesting  English  Class"
+        android:textColor="#FAD886"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        tools:layout_editor_absoluteX="83dp"
+        tools:layout_editor_absoluteY="183dp">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="로그인" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            tools:layout_editor_absoluteX="83dp"
-            tools:layout_editor_absoluteY="183dp">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 1" />
+                android:text="아이디  :  " />
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/login_name"
+                android:layout_width="227dp"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 2" />
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 3" />
-
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 4" />
-
-            <Button
-                android:id="@+id/button5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 5" />
-
-            <Button
-                android:id="@+id/button6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 6" />
-
-            <Button
-                android:id="@+id/button7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 7" />
-
-            <Button
-                android:id="@+id/button8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 8" />
-
-            <Button
-                android:id="@+id/button9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 9" />
-
-            <Button
-                android:id="@+id/button10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 10" />
-
-            <Button
-                android:id="@+id/button11"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 11" />
-
-            <Button
-                android:id="@+id/button12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#F7C25F"
-                android:text="Lesson 12" />
-
+                android:layout_weight="1"
+                android:background="#F5EDED"
+                android:hint="예)60801" />
 
         </LinearLayout>
 
-    </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#F7C25F"
+            android:text="로그인" />
+    </LinearLayout>
 
 
 </LinearLayout>

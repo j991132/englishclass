@@ -100,7 +100,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
     private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
-    private String folder, fname;
+    private String folder, fname, login_name, token;
     public  String serchfilename, ext ;
     public  String audioContents = "";
     private File beforeFileName, afterFileName, beforesendtest, aftersendtest, exisitFileName;
@@ -123,6 +123,8 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_englishlesson);
 
         Intent intent = getIntent();
+        login_name = intent.getStringExtra("login_name");
+        token = intent.getStringExtra("token");
         folder = intent.getStringExtra("lesson");
 
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
@@ -405,6 +407,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
   */
 // 녹음서버 목록 보여주는 엑티비티 띄우기
                 Intent intent = new Intent(this, recordserver.class);
+                intent.putExtra("login_name",login_name);
                 startActivity(intent);
                 break;
         }
@@ -758,9 +761,9 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            Upload upload = new Upload(FileName, taskSnapshot.getUploadSessionUri().toString());
+                            Upload upload = new Upload(FileName, taskSnapshot.getUploadSessionUri().toString(), login_name, token );
                             String uploadId = mDatabaseRef.push().getKey();
-                            mDatabaseRef.child(uploadId).setValue(upload);
+                            mDatabaseRef.child(FileName).setValue(upload);
                             progressDialog.dismiss();
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                         }

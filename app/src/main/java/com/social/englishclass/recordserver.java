@@ -44,12 +44,17 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
     private List<Upload> mUploads;
     private ImageButton mBtnPlayPause;
     private TextView rec_mTxtTitle;
+    public static String login_name;
     String filename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recordserver);
+
+        Intent intent = getIntent();
+        login_name = intent.getStringExtra("login_name");
+
         mBtnPlayPause = (ImageButton) findViewById(R.id.rec_btn_play_pause);
         mBtnPlayPause.setOnClickListener(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.rec_recyclerview);
