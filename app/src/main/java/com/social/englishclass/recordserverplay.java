@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,7 +43,7 @@ import java.util.ArrayList;
 
 public class recordserverplay extends AppCompatActivity implements View.OnClickListener{
 
-    private String filename, ext, stress, accent, speed, pronunciation, login_name;
+    private String filename, ext, stress, accent, speed, pronunciation, login_name, login_name_fcm, login_name_teacher, send_token;
     public static MediaPlayer mMediaplayer;
     private Uri uri, muri;
     private StorageReference mStorageRef;
@@ -88,11 +90,19 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         text_accent = (TextView)findViewById(R.id.text_accent);
         text_speed = (TextView)findViewById(R.id.text_speed);
         text_pronunciation = (TextView)findViewById(R.id.text_pronunciation);
+        LinearLayout test_layout1 = (LinearLayout) findViewById(R.id.t_test1);
+        LinearLayout test_layout2 = (LinearLayout) findViewById(R.id.t_test2);
+        if(!login_name.equals("teacher")){
+            test_layout1.setVisibility(View.GONE);
+            test_layout2.setVisibility(View.GONE);
+        }
         up_mid_down_select("eng_stress");
         up_mid_down_select("eng_accent");
         up_mid_down_select("eng_speed");
         up_mid_down_select("eng_pronunciation");
         openChat();
+//보이는 뷰에 업로드했던 로그인아이디 가져오기
+        getLoginId();
     }//메인 끝
 
     @Override
@@ -139,16 +149,77 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }//클릭 끝
+//파이어베이스에서 뷰에 해당하는 업로드시 저장된 로그인아이디 가져오기
+    private void getLoginId(){
+        firebaseDatabase.getReference("uploads")
+                .child(filename)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        final Upload upload = dataSnapshot.getValue(Upload.class);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    login_name_fcm = upload.getUserId();
+                                    Log.e("파이어베이스 저장된 로그인아이디  ", ""+login_name_fcm);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+ //파이어베이스에서 선생님의 로그인아이디 가져오기
+    private void getTeacherLoginId(){
+        firebaseDatabase.getReference("users")
+                .child("teacher")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        final UserData userTeacherData = dataSnapshot.getValue(UserData.class);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    if (userTeacherData != null) {
+                                        login_name_teacher = userTeacherData.fcmToken;
+                                        Log.e("파이어베이스 저장된 선생님 토큰  ", ""+login_name_teacher);
+                                    }
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
 //푸쉬 알림 보내기
     private  void  sendPostToFCM(final String msg){
-
+        getTeacherLoginId();
 
             firebaseDatabase.getReference("users")
-                    .child(login_name)
+                    .child(login_name_fcm)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             final UserData userData = dataSnapshot.getValue(UserData.class);
+                            if(login_name.equals(login_name_fcm)){
+                                send_token = login_name_teacher;
+                            }else{
+                                send_token = userData.fcmToken;
+                            }
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -161,7 +232,10 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 
                                         notification.put("title", getString(R.string.app_name));
                                         root.put("notification", notification);
-                                        root.put("to", userData.fcmToken);
+
+                                        root.put("to", send_token);
+                                            Log.e("로그인 아이디,  저장된 아이디,put", "//"+login_name+"//"+login_name_fcm+"//"+send_token);
+
                                         // FMC 메시지 생성 end
 
                                         URL Url = new URL(FCM_MESSAGE_URL);
@@ -408,6 +482,7 @@ switch (spiner_name){
                                 break;
                         }
                         break;
+
                 }
             }
 

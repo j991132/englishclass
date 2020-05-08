@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity{
                 switch (v.getId()) {
                     case R.id.login_btn:
                         UserData userdata = new UserData();
-                        userdata.userID = login_name.getText().toString();
+                        userdata.userID = login_name.getText().toString().trim();
                         userdata.fcmToken = FirebaseInstanceId.getInstance().getToken();
-//                        firebaseDatabase.getReference("users").child(userdata.userID).setValue(userdata);
+                        firebaseDatabase.getReference("users").child(userdata.userID).setValue(userdata);
                         intent.putExtra("login_name", userdata.userID);
                         intent.putExtra("token", userdata.fcmToken);
                         startActivity(intent);

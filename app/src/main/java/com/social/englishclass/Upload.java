@@ -10,7 +10,7 @@ public class Upload {
         //empty constructor needed
     }
 
-    public Upload(String name, String Url, String userId, String token) {
+    public Upload(String name, String Url, String userId) {
         if (name.trim().equals("")) {
             name = "No Name";
         }
@@ -18,7 +18,7 @@ public class Upload {
         mName = name;
         mUrl = Url;
         muserId = userId;
-        mtoken = token;
+//        mtoken = token;
     }
 
     public String getName() {
@@ -45,12 +45,12 @@ public class Upload {
         muserId = userId;
     }
 
-    public String getToken() {
-        return mtoken;
-    }
+//    public String getToken() {
+//        return mtoken;
+//    }
 
-    public void setToken(String token) {
-        mtoken = token;
-    }
+//    public void setToken(String token) {
+//        mtoken = token;
+//    }
 
 }

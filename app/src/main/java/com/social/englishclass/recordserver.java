@@ -74,10 +74,14 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mUploads.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
                     Upload upload = postSnapshot.getValue(Upload.class);
+//                    mUploads.clear();
                     mUploads.add(upload);
                 }
  /*
