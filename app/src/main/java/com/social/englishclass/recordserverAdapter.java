@@ -110,6 +110,7 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
                     String file_name_ext = mTxtTitle.getText().toString()+ext;
 //리사이클뷰 어댑터안의 뷰에서 인텐트 전달
                     Intent intent = new Intent(view.getContext(), recordserverplay.class);
+                    intent.putExtra("login_school", recordserver.login_school);
                     intent.putExtra("login_name", recordserver.login_name);
                     intent.putExtra("filename", mTxtTitle.getText().toString());
                     intent.putExtra("ext", ext);

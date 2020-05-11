@@ -46,7 +46,7 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
     private ImageButton mBtnPlayPause, search_server_btn;
     private TextView rec_mTxtTitle;
     private EditText search_server_text;
-    public static String login_name;
+    public static String login_name, login_school;
     String filename;
 
     @Override
@@ -55,6 +55,7 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_recordserver);
 
         Intent intent = getIntent();
+        login_school = intent.getStringExtra("login_school");
         login_name = intent.getStringExtra("login_name");
 
         mBtnPlayPause = (ImageButton) findViewById(R.id.rec_btn_play_pause);

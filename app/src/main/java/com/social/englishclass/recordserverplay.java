@@ -43,7 +43,7 @@ import java.util.ArrayList;
 
 public class recordserverplay extends AppCompatActivity implements View.OnClickListener{
 
-    private String filename, ext, stress, accent, speed, pronunciation, login_name, login_name_fcm, login_name_teacher, send_token;
+    private String filename, ext, stress, accent, speed, pronunciation, login_name, login_name_fcm, login_name_teacher, send_token, login_school;
     public static MediaPlayer mMediaplayer;
     private Uri uri, muri;
     private StorageReference mStorageRef;
@@ -71,6 +71,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 
 // 인텐트 값 받기
         Intent intent = getIntent();
+        login_school = intent.getStringExtra("login_school");
         login_name = intent.getStringExtra("login_name");
         filename = intent.getStringExtra("filename");
         ext = intent.getStringExtra("ext");
@@ -127,6 +128,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
                     getaudiourl(filename + ext);
                 }
                 break;
+// 피드백 저장버튼 클릭시
             case R.id.save_btn:
                 if(comment.getText().toString().equals(""))
 
@@ -179,7 +181,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
  //파이어베이스에서 선생님의 로그인아이디 가져오기
     private void getTeacherLoginId(){
         firebaseDatabase.getReference("users")
-                .child("teacher")
+                .child(login_school+"teacher")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

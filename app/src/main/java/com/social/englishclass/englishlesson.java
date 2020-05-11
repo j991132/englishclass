@@ -100,7 +100,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
     private TextView mTxtTitle;
     private ImageButton mBtnPlayPause;
     private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
-    private String folder, fname, login_name, token;
+    private String folder, fname, login_name, token, login_school;
     public  String serchfilename, ext ;
     public  String audioContents = "";
     private File beforeFileName, afterFileName, beforesendtest, aftersendtest, exisitFileName;
@@ -123,6 +123,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_englishlesson);
 
         Intent intent = getIntent();
+        login_school = intent.getStringExtra("login_school");
         login_name = intent.getStringExtra("login_name");
         token = intent.getStringExtra("token");
         folder = intent.getStringExtra("lesson");
@@ -407,6 +408,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
   */
 // 녹음서버 목록 보여주는 엑티비티 띄우기
                 Intent intent = new Intent(this, recordserver.class);
+                intent.putExtra("login_school",login_school);
                 intent.putExtra("login_name",login_name);
                 startActivity(intent);
                 break;
