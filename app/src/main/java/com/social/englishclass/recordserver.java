@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,8 +43,9 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
     private DatabaseReference mDatabaseRef;
     private StorageReference mStorageRef;
     private List<Upload> mUploads;
-    private ImageButton mBtnPlayPause;
+    private ImageButton mBtnPlayPause, search_server_btn;
     private TextView rec_mTxtTitle;
+    private EditText search_server_text;
     public static String login_name;
     String filename;
 
@@ -57,14 +59,16 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
         mBtnPlayPause = (ImageButton) findViewById(R.id.rec_btn_play_pause);
         mBtnPlayPause.setOnClickListener(this);
+        search_server_btn = (ImageButton)findViewById(R.id.search_server_btn);
         mRecyclerView = (RecyclerView) findViewById(R.id.rec_recyclerview);
+        search_server_btn.setOnClickListener(this);
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
         rec_mTxtTitle = (TextView) findViewById(R.id.rec_txt_title);
-
+        search_server_text = (EditText)findViewById(R.id.search_server_text);
         registerBroadcast();
 //        mProgressCircle = findViewById(R.id.progress_circle);
 
@@ -81,7 +85,6 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     Upload upload = postSnapshot.getValue(Upload.class);
-//                    mUploads.clear();
                     mUploads.add(upload);
                 }
  /*
@@ -144,6 +147,9 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
                 togglePlay((float) 1.00);
                 // 플레이어 화면으로 이동할 코드가 들어갈 예정
                 break;
+            case R.id.search_server_btn:
+                search_server();
+                break;
         }
     }
 
@@ -198,6 +204,35 @@ if(recordserverAdapter.reset ){
 
             recordserverAdapter.play(a);
         }
+    }
+//해당 차일드의 스트링값을 모두 가져와서 포함된 것만 검색
+    private void search_server(){
+        mUploads.clear();
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Boolean found;
+                String search = search_server_text.getText().toString();
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    String searchname = ds.child("name").getValue(String.class);
+                    found = searchname.contains(search);
+                    Log.e("검색어 포함 결과", searchname+"/"+found);
+                    if(found){
+                        Upload upload = ds.getValue(Upload.class);
+                        mUploads.add(upload);
+                    }
+                }
+//                mAdapter = new recordserverAdapter(recordserver.this, mUploads);
+
+                mRecyclerView.setAdapter(mAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseRef.addListenerForSingleValueEvent(eventListener);
     }
 }
 
