@@ -12,12 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class SelectLesson extends AppCompatActivity {
 
     private Intent intent;
     private String login_name, token, login_school;
-    private Dialog lesson_dialog;
+    private Dialog lesson_dialog, level_dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,84 +50,84 @@ public class SelectLesson extends AppCompatActivity {
                 switch (v.getId()) {
                     case R.id.button1:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson1");
                         startActivity(intent);
                         break;
                     case R.id.button2:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson2");
                         startActivity(intent);
                         break;
                     case R.id.button3:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson3");
                         startActivity(intent);
                         break;
                     case R.id.button4:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson4");
                         startActivity(intent);
                         break;
                     case R.id.button5:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson5");
                         startActivity(intent);
                         break;
                     case R.id.button6:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson6");
                         startActivity(intent);
                         break;
                     case R.id.button7:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson7");
                         startActivity(intent);
                         break;
                     case R.id.button8:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson8");
                         startActivity(intent);
                         break;
                     case R.id.button9:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson9");
                         startActivity(intent);
                         break;
                     case R.id.button10:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson10");
                         startActivity(intent);
                         break;
                     case R.id.button11:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson11");
                         startActivity(intent);
                         break;
                     case R.id.button12:
                         intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name",login_name);
+                        intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson12");
                         startActivity(intent);
@@ -148,10 +149,14 @@ public class SelectLesson extends AppCompatActivity {
         btn12.setOnClickListener(Listener);
 
 
+    }
+//레벨 다이얼로그
+    private  void levelDialog(){
+        level_dialog = new Dialog(this);
 
     }
-
-    private void lessonDialog(){
+//레슨 다이얼로그
+    private void lessonDialog(String lesson_num) {
         lesson_dialog = new Dialog(this);
         lesson_dialog.setContentView(R.layout.lesson_dialog);
 
@@ -159,43 +164,69 @@ public class SelectLesson extends AppCompatActivity {
         ImageButton lookandsay_btn = (ImageButton) lesson_dialog.findViewById(R.id.lookandsay_btn);
         ImageButton listenandrepeat_btn = (ImageButton) lesson_dialog.findViewById(R.id.listenandrepeat_btn);
         ImageButton letsread_btn = (ImageButton) lesson_dialog.findViewById(R.id.letsread_btn);
+        TextView lessondialog_text = (TextView) lesson_dialog.findViewById(R.id.lessondialog_text);
+        lessondialog_text.setText(lesson_num);
 
-    }
+        View.OnClickListener lessondialog_listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.lookandlisten_btn:
 
-    private void testResolver(){
-        String folder = "englishclass/record";
+                        break;
+                    case R.id.lookandsay_btn:
 
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-//               String folder = "/storage/emulated/0/Music";
-        String[] projection = new String[]{
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.ALBUM_ID,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.DATA
+                        break;
+                    case R.id.listenandrepeat_btn:
+
+                        break;
+                    case R.id.letsread_btn:
+
+                        break;
+                }
+            }
+
         };
+        lookandlisten_btn.setOnClickListener(lessondialog_listener);
+        lookandsay_btn.setOnClickListener(lessondialog_listener);
+        listenandrepeat_btn.setOnClickListener(lessondialog_listener);
+        letsread_btn.setOnClickListener(lessondialog_listener);
+    }//레슨다이얼로그 끝
+        private void testResolver () {
+            String folder = "englishclass/record";
+
+            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+//               String folder = "/storage/emulated/0/Music";
+            String[] projection = new String[]{
+                    MediaStore.Audio.Media._ID,
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.ALBUM,
+                    MediaStore.Audio.Media.ALBUM_ID,
+                    MediaStore.Audio.Media.DURATION,
+                    MediaStore.Audio.Media.DATA
+            };
 //쿼리를 위한 조건을 담는 부분 ? 한개당 1개의 아규먼트가 적용된다.
 //해당폴더는 검색하고 하위폴더는 제외하는 내용
 //        String selection = MediaStore.Audio.Media.DATA + " LIKE ? AND " + MediaStore.Audio.Media.DATA + " NOT LIKE ? ";
-        String selection = MediaStore.Audio.Media.DATA + " LIKE ? ";
+            String selection = MediaStore.Audio.Media.DATA + " LIKE ? ";
 // 원래는 미디어 ismusic 값이 1인 것(음악파일)은 모두 검색하는 조건이 들어갔었다
 //                String selection = MediaStore.Audio.Media.IS_MUSIC + " = 1";
 
-        String[] selectionArgs = new String[]{
-                "%" + folder + "%",
+            String[] selectionArgs = new String[]{
+                    "%" + folder + "%",
 //                "%" + folder + "/%/%"
-        };
-        Log.e("겟리스트", "폴더" + folder );
-        String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
+            };
+            Log.e("겟리스트", "폴더" + folder);
+            String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
 
-        Cursor cur = getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
-        while (cur.moveToNext()) {
-            Log.e("폴더안 파일 타이틀", "Title:" + cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+            Cursor cur = getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
+            while (cur.moveToNext()) {
+                Log.e("폴더안 파일 타이틀", "Title:" + cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+            }
+            Log.e("count", cur.getCount() + "");
+
+            cur.close();
         }
-        Log.e("count", cur.getCount() +"");
-
-        cur.close();
     }
-}
+
