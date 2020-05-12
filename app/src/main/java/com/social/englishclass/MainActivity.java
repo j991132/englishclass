@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity{
         final EditText login_school = (EditText)findViewById(R.id.login_school);
         final EditText login_name = (EditText)findViewById(R.id.login_name);
         Button login_btn= (Button) findViewById(R.id.login_btn);
+        RadioButton online_rbtn = (RadioButton)findViewById(R.id.online_rbtn);
+        RadioButton offline_rbtn = (RadioButton)findViewById(R.id.offline_rbtn);
 
 
 
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity{
 
                         UserData userdata = new UserData();
                         String schoolID = login_school.getText().toString().trim();
+                        userdata.schoolID = schoolID;
                         userdata.userID = login_name.getText().toString().trim();
                         userdata.fcmToken = FirebaseInstanceId.getInstance().getToken();
 
@@ -70,7 +74,8 @@ public class MainActivity extends AppCompatActivity{
             }
         };
         login_btn.setOnClickListener(Listener);
-
+        online_rbtn.setOnClickListener(Listener);
+        offline_rbtn.setOnClickListener(Listener);
 
 
     }

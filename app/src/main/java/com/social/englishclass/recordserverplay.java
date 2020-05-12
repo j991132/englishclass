@@ -43,7 +43,7 @@ import java.util.ArrayList;
 
 public class recordserverplay extends AppCompatActivity implements View.OnClickListener{
 
-    private String filename, ext, stress, accent, speed, pronunciation, login_name, login_name_fcm, login_name_teacher, send_token, login_school;
+    private String filename, ext, stress, accent, speed, pronunciation, login_name, login_name_fcm, login_name_teacher, send_token, login_school, schoolID;
     public static MediaPlayer mMediaplayer;
     private Uri uri, muri;
     private StorageReference mStorageRef;
@@ -93,7 +93,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         text_pronunciation = (TextView)findViewById(R.id.text_pronunciation);
         LinearLayout test_layout1 = (LinearLayout) findViewById(R.id.t_test1);
         LinearLayout test_layout2 = (LinearLayout) findViewById(R.id.t_test2);
-        if(!login_name.equals("teacher")){
+        if(!login_name.equals(login_school+"teacher")){
             test_layout1.setVisibility(View.GONE);
             test_layout2.setVisibility(View.GONE);
         }
@@ -104,6 +104,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         openChat();
 //보이는 뷰에 업로드했던 로그인아이디 가져오기
         getLoginId();
+        getSchoolId();
     }//메인 끝
 
     @Override
@@ -178,10 +179,40 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
                     }
                 });
     }
+//파이어베이스에서 학교아이디 가져오기
+    private void getSchoolId(){
+        firebaseDatabase.getReference("users")
+                .child(login_name)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        final UserData userSchoolData = dataSnapshot.getValue(UserData.class);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    if (userSchoolData != null) {
+                                        schoolID = userSchoolData.schoolID;
+                                        Log.e("파이어베이스 저장된 학교ID  ", ""+schoolID);
+                                    }
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
  //파이어베이스에서 선생님의 로그인아이디 가져오기
     private void getTeacherLoginId(){
+
         firebaseDatabase.getReference("users")
-                .child(login_school+"teacher")
+                .child(schoolID+"teacher")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -2,6 +2,7 @@ package com.social.englishclass;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,11 +11,14 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class SelectLesson extends AppCompatActivity {
 
     private Intent intent;
     private String login_name, token, login_school;
+    private Dialog lesson_dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,18 +29,18 @@ public class SelectLesson extends AppCompatActivity {
         login_name = login_intent.getStringExtra("login_name");
         token = login_intent.getStringExtra("token");
 
-        Button btn1 = (Button) findViewById(R.id.button1);
-        Button btn2 = (Button) findViewById(R.id.button2);
-        Button btn3 = (Button) findViewById(R.id.button3);
-        Button btn4 = (Button) findViewById(R.id.button4);
-        Button btn5 = (Button) findViewById(R.id.button5);
-        Button btn6 = (Button) findViewById(R.id.button6);
-        Button btn7 = (Button) findViewById(R.id.button7);
-        Button btn8 = (Button) findViewById(R.id.button8);
-        Button btn9 = (Button) findViewById(R.id.button9);
-        Button btn10 = (Button) findViewById(R.id.button10);
-        Button btn11 = (Button) findViewById(R.id.button11);
-        Button btn12 = (Button) findViewById(R.id.button12);
+        ImageButton btn1 = (ImageButton) findViewById(R.id.button1);
+        ImageButton btn2 = (ImageButton) findViewById(R.id.button2);
+        ImageButton btn3 = (ImageButton) findViewById(R.id.button3);
+        ImageButton btn4 = (ImageButton) findViewById(R.id.button4);
+        ImageButton btn5 = (ImageButton) findViewById(R.id.button5);
+        ImageButton btn6 = (ImageButton) findViewById(R.id.button6);
+        ImageButton btn7 = (ImageButton) findViewById(R.id.button7);
+        ImageButton btn8 = (ImageButton) findViewById(R.id.button8);
+        ImageButton btn9 = (ImageButton) findViewById(R.id.button9);
+        ImageButton btn10 = (ImageButton) findViewById(R.id.button10);
+        ImageButton btn11 = (ImageButton) findViewById(R.id.button11);
+        ImageButton btn12 = (ImageButton) findViewById(R.id.button12);
         intent = new Intent(this, englishlesson.class);
 
         View.OnClickListener Listener = new View.OnClickListener() {
@@ -144,6 +148,17 @@ public class SelectLesson extends AppCompatActivity {
         btn12.setOnClickListener(Listener);
 
 
+
+    }
+
+    private void lessonDialog(){
+        lesson_dialog = new Dialog(this);
+        lesson_dialog.setContentView(R.layout.lesson_dialog);
+
+        ImageButton lookandlisten_btn = (ImageButton) lesson_dialog.findViewById(R.id.lookandlisten_btn);
+        ImageButton lookandsay_btn = (ImageButton) lesson_dialog.findViewById(R.id.lookandsay_btn);
+        ImageButton listenandrepeat_btn = (ImageButton) lesson_dialog.findViewById(R.id.listenandrepeat_btn);
+        ImageButton letsread_btn = (ImageButton) lesson_dialog.findViewById(R.id.letsread_btn);
 
     }
 
