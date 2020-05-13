@@ -17,7 +17,7 @@ import android.widget.TextView;
 public class SelectLesson extends AppCompatActivity {
 
     private Intent intent;
-    private String login_name, token, login_school;
+    private String login_name, token, login_school, lesson;
     private Dialog lesson_dialog, level_dialog;
 
     @Override
@@ -42,18 +42,20 @@ public class SelectLesson extends AppCompatActivity {
         ImageButton btn10 = (ImageButton) findViewById(R.id.button10);
         ImageButton btn11 = (ImageButton) findViewById(R.id.button11);
         ImageButton btn12 = (ImageButton) findViewById(R.id.button12);
-        intent = new Intent(this, englishlesson.class);
+//        intent = new Intent(this, englishlesson.class);
 
         View.OnClickListener Listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.button1:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson1");
-                        startActivity(intent);
+                        lessonDialog("Lesson 1 - What Grade Are You In?");
+                        lesson = "Lesson 1";
+//                        intent.putExtra("login_school", login_school);
+//                        intent.putExtra("login_name", login_name);
+//                        intent.putExtra("token", token);
+//                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson1");
+//                        startActivity(intent);
                         break;
                     case R.id.button2:
                         intent.putExtra("login_school", login_school);
@@ -151,9 +153,50 @@ public class SelectLesson extends AppCompatActivity {
 
     }
 //레벨 다이얼로그
-    private  void levelDialog(){
+    private  void levelDialog(String level_num){
         level_dialog = new Dialog(this);
+        level_dialog.setContentView(R.layout.level_dialog);
 
+        ImageButton level1_btn = (ImageButton) level_dialog.findViewById(R.id.level1_btn);
+        ImageButton level2_btn = (ImageButton) level_dialog.findViewById(R.id.level2_btn);
+        ImageButton level3_btn = (ImageButton) level_dialog.findViewById(R.id.level3_btn);
+        ImageButton level4_btn = (ImageButton) level_dialog.findViewById(R.id.level4_btn);
+        ImageButton level5_btn = (ImageButton) level_dialog.findViewById(R.id.level5_btn);
+        TextView leveldialog_text = (TextView) level_dialog.findViewById(R.id.leveldialog_text);
+        leveldialog_text.setText(level_num);
+
+        View.OnClickListener leveldialog_listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.level1_btn:
+                        intent = new Intent(v.getContext(), level.class);
+                        startActivity(intent);
+                        lesson_dialog.dismiss();
+                        break;
+                    case R.id.level2_btn:
+
+                        break;
+                    case R.id.level3_btn:
+
+                        break;
+                    case R.id.level4_btn:
+
+                        break;
+                    case R.id.level5_btn:
+
+                        break;
+                }
+            }
+
+        };
+        level1_btn.setOnClickListener(leveldialog_listener);
+        level2_btn.setOnClickListener(leveldialog_listener);
+        level3_btn.setOnClickListener(leveldialog_listener);
+        level4_btn.setOnClickListener(leveldialog_listener);
+        level5_btn.setOnClickListener(leveldialog_listener);
+
+        level_dialog.show();
     }
 //레슨 다이얼로그
     private void lessonDialog(String lesson_num) {
@@ -172,7 +215,7 @@ public class SelectLesson extends AppCompatActivity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.lookandlisten_btn:
-
+                        levelDialog(lesson+" - Look And Listen");
                         break;
                     case R.id.lookandsay_btn:
 
@@ -191,6 +234,8 @@ public class SelectLesson extends AppCompatActivity {
         lookandsay_btn.setOnClickListener(lessondialog_listener);
         listenandrepeat_btn.setOnClickListener(lessondialog_listener);
         letsread_btn.setOnClickListener(lessondialog_listener);
+
+        lesson_dialog.show();
     }//레슨다이얼로그 끝
         private void testResolver () {
             String folder = "englishclass/record";
