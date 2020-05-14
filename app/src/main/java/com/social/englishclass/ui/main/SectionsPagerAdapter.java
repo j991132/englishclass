@@ -1,6 +1,7 @@
 package com.social.englishclass.ui.main;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -27,9 +28,39 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+
+        PlaceholderFragment fragment = null;
+//        fragment = PlaceholderFragment.newInstance(position + 1);
+//        fragment = new PlaceholderFragment();
+
+        switch(position) {
+            case 0:
+                fragment = PlaceholderFragment.newInstance(1);
+                Bundle args = new Bundle();
+                args.putString("l1lv1", "/storage/emulated/0/englishclass/lesson1/l1lv1.mp4");
+
+                fragment.setArguments(args);
+                break;
+            case 1:
+                fragment = PlaceholderFragment.newInstance(2);
+                break;
+            case 2:
+                fragment = PlaceholderFragment.newInstance(3);
+                break;
+            case 3:
+                fragment = PlaceholderFragment.newInstance(4);
+                break;
+            case 4:
+                fragment = PlaceholderFragment.newInstance(5);
+                break;
+        }
+
+
+        return fragment;
+
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+//        return PlaceholderFragment.newInstance(position + 1);
     }
 
     @Nullable
