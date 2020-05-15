@@ -1,11 +1,16 @@
 package com.social.englishclass;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -13,12 +18,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import static com.social.englishclass.englishlesson.REQUEST_AUDIO_PERMISSION_CODE;
 
 public class SelectLesson extends AppCompatActivity {
 
     private Intent intent;
-    private String login_name, token, login_school, lesson;
+    private String login_name, token, login_school;
     private Dialog lesson_dialog, level_dialog;
+    public static String lesson, lesson_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +38,22 @@ public class SelectLesson extends AppCompatActivity {
         login_school = login_intent.getStringExtra("login_school");
         login_name = login_intent.getStringExtra("login_name");
         token = login_intent.getStringExtra("token");
+
+        // OS가 Marshmallow 이상일 경우 권한체크를 해야 합니다.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1000);
+            } else {
+                // READ_EXTERNAL_STORAGE 에 대한 권한이 있음.
+//                getAudioListFromMediaDatabase();
+            }
+        }
+        // OS가 Marshmallow 이전일 경우 권한체크를 하지 않는다.
+        else {
+//            getAudioListFromMediaDatabase();
+        }
+
+
 
         ImageButton btn1 = (ImageButton) findViewById(R.id.button1);
         ImageButton btn2 = (ImageButton) findViewById(R.id.button2);
@@ -50,7 +75,8 @@ public class SelectLesson extends AppCompatActivity {
                 switch (v.getId()) {
                     case R.id.button1:
                         lessonDialog("Lesson 1 - What Grade Are You In?");
-                        lesson = "Lesson 1";
+                        lesson = "1";
+
 //                        intent.putExtra("login_school", login_school);
 //                        intent.putExtra("login_name", login_name);
 //                        intent.putExtra("token", token);
@@ -152,6 +178,28 @@ public class SelectLesson extends AppCompatActivity {
 
 
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // READ_EXTERNAL_STORAGE 에 대한 권한 획득.
+//                getAudioListFromMediaDatabase();
+        }
+        switch (requestCode) {
+            case REQUEST_AUDIO_PERMISSION_CODE:
+                if (grantResults.length > 0) {
+                    boolean permissionToRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean permissionToStore = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (permissionToRecord && permissionToStore) {
+                        Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+        }
+    }
+
 //레벨 다이얼로그
     private  void levelDialog(String level_num){
         level_dialog = new Dialog(this);
@@ -168,23 +216,33 @@ public class SelectLesson extends AppCompatActivity {
         View.OnClickListener leveldialog_listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                intent = new Intent(v.getContext(), level.class);
                 switch (v.getId()) {
                     case R.id.level1_btn:
-                        intent = new Intent(v.getContext(), level.class);
+
+                        intent.putExtra("lv_num", "0");
                         startActivity(intent);
                         lesson_dialog.dismiss();
                         break;
                     case R.id.level2_btn:
-
+                        intent.putExtra("lv_num", "1");
+                        startActivity(intent);
+                        lesson_dialog.dismiss();
                         break;
                     case R.id.level3_btn:
-
+                        intent.putExtra("lv_num", "2");
+                        startActivity(intent);
+                        lesson_dialog.dismiss();
                         break;
                     case R.id.level4_btn:
-
+                        intent.putExtra("lv_num", "3");
+                        startActivity(intent);
+                        lesson_dialog.dismiss();
                         break;
                     case R.id.level5_btn:
-
+                        intent.putExtra("lv_num", "4");
+                        startActivity(intent);
+                        lesson_dialog.dismiss();
                         break;
                 }
             }
@@ -215,16 +273,20 @@ public class SelectLesson extends AppCompatActivity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.lookandlisten_btn:
-                        levelDialog(lesson+" - Look And Listen");
+                        levelDialog("Lesson "+lesson+" - Look And Listen");
+                        lesson_type = "ll";
                         break;
                     case R.id.lookandsay_btn:
-
+                        levelDialog("Lesson "+lesson+" - Look And Say");
+                        lesson_type = "ls";
                         break;
                     case R.id.listenandrepeat_btn:
-
+                        levelDialog("Lesson "+lesson+" - Listen And Repeat");
+                        lesson_type = "lr";
                         break;
                     case R.id.letsread_btn:
-
+                        levelDialog("Lesson "+lesson+" - Let's Read");
+                        lesson_type = "let";
                         break;
                 }
             }

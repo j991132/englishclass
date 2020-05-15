@@ -32,8 +32,10 @@ public class MainActivity extends AppCompatActivity{
         Button login_btn= (Button) findViewById(R.id.login_btn);
         RadioButton online_rbtn = (RadioButton)findViewById(R.id.online_rbtn);
         RadioButton offline_rbtn = (RadioButton)findViewById(R.id.offline_rbtn);
-
-
+//테스트중 넘어가기
+//        intent = new Intent(MainActivity.this, englishlesson.class);
+        intent = new Intent(MainActivity.this, SelectLesson.class);
+        startActivity(intent);
 
         View.OnClickListener Listener = new View.OnClickListener() {
             @Override
