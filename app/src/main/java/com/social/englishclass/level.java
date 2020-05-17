@@ -3,11 +3,12 @@ package com.social.englishclass;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-
+import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -43,9 +44,9 @@ private String current_lv;
 
 
 //탭 화면구성
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setOffscreenPageLimit(5); //탭은 보통 3개까지 로드 되고 죽지만 제한을 5개로 늘려준다
+        viewPager.setOffscreenPageLimit(0); //탭은 보통 3개까지 로드 되고 죽지만 제한을 5개로 늘려준다
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setCurrentItem(Integer.parseInt(current_lv));  // 현재 보여줄 탭 세팅
         TabLayout tabs = findViewById(R.id.tabs);

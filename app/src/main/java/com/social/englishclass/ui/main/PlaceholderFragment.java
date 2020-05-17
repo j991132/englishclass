@@ -233,7 +233,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     public void surfaceCreated(SurfaceHolder holder) {
         Log.e("MyTag","surfaceCreated");
 
-        if (mediaPlayer == null) {
+        if (mediaPlayer == null || isPrepared ==false ) {
             mediaPlayer = new MediaPlayer();
         } else {
             mediaPlayer.reset();
@@ -273,8 +273,8 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
-        Log.d("MyTag","surfaceChanged");
+        isPrepared =false;
+        Log.e("MyTag","surfaceChanged");
     }
 
     @Override
@@ -285,4 +285,5 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             mediaPlayer.release();
         }
     }
+
 }
