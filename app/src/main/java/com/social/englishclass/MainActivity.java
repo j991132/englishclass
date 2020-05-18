@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity{
                                 Toast.makeText(getApplicationContext(), "온라인 또는 오프라인을 선택하세요", Toast.LENGTH_LONG).show();
                             }else {
                                 firebaseDatabase.getReference("users").child(schoolID + userdata.userID).setValue(userdata);
-
-                                intent = new Intent(MainActivity.this, SelectLesson.class);
+                                intent = new Intent(MainActivity.this, englishlesson.class);
+//                                intent = new Intent(MainActivity.this, SelectLesson.class);
                                 intent.putExtra("login_school", schoolID);
                                 intent.putExtra("login_name", schoolID + userdata.userID);
                                 intent.putExtra("token", userdata.fcmToken);

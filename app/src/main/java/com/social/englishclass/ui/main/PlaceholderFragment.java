@@ -272,6 +272,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         } catch (Exception e) {
             Log.e("MyTag","surface view error : " + e.getMessage());
         }
+
     }
 
     @Override
@@ -336,9 +337,10 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     }
     @Override
     public void onPause() {
-        mediaPlayer.pause();
-        super.onPause();
+        mediaPlayer.reset();
 
+        super.onPause();
+        updateUI();
         Log.e("MyTag","on Pause  "+mediaPlayer);
 
 
