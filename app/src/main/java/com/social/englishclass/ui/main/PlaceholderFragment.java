@@ -44,7 +44,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     private ImageButton mBtnPlayPause;
     ArrayList<String> arrayList;
     private  ArrayAdapter<String> arrayAdapter;
-    private float f;
+    private float f=1;
     private static boolean pause=false;
     private View root = null;
     private static boolean isPrepared ;
@@ -116,23 +116,25 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         mBtnPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mediaPlayer.isPlaying() && pause == false) {
+                if (mediaPlayer.isPlaying()) {
                     Log.e("정지  ", "" + pause);
                     mediaPlayer.pause();
                     pause = true;
                     updateUI();
-                }else if(pause == true){
-                    Log.e("재생  ", "" + pause);
+                    Log.e("정지2  ", "" + pause);
+                }else {
+
                     play(f);
                     pause = false;
                     updateUI();
+                    Log.e("재생  ", "" + pause);
                 }
-                else {
-                    Log.e("파이어베이스 불러오기  ", "");
-                    mediaPlayer.start();
-                    updateUI();
+//                else {
+//                    Log.e("파이어베이스 불러오기  ", "");
+//                    mediaPlayer.start();
+//                    updateUI();
 //                    getaudiourl(filename + ext);
-                }
+//                }
             }
         });
 
@@ -233,7 +235,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     public void surfaceCreated(SurfaceHolder holder) {
         Log.e("MyTag","surfaceCreated");
 
-        if (mediaPlayer == null || isPrepared ==false ) {
+        if (mediaPlayer == null ) {
             mediaPlayer = new MediaPlayer();
         } else {
             mediaPlayer.reset();
@@ -248,6 +250,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             mediaPlayer.setDisplay(surfaceHolder); // 화면 호출
             mediaPlayer.prepare(); // 비디오 load 준비
             isPrepared = true;
+            Log.e("MyTag","크리에이트_이즈프리페어드  "+isPrepared);
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -273,7 +276,9 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-        isPrepared =false;
+//        isPrepared =false;
+
+//        이거 왜 여기다가 위에꺼넣으면 미디어 속도조절이 안되나
         Log.e("MyTag","surfaceChanged");
     }
 
@@ -283,7 +288,60 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         if (mediaPlayer != null) {
             isPrepared = false;
             mediaPlayer.release();
+            Log.e("MyTag","디스트로이_이즈프리페어드  "+isPrepared);
         }
+    }
+    @Override
+    public void onResume(){
+        if (mediaPlayer == null ) {
+            mediaPlayer = new MediaPlayer();
+        } else {
+            mediaPlayer.reset();
+        }
+
+        try {
+
+
+            mediaPlayer.setDataSource(filepath);
+
+            //mediaPlayer.setVolume(0, 0); //볼륨 제거
+            mediaPlayer.setDisplay(surfaceHolder); // 화면 호출
+            mediaPlayer.prepare(); // 비디오 load 준비
+            isPrepared = true;
+            Log.e("MyTag","크리에이트_이즈프리페어드  "+isPrepared);
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    if (mediaPlayer != null) {
+                        isPrepared = false;
+
+
+                        mediaPlayer.reset();
+
+                        updateUI();
+                        speedselect_server();
+                    }
+
+                }
+            }); // 비디오 재생 완료 리스너
+
+//            mediaPlayer.start();
+
+        } catch (Exception e) {
+            Log.e("MyTag","surface view error : " + e.getMessage());
+        }
+        super.onResume();
+
+        Log.e("MyTag","on Resume  "+mediaPlayer);
+    }
+    @Override
+    public void onPause() {
+        mediaPlayer.pause();
+        super.onPause();
+
+        Log.e("MyTag","on Pause  "+mediaPlayer);
+
+
     }
 
 }
