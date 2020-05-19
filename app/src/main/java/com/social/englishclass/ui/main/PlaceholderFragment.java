@@ -238,7 +238,11 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         if (mediaPlayer == null ) {
             mediaPlayer = new MediaPlayer();
         } else {
-            mediaPlayer.reset();
+            try {
+                mediaPlayer.reset();
+            }catch (Exception e) {
+                Log.e("MyTag","미디어 플레이어 오류 : " + e.getMessage());
+            }
         }
 
         try {
@@ -297,7 +301,13 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         if (mediaPlayer == null ) {
             mediaPlayer = new MediaPlayer();
         } else {
-            mediaPlayer.reset();
+            Log.e("MyTag","미디어 플레이어 상태  "+mediaPlayer);
+            try {
+                mediaPlayer.reset();
+            }catch (Exception e) {
+                Log.e("MyTag","미디어 플레이어 오류 : " + e.getMessage());
+            }
+
         }
 
         try {
@@ -337,7 +347,8 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     }
     @Override
     public void onPause() {
-        mediaPlayer.reset();
+        if (mediaPlayer !=null){mediaPlayer.reset();}
+
 
         super.onPause();
         updateUI();

@@ -281,6 +281,10 @@ public class AudioService extends Service {
         }
         play(mCurrentPosition);
     }
+    public void record3gp() {
+        initAudioRecorder();
+        mRecorder.start();
+    }
 
     public void record() {
 
@@ -356,7 +360,14 @@ public class AudioService extends Service {
         mRecorder.resume();
         Toast.makeText(getApplicationContext(), "녹음 재개", Toast.LENGTH_LONG).show();
     }
+    public void recrecordstop() {
+         isRecording = false;
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
 
+        Toast.makeText(getApplicationContext(), "Recording Stopped", Toast.LENGTH_LONG).show();
+    }
     public void recordstop() {
         forceStop = true;
 

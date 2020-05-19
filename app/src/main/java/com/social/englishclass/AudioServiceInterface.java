@@ -89,13 +89,21 @@ public class AudioServiceInterface {
             mService.play2(a);
         }
     }
-
+    public void record3gp() {
+        if (mService != null) {
+            mService.record3gp();
+        }
+    }
     public void record() {
         if (mService != null) {
             mService.record();
         }
     }
-
+    public void recrecordstop() {
+        if (mService != null) {
+            mService.recrecordstop();
+        }
+    }
     public void recordstop() {
         if (mService != null) {
             mService.recordstop();
