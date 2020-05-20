@@ -221,6 +221,9 @@ public class SelectLesson extends AppCompatActivity {
                     case R.id.level1_btn:
 
                         intent.putExtra("lv_num", "0");
+                        intent.putExtra("login_school", login_school);
+                        intent.putExtra("login_name", login_name);
+                        intent.putExtra("token", token);
                         startActivity(intent);
                         lesson_dialog.dismiss();
                         break;

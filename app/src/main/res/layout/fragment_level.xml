@@ -54,10 +54,18 @@
 
         <ImageButton
             android:id="@+id/videoplay_btn_play_pause"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/play" />
+
+        <ImageButton
+            android:id="@+id/sendtest_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mic_normal" />
     </LinearLayout>
 
 </LinearLayout>

@@ -92,6 +92,8 @@ private String current_lv;
         setContentView(R.layout.activity_level);
 //현재 보여줄 탭 번호 받기
         Intent intent = getIntent();
+        login_school = intent.getStringExtra("login_school");
+        login_name = intent.getStringExtra("login_name");
         current_lv = intent.getStringExtra("lv_num");
 //뷰매칭
 //녹음버튼 관련
