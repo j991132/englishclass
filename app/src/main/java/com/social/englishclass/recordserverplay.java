@@ -51,7 +51,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private Uri uri, muri;
     private StorageReference mStorageRef;
     private ImageButton mBtnPlayPause;
-    private Button save_btn;
+    private Button save_btn, fold_btn;
     private TextView recplay_txt_title, text_stress, text_accent, text_speed, text_pronunciation;
     private static boolean isPrepared ;
     public static boolean reset;
@@ -66,7 +66,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private ListView chat_view;
     private static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
     private static final String SERVER_KEY = "AAAAPWMRRUI:APA91bGaqqUJuVclBGOynB4TiyWFDyVFqGs1l_blyaxaHI7oaUKecEgXG5bx5WQ7B4Nq22kwFwf4fH3YfzHccdt4Sy2ux2Yx-DvBmEYgKRmefBVOhWzVsensa_zIe5pOVVCeymi3D5DK";
-
+    private LinearLayout wave_fragment_layer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +84,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         mBtnPlayPause.setOnClickListener(this);
         save_btn = (Button)findViewById(R.id.save_btn);
         save_btn.setOnClickListener(this);
+        fold_btn = (Button)findViewById(R.id.fold_btn);
+        fold_btn.setOnClickListener(this);
         comment = (EditText)findViewById(R.id.comment);
         recplay_txt_title.setText(filename);
         speedselect_server();
@@ -96,6 +98,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         text_pronunciation = (TextView)findViewById(R.id.text_pronunciation);
         LinearLayout test_layout1 = (LinearLayout) findViewById(R.id.t_test1);
         LinearLayout test_layout2 = (LinearLayout) findViewById(R.id.t_test2);
+        wave_fragment_layer = (LinearLayout)findViewById(R.id.wave_fragment_layer);
+
         if(!login_name.equals(login_school+"teacher")){
             test_layout1.setVisibility(View.GONE);
             test_layout2.setVisibility(View.GONE);
@@ -185,6 +189,13 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 
 
 
+                break;
+            case R.id.fold_btn:
+                if(wave_fragment_layer.getVisibility()==View.GONE){
+                    wave_fragment_layer.setVisibility(View.VISIBLE);
+                    fold_btn.setText("그래프 접기");
+                }else {wave_fragment_layer.setVisibility(View.GONE);
+                fold_btn.setText("그래프 펼치기");}
                 break;
         }
     }//클릭 끝

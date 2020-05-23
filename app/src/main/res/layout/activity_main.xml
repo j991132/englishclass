@@ -49,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="#F5EDED"
+                android:text="용현초"
                 android:hint="예)용현초" />
 
         </LinearLayout>
@@ -76,6 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="#F5EDED"
+                android:text="60801"
                 android:hint="예)60801" />
 
         </LinearLayout>
