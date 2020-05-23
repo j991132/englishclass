@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -40,6 +41,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class recordserverplay extends AppCompatActivity implements View.OnClickListener{
 
@@ -105,8 +108,41 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 //보이는 뷰에 업로드했던 로그인아이디 가져오기
         getLoginId();
         getSchoolId();
-    }//메인 끝
 
+//웨이브곡선 프래그먼트
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new CustomWaveformFragment())
+                    .add(R.id.container2, new CustomWaveformFragment())
+                    .commit();
+        }
+
+    }//메인 끝
+    public static class CustomWaveformFragment extends WaveformFragment {
+
+        /**
+         * Provide path to your audio file.
+         *
+         * @return
+         */
+        @Override
+        protected String getFileName() {
+            return "/storage/emulated/0/englishclass/lesson3/6-3-Look and Say.mp3";
+        }
+
+        /**
+         * Optional - provide list of segments (start and stop values in seconds) and their corresponding colors
+         *
+         * @return
+         */
+        @Override
+        protected List<Segment> getSegments() {
+            return Arrays.asList(
+                    new Segment(55.2, 55.8, Color.rgb(238, 23, 104)),
+                    new Segment(56.2, 56.6, Color.rgb(238, 23, 104)),
+                    new Segment(58.4, 59.9, Color.rgb(184, 92, 184)));
+        }
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
