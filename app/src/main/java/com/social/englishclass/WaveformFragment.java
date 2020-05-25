@@ -62,7 +62,8 @@ public abstract class WaveformFragment extends Fragment implements MarkerView.Ma
     protected ProgressDialog mProgressDialog;
     protected CheapSoundFile mSoundFile;
     protected File mFile;
-    protected String mFilename;
+    protected String mFilename ;
+    protected String mTilte;
     protected WaveformView mWaveformView;
     protected MarkerView mStartMarker;
     protected MarkerView mEndMarker;
@@ -125,6 +126,8 @@ public abstract class WaveformFragment extends Fragment implements MarkerView.Ma
         mIsPlaying = false;
 
         mFilename = getFileName();
+        mTilte = getFileTitle();
+//        mTilte = recordserverplay.filename;
         mSoundFile = null;
         mKeyDown = false;
 
@@ -381,7 +384,7 @@ public abstract class WaveformFragment extends Fragment implements MarkerView.Ma
         mWaveformView.setSegments(getSegments());
 
         mInfo = (TextView) view.findViewById(R.id.info);
-        mInfo.setText(mCaption);
+        mInfo.setText("파일명 :  "+mTilte+",   음원 시간 :  "+mCaption);
 
         mMaxPos = 0;
         mLastDisplayedStartPos = -1;
@@ -480,12 +483,12 @@ public abstract class WaveformFragment extends Fragment implements MarkerView.Ma
         mOffsetGoal = 0;
         mFlingVelocity = 0;
         resetPositions();
-
-        mCaption = mSoundFile.getFiletype() + ", " +
-                mSoundFile.getSampleRate() + " Hz, " +
-                mSoundFile.getAvgBitrateKbps() + " kbps, " +
-                formatTime(mMaxPos) + " " + getResources().getString(R.string.time_seconds);
-        mInfo.setText(mCaption);
+        mCaption = formatTime(mMaxPos) + " " + getResources().getString(R.string.time_seconds);
+//        mCaption = mSoundFile.getFiletype() + ", " +
+//                mSoundFile.getSampleRate() + " Hz, " +
+//                mSoundFile.getAvgBitrateKbps() + " kbps, " +
+//                formatTime(mMaxPos) + " " + getResources().getString(R.string.time_seconds);
+        mInfo.setText("파일명 :  "+mTilte+",   음원 시간 :  "+mCaption);
         mProgressDialog.dismiss();
         updateDisplay();
     }
@@ -852,6 +855,8 @@ public abstract class WaveformFragment extends Fragment implements MarkerView.Ma
     };
 
     protected abstract String getFileName();
+
+    public abstract String getFileTitle();
 
     protected List<Segment> getSegments() {
         return null;

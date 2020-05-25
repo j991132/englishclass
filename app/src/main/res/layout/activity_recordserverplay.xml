@@ -300,11 +300,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
-                    <TextView
-                        android:id="@+id/textView38"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="- 선생님의 평가 -" />
                 </LinearLayout>
 
 

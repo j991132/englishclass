@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -31,11 +32,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -46,10 +50,23 @@ import java.util.List;
 
 public class recordserverplay extends AppCompatActivity implements View.OnClickListener{
 
-    private String filename, ext, stress, accent, speed, pronunciation, login_name, login_name_fcm, login_name_teacher, send_token, login_school, schoolID;
+    public static String filename;
+    private String ext;
+    private String stress;
+    private String accent;
+    private String speed;
+    private String pronunciation;
+    private String login_name;
+    private String login_name_fcm;
+    private String login_name_teacher;
+    private String send_token;
+    private String login_school;
+    private String schoolID;
+    private static String downfile;
     public static MediaPlayer mMediaplayer;
-    private Uri uri, muri;
-    private StorageReference mStorageRef;
+    private Uri uri;
+    private static Uri muri;
+    private StorageReference mStorageRef, pathReference;
     private ImageButton mBtnPlayPause;
     private Button save_btn, fold_btn;
     private TextView recplay_txt_title, text_stress, text_accent, text_speed, text_pronunciation;
@@ -87,6 +104,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         fold_btn = (Button)findViewById(R.id.fold_btn);
         fold_btn.setOnClickListener(this);
         comment = (EditText)findViewById(R.id.comment);
+        comment.setTextIsSelectable(true);
+        comment.setShowSoftInputOnFocus(false);
         recplay_txt_title.setText(filename);
         speedselect_server();
         mMediaplayer = new MediaPlayer();
@@ -112,15 +131,16 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 //보이는 뷰에 업로드했던 로그인아이디 가져오기
         getLoginId();
         getSchoolId();
-
-//웨이브곡선 프래그먼트
+        getrecuri(filename + ext);
+/*
+//웨이브곡선 프래그먼트       ---->      파일 다운로드 성공시 프래그먼트 띄워주는 걸로 이동
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new CustomWaveformFragment())
                     .add(R.id.container2, new CustomWaveformFragment())
                     .commit();
         }
-
+*/
     }//메인 끝
     public static class CustomWaveformFragment extends WaveformFragment {
 
@@ -131,7 +151,16 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
          */
         @Override
         protected String getFileName() {
-            return "/storage/emulated/0/englishclass/lesson3/6-3-Look and Say.mp3";
+            Log.e("다운로드받은 녹음파일 getname", "" + downfile);
+            return downfile;
+//            return "/storage/emulated/0/englishclass/lesson3/6-3-Look and Say.mp3";
+        }
+
+        @Override
+        public String getFileTitle() {
+
+            return filename;
+
         }
 
         /**
@@ -431,6 +460,61 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
     }
 });
 }
+//wave를 위한 파이어베이스에서 녹음파일 주소 가져오기
+    public void getrecuri(String Filename){
+        //다운로드 진행 Dialog 보이기
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("다운로드중...");
+        progressDialog.show();
+
+        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
+        pathReference = mStorageRef.child(Filename);
+        try{
+            File path = new File("/storage/emulated/0/englishclass/record/");
+            final File file = new File(path, Filename);
+            try{
+                if (!path.exists()){
+                    path.mkdirs();
+                }
+                file.createNewFile();
+                final FileDownloadTask fileDownloadTask = pathReference.getFile(file);
+//                downfile = "/storage/emulated/0/englishclass/record/"+Filename;
+                fileDownloadTask.addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Log.e("다운로드받은 녹음파일 ","경로입력전");
+                                downfile = "/storage/emulated/0/englishclass/record/"+Filename;
+                        Log.e("다운로드받은 녹음파일 ", "" + downfile);
+ //웨이브곡선 프래그먼트
+
+                            getSupportFragmentManager().beginTransaction()
+                                    .add(R.id.container, new CustomWaveformFragment())
+                                    .add(R.id.container2, new CustomWaveformFragment())
+                                    .commit();
+
+                        progressDialog.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("다운로드실패 ", "" );
+                        progressDialog.dismiss();
+                    }
+                }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        //dialog에 진행률을 퍼센트로 출력해 준다
+                        progressDialog.setMessage("Downloaded " + ((int) progress) + "% ...");
+                    }
+                });
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 // 파이어베이스에서 스트리밍하기
     public void getaudiourl(final String Filename) {
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");

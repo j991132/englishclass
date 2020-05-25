@@ -25,7 +25,10 @@
         <activity android:name=".recordserverplay" />
         <activity android:name=".recordserver" />
         <activity android:name=".englishlesson" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+
+
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
