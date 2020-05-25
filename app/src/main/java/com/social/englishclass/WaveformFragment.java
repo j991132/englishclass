@@ -159,6 +159,7 @@ public abstract class WaveformFragment extends Fragment implements MarkerView.Ma
      */
     public void waveformDraw() {
         mWidth = mWaveformView.getMeasuredWidth();
+
         if (mOffsetGoal != mOffset && !mKeyDown)
             updateDisplay();
         else if (mIsPlaying) {
@@ -550,6 +551,7 @@ public abstract class WaveformFragment extends Fragment implements MarkerView.Ma
 
         mWaveformView.setParameters(mStartPos, mEndPos, mOffset);
         mWaveformView.invalidate();
+
 
         mStartMarker.setContentDescription(getResources().getText(R.string.start_marker) + " " + formatTime(mStartPos));
         mEndMarker.setContentDescription(getResources().getText(R.string.end_marker) + " " + formatTime(mEndPos));

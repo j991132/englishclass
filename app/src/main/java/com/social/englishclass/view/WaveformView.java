@@ -323,7 +323,7 @@ public class WaveformView extends View {
     }
 
     protected void drawWaveformLine(Canvas canvas, int x, int y0, int y1, Paint paint) {
-        canvas.drawLine(x, y0, x, y1, paint);
+        canvas.drawLine(x*2, y0, x*2, y1, paint);
     }
 
     @Override
