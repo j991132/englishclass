@@ -44,7 +44,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="#F5EDED"
-                android:textIsSelectable="true"
                 android:text="용현초"
                 android:hint="예)용현초" />
 
@@ -72,7 +71,7 @@
                 android:layout_width="227dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textIsSelectable="true"
+
                 android:background="#F5EDED"
                 android:text="60801"
                 android:hint="예)60801" />

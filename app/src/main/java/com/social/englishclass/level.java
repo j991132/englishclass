@@ -115,7 +115,7 @@ private String current_lv;
 //탭 화면구성
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setOffscreenPageLimit(1); //탭은 보통 3개까지 로드 되고 죽지만 제한을 5개로 늘려준다
+        viewPager.setOffscreenPageLimit(4); //탭은 보통 3개까지 로드 되고 죽지만 제한을 5개로 늘려준다
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setCurrentItem(Integer.parseInt(current_lv));  // 현재 보여줄 탭 세팅
         TabLayout tabs = findViewById(R.id.tabs);
@@ -259,6 +259,7 @@ private String current_lv;
                 intent.putExtra("login_school",login_school);
                 intent.putExtra("login_name",login_name);
                 startActivity(intent);
+                finish();
                 break;
         }
 

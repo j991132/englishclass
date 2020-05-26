@@ -73,7 +73,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     private View root = null;
     private static boolean isPrepared ;
     int maxLenSpeech = 16000 * 45;
-    byte [] speechData = new byte [maxLenSpeech * 2];
+    byte [] speechData ;
     int lenSpeech = 0;
     boolean isRecording = false;
     boolean forceStop = false;
@@ -172,6 +172,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         sendtest_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                speechData = new byte [maxLenSpeech * 2];
                 if (isRecording) {
                     forceStop = true;
                     sendtest_btn.setImageResource(R.drawable.mic_normal);
@@ -357,13 +358,14 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        Log.e("MyTag","surfaceDestroyed");
+        Log.e("MyTag","surfaceDestroyed   pos:  "+pos);
         if (mediaPlayer != null) {
             isPrepared = false;
             mediaPlayer.stop();
             mediaPlayer.release();
+            mediaPlayer = null;
             Log.e("MyTag","서피스 디스트로이_미디어상태  "+mediaPlayer);
-        }
+        }mediaPlayer = null;
     }
 
     @Override
@@ -426,7 +428,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             mediaPlayer.release();
             mediaPlayer = null;
 //            mediaPlayer.reset();
-        }
+        }mediaPlayer = null;
         super.onPause();
 //
         Log.e("MyTag","on Pause  "+mediaPlayer);

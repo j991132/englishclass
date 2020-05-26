@@ -225,22 +225,35 @@ public class SelectLesson extends AppCompatActivity {
                         intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         startActivity(intent);
-                        lesson_dialog.dismiss();
+//                        lesson_dialog.dismiss();
+                        level_dialog.dismiss();
                         break;
                     case R.id.level2_btn:
                         intent.putExtra("lv_num", "1");
+                        intent.putExtra("login_school", login_school);
+                        intent.putExtra("login_name", login_name);
+                        intent.putExtra("token", token);
                         startActivity(intent);
-                        lesson_dialog.dismiss();
+//                        lesson_dialog.dismiss();
+                        level_dialog.dismiss();
                         break;
                     case R.id.level3_btn:
                         intent.putExtra("lv_num", "2");
+                        intent.putExtra("login_school", login_school);
+                        intent.putExtra("login_name", login_name);
+                        intent.putExtra("token", token);
                         startActivity(intent);
-                        lesson_dialog.dismiss();
+//                        lesson_dialog.dismiss();
+                        level_dialog.dismiss();
                         break;
                     case R.id.level4_btn:
                         intent.putExtra("lv_num", "3");
+                        intent.putExtra("login_school", login_school);
+                        intent.putExtra("login_name", login_name);
+                        intent.putExtra("token", token);
                         startActivity(intent);
-                        lesson_dialog.dismiss();
+//                        lesson_dialog.dismiss();
+                        level_dialog.dismiss();
                         break;
 
                 }

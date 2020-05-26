@@ -29,11 +29,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final EditText login_school = (EditText)findViewById(R.id.login_school);
-
-        login_school.setShowSoftInputOnFocus(false);
         final EditText login_name = (EditText)findViewById(R.id.login_name);
 
-        login_name.setShowSoftInputOnFocus(false);
         Button login_btn= (Button) findViewById(R.id.login_btn);
         RadioButton online_rbtn = (RadioButton)findViewById(R.id.online_rbtn);
         RadioButton offline_rbtn = (RadioButton)findViewById(R.id.offline_rbtn);
@@ -68,6 +65,7 @@ public class MainActivity extends AppCompatActivity{
                                 intent.putExtra("login_name", schoolID + userdata.userID);
                                 intent.putExtra("token", userdata.fcmToken);
                                 startActivity(intent);
+                                finish();
                             }
                         }
                         break;

@@ -22,13 +22,14 @@
             android:label="@string/title_activity_level"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SelectLesson" />
-        <activity android:name=".recordserverplay" />
-        <activity android:name=".recordserver" />
+        <activity android:name=".recordserverplay"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
+        <activity android:name=".recordserver"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
         <activity android:name=".englishlesson" />
-        <activity android:name=".MainActivity"
-
-
-            >
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

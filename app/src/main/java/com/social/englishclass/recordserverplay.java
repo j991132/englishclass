@@ -118,11 +118,12 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         LinearLayout test_layout1 = (LinearLayout) findViewById(R.id.t_test1);
         LinearLayout test_layout2 = (LinearLayout) findViewById(R.id.t_test2);
         wave_fragment_layer = (LinearLayout)findViewById(R.id.wave_fragment_layer);
-
-        if(!login_name.equals(login_school+"teacher")){
-            test_layout1.setVisibility(View.GONE);
-            test_layout2.setVisibility(View.GONE);
-        }
+if(login_name != null && login_school !=null) {
+    if (!login_name.equals(login_school + "teacher")) {
+        test_layout1.setVisibility(View.GONE);
+        test_layout2.setVisibility(View.GONE);
+    }
+}
         up_mid_down_select("eng_stress");
         up_mid_down_select("eng_accent");
         up_mid_down_select("eng_speed");
@@ -725,4 +726,15 @@ public void play(float a) {
 
     }
 }
+    @Override
+    protected void onPause() {
+        finish();
+        super.onPause();
+    }
+    @Override
+    public void onBackPressed()
+    {
+        finish();
+        super.onBackPressed();
+    }
 }//메인 끝

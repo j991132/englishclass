@@ -235,6 +235,12 @@ if(recordserverAdapter.reset ){
         };
         mDatabaseRef.addListenerForSingleValueEvent(eventListener);
     }
+    @Override
+    public void onBackPressed()
+              {
+        finish();
+        super.onBackPressed();
+    }
 }
 
 
