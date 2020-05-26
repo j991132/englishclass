@@ -107,7 +107,7 @@ public class WaveformView extends View {
         mGridPaint.setAntiAlias(false);
         mGridPaint.setColor(getResources().getColor(R.color.grid_line));
         mSelectedLinePaint = new Paint();
-        mSelectedLinePaint.setAntiAlias(false);
+        mSelectedLinePaint.setAntiAlias(true);
         mSelectedLinePaint.setColor(getResources().getColor(R.color.waveform_selected));
         mUnselectedLinePaint = new Paint();
         mUnselectedLinePaint.setAntiAlias(false);
@@ -341,12 +341,12 @@ public class WaveformView extends View {
         if (width > measuredWidth)
             width = measuredWidth;
 
-        double onePixelInSecs = pixelsToSeconds(1);
+        double onePixelInSecs = pixelsToSeconds(1)*0.5;    //1초당 간격
         boolean onlyEveryFiveSecs = (onePixelInSecs > 1.0 / 50.0);
         double fractionalSecs = mOffset * onePixelInSecs;
         int integerSecs = (int) fractionalSecs;
 
-        double timecodeIntervalSecs = 1.0;
+        double timecodeIntervalSecs = 1.0;    //한 칸단 초
 
         int factor = 1;
         while (timecodeIntervalSecs / onePixelInSecs < 50) {
@@ -357,7 +357,7 @@ public class WaveformView extends View {
         int integerTimecode = (int) (fractionalSecs / timecodeIntervalSecs);
 
         int i = 0;
-        while (i < width) {
+        while (i < width*2) {     //  세로선
             fractionalSecs += onePixelInSecs;
             int integerSecsNew = (int) fractionalSecs;
             if (integerSecsNew != integerSecs) {
@@ -392,7 +392,7 @@ public class WaveformView extends View {
         // Draw grid
         fractionalSecs = mOffset * onePixelInSecs;
         i = 0;
-        while (i < width) {
+        while (i < width*2) {     //표시되는 초 갯수
             i++;
             fractionalSecs += onePixelInSecs;
             int integerSecs2 = (int) fractionalSecs;
@@ -434,7 +434,7 @@ public class WaveformView extends View {
                 paint);
 
         if (i + start == mPlaybackPos) {
-            canvas.drawLine(i, 0, i, measuredHeight, mPlaybackLinePaint);
+            canvas.drawLine(i*2, 0, i*2, measuredHeight, mPlaybackLinePaint);       //진행 노란색 세로바 움직임
         }
     }
 

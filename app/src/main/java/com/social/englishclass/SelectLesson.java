@@ -209,7 +209,7 @@ public class SelectLesson extends AppCompatActivity {
         ImageButton level2_btn = (ImageButton) level_dialog.findViewById(R.id.level2_btn);
         ImageButton level3_btn = (ImageButton) level_dialog.findViewById(R.id.level3_btn);
         ImageButton level4_btn = (ImageButton) level_dialog.findViewById(R.id.level4_btn);
-        ImageButton level5_btn = (ImageButton) level_dialog.findViewById(R.id.level5_btn);
+
         TextView leveldialog_text = (TextView) level_dialog.findViewById(R.id.leveldialog_text);
         leveldialog_text.setText(level_num);
 
@@ -242,11 +242,7 @@ public class SelectLesson extends AppCompatActivity {
                         startActivity(intent);
                         lesson_dialog.dismiss();
                         break;
-                    case R.id.level5_btn:
-                        intent.putExtra("lv_num", "4");
-                        startActivity(intent);
-                        lesson_dialog.dismiss();
-                        break;
+
                 }
             }
 
@@ -255,7 +251,7 @@ public class SelectLesson extends AppCompatActivity {
         level2_btn.setOnClickListener(leveldialog_listener);
         level3_btn.setOnClickListener(leveldialog_listener);
         level4_btn.setOnClickListener(leveldialog_listener);
-        level5_btn.setOnClickListener(leveldialog_listener);
+
 
         level_dialog.show();
     }

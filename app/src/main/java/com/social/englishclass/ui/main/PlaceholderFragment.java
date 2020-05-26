@@ -116,9 +116,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
                 case 4:
                     filepath = getArguments().getString(ln+lt+"lv4");
                     break;
-                case 5:
-                    filepath = getArguments().getString(ln+lt+"lv5");
-                    break;
+
             }
 
         }
@@ -138,7 +136,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         else if(pos==2){root = inflater.inflate(R.layout.fragment_level, container, false);}
         else if(pos==3){root = inflater.inflate(R.layout.fragment_level, container, false);}
         else if(pos==4){root = inflater.inflate(R.layout.fragment_level, container, false);}
-        else if(pos==5){root = inflater.inflate(R.layout.fragment_level, container, false);}
+//        else if(pos==5){root = inflater.inflate(R.layout.fragment_level, container, false);}
         surfaceView = root.findViewById(R.id.surfaceView);
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);

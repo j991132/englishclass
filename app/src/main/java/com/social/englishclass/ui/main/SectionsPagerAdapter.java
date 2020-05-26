@@ -57,13 +57,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         else if (position == 3) return "lv 4";
 
-        else if (position == 4) return "lv 5";
+
         return mContext.getResources().getString(TAB_TITLES[position]);
     }
 
     @Override
     public int getCount() {
         // Show 2 total pages.
-        return 5;
+        return 4;
     }
 }
