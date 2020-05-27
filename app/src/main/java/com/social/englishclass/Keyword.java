@@ -50,7 +50,7 @@ public class Keyword extends AppCompatActivity {
 
 
         mRecyclerView.setAdapter(mAdapter);
-        GridLayoutManager layoutManager = new GridLayoutManager(this,3);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
         mRecyclerView.setLayoutManager(layoutManager);
 
 

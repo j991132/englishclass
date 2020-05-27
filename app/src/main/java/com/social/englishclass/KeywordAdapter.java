@@ -1,16 +1,21 @@
 package com.social.englishclass;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -23,18 +28,21 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, Cursor cursor) {
         KeywordItem audioItem = KeywordItem.bindCursor(cursor);
         ((AudioViewHolder) viewHolder).setAudioItem(audioItem, cursor.getPosition());
+
+
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_audio, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.keyword_item, parent, false);
         return new AudioViewHolder(v);
     }
     public static class KeywordItem {
         public long mId; // 오디오 고유 ID
         public String mTitle; // 타이틀 정보
         public String mDataPath; // 실제 데이터위치
+        public long mAlbumId; // 오디오 앨범아트 ID
 
         public static KeywordItem bindCursor(Cursor cursor) {
             KeywordItem audioItem = new KeywordItem();
@@ -55,19 +63,18 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
         return audioIds;
     }
     private class AudioViewHolder extends RecyclerView.ViewHolder {
-
-
+        private final Uri artworkUri = Uri.parse("/storage/emulated/0/englishclass/lesson1keyword/picture");
+//        private final Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
         private TextView mTxtTitle;
-
-
+        private ImageView mImageView;
         private KeywordItem mItem;
         private int mPosition;
 
         private AudioViewHolder(View view) {
             super(view);
 
-            mTxtTitle = (TextView) view.findViewById(R.id.txt_title);
-
+            mTxtTitle = (TextView) view.findViewById(R.id.keyword_text);
+            mImageView = (ImageView)view.findViewById(R.id.keyword_image);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -86,6 +93,9 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
             mItem = item;
             mPosition = position;
             mTxtTitle.setText(item.mTitle);
+            Uri albumArtUri = ContentUris.withAppendedId(artworkUri, item.mAlbumId);
+            Picasso.with(itemView.getContext()).load( Uri.parse("/storage/emulated/0/englishclass/lesson1keyword/picture/grade.jpg")).error(R.drawable.music).into(mImageView);
+//            Picasso.with(itemView.getContext()).load(albumArtUri).error(R.drawable.music).into(mImageView);
 
         }
     }
