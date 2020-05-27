@@ -273,6 +273,7 @@ public class SelectLesson extends AppCompatActivity {
         lesson_dialog = new Dialog(this);
         lesson_dialog.setContentView(R.layout.lesson_dialog);
 
+        ImageButton keyword_btn = (ImageButton) lesson_dialog.findViewById(R.id.keyword_btn);
         ImageButton lookandlisten_btn = (ImageButton) lesson_dialog.findViewById(R.id.lookandlisten_btn);
         ImageButton lookandsay_btn = (ImageButton) lesson_dialog.findViewById(R.id.lookandsay_btn);
         ImageButton listenandrepeat_btn = (ImageButton) lesson_dialog.findViewById(R.id.listenandrepeat_btn);
@@ -284,6 +285,11 @@ public class SelectLesson extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
+                    case R.id.keyword_btn:
+                        intent = new Intent(v.getContext(), Keyword.class);
+                        startActivity(intent);
+                        lesson_dialog.dismiss();
+                        break;
                     case R.id.lookandlisten_btn:
                         levelDialog("Lesson "+lesson+" - Look And Listen");
                         lesson_type = "ll";
@@ -304,6 +310,7 @@ public class SelectLesson extends AppCompatActivity {
             }
 
         };
+        keyword_btn.setOnClickListener(lessondialog_listener);
         lookandlisten_btn.setOnClickListener(lessondialog_listener);
         lookandsay_btn.setOnClickListener(lessondialog_listener);
         listenandrepeat_btn.setOnClickListener(lessondialog_listener);

@@ -73,7 +73,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     private View root = null;
     private static boolean isPrepared ;
     int maxLenSpeech = 16000 * 45;
-    byte [] speechData ;
+    private  byte [] speechData = null;
     int lenSpeech = 0;
     boolean isRecording = false;
     boolean forceStop = false;
@@ -172,12 +172,13 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         sendtest_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speechData = new byte [maxLenSpeech * 2];
+
                 if (isRecording) {
                     forceStop = true;
                     sendtest_btn.setImageResource(R.drawable.mic_normal);
                     CheckTypesTask task = new CheckTypesTask();
                     task.execute();
+
                 } else {
                     sendtest_btn.setImageResource(R.drawable.mic_rec);
                     try {
@@ -198,6 +199,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
 //                    textResult.setText("ERROR: " + t.toString());
                     forceStop = false;
                     isRecording = false;
+//                        speechData = null;
                 }
             }
         }
@@ -437,6 +439,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     }
     public void recordSpeech() throws RuntimeException {
         try {
+            speechData = new byte [maxLenSpeech * 2];
             int bufferSize = AudioRecord.getMinBufferSize(
                     16000, // sampling frequency
                     AudioFormat.CHANNEL_IN_MONO,
@@ -500,7 +503,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
 
         request.put("access_key", accessKey);
         request.put("argument", argument);
-
+//        speechData = null;
         URL url;
         Integer responseCode;
         String responBody;
@@ -628,6 +631,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             }else {imageresult.setImageResource(R.drawable.star3);}
 
             sendtestdialog.show();
+            speechData = null;
         }
     }
 }
