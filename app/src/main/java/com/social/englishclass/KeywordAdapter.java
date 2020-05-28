@@ -3,7 +3,10 @@ package com.social.englishclass;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,13 +18,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.ViewHolder> {
+    private Context mcontext;
     public KeywordAdapter(Context context, Cursor cursor) {
         super(context, cursor);
+        mcontext = context;
     }
 
     @Override
@@ -93,8 +100,43 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
             mItem = item;
             mPosition = position;
             mTxtTitle.setText(item.mTitle);
+            Log.e("키워드 파일 이름", "       " +item.mTitle );
             Uri albumArtUri = ContentUris.withAppendedId(artworkUri, item.mAlbumId);
-            Picasso.with(itemView.getContext()).load( Uri.parse("/storage/emulated/0/englishclass/lesson1keyword/picture/grade.jpg")).error(R.drawable.music).into(mImageView);
+
+            Picasso.with(itemView.getContext()).load( Uri.parse("/storage/emulated/0/englishclass/lesson1keyword/picture/grade.jpg")).into(mImageView, new Callback() {
+                @Override
+                public void onSuccess() {
+                    Log.e("피카소 성공", "       "  );
+                    File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson1keyword/picture", item.mTitle+".jpg");
+
+                    if(imgFile.exists()){
+
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                       mImageView.setImageBitmap(myBitmap);
+
+                    }
+                }
+
+                @Override
+                public void onError() {
+                    Log.e("피카소 실패", "       "  );
+                    Log.e("피카소 실패 파일 이름", "       " +item.mTitle );
+                    File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson1keyword/picture", item.mTitle+".jpg");
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                    mImageView.setImageBitmap(myBitmap);
+                    if(imgFile.exists()){
+                        Log.e("피카소 실패 이프 문", " imgFile.exists()  " +item.mTitle );
+//                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                        mImageView.setImageBitmap(myBitmap);
+
+                    }
+                }
+
+
+            });
 //            Picasso.with(itemView.getContext()).load(albumArtUri).error(R.drawable.music).into(mImageView);
 
         }
