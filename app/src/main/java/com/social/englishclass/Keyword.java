@@ -10,13 +10,42 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.social.englishclass.ui.main.PlaceholderFragment;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Keyword extends AppCompatActivity {
 
@@ -24,6 +53,13 @@ public class Keyword extends AppCompatActivity {
     private KeywordAdapter mAdapter;
     private final static int LOADER_ID = 0x001;
     private String folder;
+    int maxLenSpeech = 16000 * 45;
+    private  byte [] speechData = null;
+    int lenSpeech = 0;
+    boolean isRecording = false;
+    boolean forceStop = false;
+    String result;
+    private ImageButton sendtest_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +80,43 @@ public class Keyword extends AppCompatActivity {
         else {
             getAudioListFromMediaDatabase();
         }
+
+        sendtest_btn = (ImageButton)findViewById(R.id.keyword_sendtest_btn);
+        sendtest_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isRecording) {
+                    forceStop = true;
+                    sendtest_btn.setImageResource(R.drawable.mic_normal);
+                    CheckTypesTask task = new CheckTypesTask();
+                    task.execute();
+
+                } else {
+                    sendtest_btn.setImageResource(R.drawable.mic_rec);
+                    try {
+                        new Thread(new Runnable() {
+                            public void run() {
+
+                                try {
+                                    recordSpeech();
+
+                                } catch (RuntimeException e) {
+
+                                    return;
+                                }
+
+                            }
+                        }).start();
+                    } catch (Throwable t) {
+//                    textResult.setText("ERROR: " + t.toString());
+                        forceStop = false;
+                        isRecording = false;
+//                        speechData = null;
+                    }
+                }
+            }
+        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.keyword_recyclerview);
         mAdapter = new KeywordAdapter(this, null);
@@ -101,5 +174,201 @@ public class Keyword extends AppCompatActivity {
             }
         });
     }
+    public void recordSpeech() throws RuntimeException {
+        try {
+            speechData = new byte [maxLenSpeech * 2];
+            int bufferSize = AudioRecord.getMinBufferSize(
+                    16000, // sampling frequency
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT);
+            AudioRecord audio = new AudioRecord(
+                    MediaRecorder.AudioSource.VOICE_RECOGNITION,
+                    16000, // sampling frequency
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT,
+                    bufferSize);
+            lenSpeech = 0;
+            if (audio.getState() != AudioRecord.STATE_INITIALIZED) {
+                throw new RuntimeException("ERROR: Failed to initialize audio device. Allow app to access microphone");
+            }
+            else {
+                short [] inBuffer = new short [bufferSize];
+                forceStop = false;
+                isRecording = true;
+                audio.startRecording();
+                while (!forceStop) {
+                    int ret = audio.read(inBuffer, 0, bufferSize);
+                    for (int i = 0; i < ret ; i++ ) {
+                        if (lenSpeech >= maxLenSpeech) {
+                            forceStop = true;
+                            break;
+                        }
+                        speechData[lenSpeech*2] = (byte)(inBuffer[i] & 0x00FF);
+                        speechData[lenSpeech*2+1] = (byte)((inBuffer[i] & 0xFF00) >> 8);
+                        lenSpeech++;
+                    }
+                }
+                audio.stop();
+                audio.release();
+                isRecording = false;
+            }
+        } catch(Throwable t) {
+            throw new RuntimeException(t.toString());
+        }
+    }
+    public String sendDataAndGetResult () {
+        String openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";
+        String accessKey = "68c063de-3739-4796-ba10-5c6c3152d760";
+//        String accessKey = editID.getText().toString().trim();
+        String languageCode = "english";
+        String audioContents;
 
+        Gson gson = new Gson();
+
+//                languageCode = "english";
+//                openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";
+
+
+        Map<String, Object> request = new HashMap<>();
+        Map<String, String> argument = new HashMap<>();
+
+        audioContents = Base64.encodeToString(
+                speechData, 0, lenSpeech*2, Base64.NO_WRAP);
+
+        argument.put("language_code", languageCode);
+        argument.put("audio", audioContents);
+
+        request.put("access_key", accessKey);
+        request.put("argument", argument);
+//        speechData = null;
+        URL url;
+        Integer responseCode;
+        String responBody;
+        try {
+            url = new URL(openApiURL);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.write(gson.toJson(request).getBytes("UTF-8"));
+            wr.flush();
+            wr.close();
+            Log.e("보내기  ", ""+wr  );
+            responseCode = con.getResponseCode();
+            if ( responseCode == 200 ) {
+                InputStream is = new BufferedInputStream(con.getInputStream());
+                responBody = readStream(is);
+                Log.e("받기  ", ""+responBody  );
+                return responBody;
+
+            }
+
+            else
+                return "ERROR: " + Integer.toString(responseCode);
+        } catch (Throwable t) {
+            return "ERROR: " + t.toString();
+        }
+    }
+    public static String readStream(InputStream in) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader r = new BufferedReader(new InputStreamReader(in),1000);
+        for (String line = r.readLine(); line != null; line =r.readLine()){
+            sb.append(line);
+        }
+        in.close();
+        return sb.toString();
+    }
+
+    public void send() {
+        Thread threadRecog = new Thread(new Runnable() {
+            public void run() {
+
+                result = sendDataAndGetResult();
+
+            }
+        });
+        threadRecog.start();
+        try {
+            threadRecog.join(20000);
+            if (threadRecog.isAlive()) {
+                threadRecog.interrupt();
+//                        SendMessage("No response from server for 20 secs", 4);
+                Toast.makeText(this, "서버응답 시간이 초과되었습니다.(20초)", Toast.LENGTH_LONG).show();
+            } else {
+
+            }
+        }catch(InterruptedException e){
+//                    SendMessage("Interrupted", 4);
+        }
+    }
+    private class CheckTypesTask extends AsyncTask<String, Integer, String> {
+
+        ProgressDialog asyncDialog = new ProgressDialog(
+                Keyword.this);
+
+
+
+
+        @Override
+        protected void onPreExecute() {
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            asyncDialog.setMessage("평가중 입니다..");
+
+            // show dialog
+            asyncDialog.show();
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(String... params) {
+            send();
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String re) {
+            asyncDialog.dismiss();
+            super.onPostExecute(re);
+            //영어평가 결과 다이얼로그 띄우기
+            final Dialog sendtestdialog = new Dialog(Keyword.this);
+            sendtestdialog.setContentView(R.layout.sendtestdialog);
+            TextView textResult = (TextView) sendtestdialog.findViewById(R.id.textresult);
+            TextView scoreResult = (TextView) sendtestdialog.findViewById(R.id.scoreresult);
+            Button test_cancle = (Button)sendtestdialog.findViewById(R.id.test_cancle);
+            ImageView imageresult = (ImageView)sendtestdialog.findViewById(R.id.imageresult);
+
+            test_cancle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sendtestdialog.dismiss();
+                }
+            });
+
+            String r = StringEscapeUtils.unescapeJava(result);
+            String target1 = "\"recognized\":\"";
+            int target1num = r.indexOf(target1);
+            String target2 = "\",\"score\":";
+            int target2num = r.indexOf(target2);
+            String text = r.substring(target1num+14,target2num);
+            String score = r.substring(target2num+10, target2num+13);
+            Log.e("스코어", "점수는    "+score);
+            float s = Math.round(Float.parseFloat(score)*100/5);
+            Log.e("평가결과 다이얼로그   ", ""+ r);
+            Log.e("평가결과 텍스트   ", ""+ text);
+            Log.e("평가결과 점수   ", ""+ score);
+            if(!text.equals("")){
+                textResult.setText(text);
+            }else{textResult.setText("녹음된 문장이 없습니다.");}
+
+            scoreResult.setText(Float.toString(s)+"%");
+            if(s<50){
+                imageresult.setImageResource(R.drawable.star1);
+            }else if(50<=s && s<70 ){
+                imageresult.setImageResource(R.drawable.star2);
+            }else {imageresult.setImageResource(R.drawable.star3);}
+
+            sendtestdialog.show();
+            speechData = null;
+        }
+    }
 }//메인 끝

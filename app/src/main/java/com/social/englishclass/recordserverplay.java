@@ -567,7 +567,7 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("조회 실패2  ", "조회실패2");
+                        Log.e("조회 실패2  ", "파일이름"+Filename);
                     }
                 });
     }

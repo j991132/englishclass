@@ -97,6 +97,7 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
         }
 
         public void setAudioItem(KeywordItem item, int position) {
+            String ln = SelectLesson.lesson;
             mItem = item;
             mPosition = position;
             mTxtTitle.setText(item.mTitle);
@@ -107,7 +108,7 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
                 @Override
                 public void onSuccess() {
                     Log.e("피카소 성공", "       "  );
-                    File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson1keyword/picture", item.mTitle+".jpg");
+                    File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson"+ln+"keyword/picture", item.mTitle+".jpg");
 
                     if(imgFile.exists()){
 
@@ -122,7 +123,7 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
                 public void onError() {
                     Log.e("피카소 실패", "       "  );
                     Log.e("피카소 실패 파일 이름", "       " +item.mTitle );
-                    File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson1keyword/picture", item.mTitle+".jpg");
+                    File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson"+ln+"keyword/picture", item.mTitle+".jpg");
                     Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
                     mImageView.setImageBitmap(myBitmap);

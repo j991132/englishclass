@@ -63,7 +63,9 @@
             android:id="@+id/sendtest_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:adjustViewBounds="true"
+            android:background="#FFFFFF"
             android:scaleType="fitCenter"
             android:src="@drawable/mic_normal" />
     </LinearLayout>

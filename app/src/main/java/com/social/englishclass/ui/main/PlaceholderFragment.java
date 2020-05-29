@@ -182,27 +182,27 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
                 } else {
                     sendtest_btn.setImageResource(R.drawable.mic_rec);
                     try {
-                    new Thread(new Runnable() {
-                        public void run() {
+                        new Thread(new Runnable() {
+                            public void run() {
 
-                            try {
-                                recordSpeech();
+                                try {
+                                    recordSpeech();
 
-                            } catch (RuntimeException e) {
+                                } catch (RuntimeException e) {
 
-                                return;
+                                    return;
+                                }
+
                             }
-
-                        }
-                    }).start();
-                } catch (Throwable t) {
+                        }).start();
+                    } catch (Throwable t) {
 //                    textResult.setText("ERROR: " + t.toString());
-                    forceStop = false;
-                    isRecording = false;
+                        forceStop = false;
+                        isRecording = false;
 //                        speechData = null;
+                    }
                 }
             }
-        }
         });
 
         final TextView textView = root.findViewById(R.id.section_label);

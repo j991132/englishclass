@@ -56,7 +56,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.annotations.Nullable;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -71,7 +73,7 @@ import java.util.ArrayList;
 public class level extends AppCompatActivity implements View.OnClickListener {
 
 
-private String current_lv;
+    private String current_lv;
     private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
@@ -81,13 +83,13 @@ private String current_lv;
     public static Dialog recordlistdialog, deletedialog;
     private String folder, fname, login_name, token, login_school;
     private AudioAdapter mAdapter, recordAdapter, serchAdapter;
-    public  String serchfilename, ext ;
+    public String serchfilename, ext;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
 //현재 보여줄 탭 번호 받기
@@ -111,6 +113,8 @@ private String current_lv;
         stopplay.setOnClickListener(this);
         btn_server.setOnClickListener(this);
 //녹음버튼 끝
+        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
         registerBroadcast();
 //탭 화면구성
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
@@ -136,8 +140,6 @@ private String current_lv;
         }
 
 
-
-
 //        FloatingActionButton fab = findViewById(R.id.fab);
 
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +150,7 @@ private String current_lv;
 //            }
 //        });
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -189,11 +192,11 @@ private String current_lv;
                         isRecording = true;
                         pause = 0;
                         startbtn.setText("일시정지");
-                    }else if(isRecording == true && pause == 0 ){
+                    } else if (isRecording == true && pause == 0) {
                         AudioApplication.getInstance().getServiceInterface().recordpause();
 
                         startbtn.setText("녹음시작");
-                    }else if (isRecording == true && pause == 1){
+                    } else if (isRecording == true && pause == 1) {
                         AudioApplication.getInstance().getServiceInterface().recordresume();
                         pause = 0;
                         startbtn.setText("일시정지");
@@ -256,14 +259,15 @@ private String current_lv;
   */
 // 녹음서버 목록 보여주는 엑티비티 띄우기
                 Intent intent = new Intent(this, recordserver.class);
-                intent.putExtra("login_school",login_school);
-                intent.putExtra("login_name",login_name);
+                intent.putExtra("login_school", login_school);
+                intent.putExtra("login_name", login_name);
                 startActivity(intent);
                 finish();
                 break;
         }
 
     }
+
     public boolean CheckPermissions() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
@@ -293,19 +297,19 @@ private String current_lv;
                 beforeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "AudioRecording.3gp");
 //                beforesendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "sendtest.txt");
                 Log.d("이전파일이름", String.valueOf(beforeFileName));
-                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".3gp");
+                afterFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName + "_" + time + ".3gp");
 //                exisitFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".pcm");
 //                aftersendtest = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName +"_"+time+".txt");
                 Log.d("수정된파일이름", String.valueOf(afterFileName));
 
-                if (afterFileName.exists()){
+                if (afterFileName.exists()) {
 //                    Log.e("저장되어 있는 파일이름      ", String.valueOf(afterFileName));
 //                    afterFileName.mkdirs();
 //                    afterFileName.delete();
                     metadata(String.valueOf(beforeFileName));
 //                    beforeFileName.renameTo(exisitFileName);
                     beforeFileName.renameTo(afterFileName);
-                    Log.e("재생시간",String.valueOf( duration));
+                    Log.e("재생시간", String.valueOf(duration));
 //                    try {
 //                        rawToWave(exisitFileName, afterFileName);
 //                    } catch (IOException e) {
@@ -315,9 +319,9 @@ private String current_lv;
 //                    wavtomp3(afterFileName);
 //                    beforeFileName.renameTo(afterFileName);
 //                    beforesendtest.renameTo(aftersendtest);
-                    updatadata(FileName+"_"+time);
+                    updatadata(FileName + "_" + time);
 //                    Log.e("삭제된 파일이름      ", String.valueOf(afterFileName));
-                }else {
+                } else {
 
                     Log.e("재생시간", String.valueOf(duration));
 //pcm to wav
@@ -342,14 +346,14 @@ private String current_lv;
 //                    File mp3 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", mp3ext);
 //                    Log.e("mp3 확장자 얻기 위한 이름   ", ""+mp3ext);
 //                    values.put(MediaStore.Audio.Media.DISPLAY_NAME, mp3.getName());
-                    String recext = afterFileName.getName().toString().substring(0,afterFileName.getName().toString().lastIndexOf("."))+".3gp";
-                    String recextpath = afterFileName.getPath().toString().substring(0,afterFileName.getPath().toString().lastIndexOf("."))+".3gp";
+                    String recext = afterFileName.getName().toString().substring(0, afterFileName.getName().toString().lastIndexOf(".")) + ".3gp";
+                    String recextpath = afterFileName.getPath().toString().substring(0, afterFileName.getPath().toString().lastIndexOf(".")) + ".3gp";
                     File rec = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", recext);
-                    Log.e("mp3 확장자 얻기 위한 이름   ", ""+recext);
+                    Log.e("mp3 확장자 얻기 위한 이름   ", "" + recext);
                     values.put(MediaStore.Audio.Media.DISPLAY_NAME, rec.getName());
 
 
-                    values.put(MediaStore.Audio.Media.TITLE, FileName+"_"+time);
+                    values.put(MediaStore.Audio.Media.TITLE, FileName + "_" + time);
 
                     values.put(MediaStore.Audio.Media.DURATION, duration);
                     Log.e("녹음 중지 시 저장되는 이름   ", afterFileName.getName());
@@ -359,7 +363,6 @@ private String current_lv;
                     values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/*");
 
 
-
 //                Uri uri = MediaStore.Audio.Media.getContentUriForPath(afterFileName.getPath());
                     getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
 //                getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
@@ -367,11 +370,11 @@ private String current_lv;
                 }
 
 
-                if (beforeFileName.renameTo(afterFileName))
-                { Toast.makeText(getApplicationContext(), "success!" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();}
-                else
-                {  Toast.makeText(getApplicationContext(), "faile" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();}
-
+                if (beforeFileName.renameTo(afterFileName)) {
+                    Toast.makeText(getApplicationContext(), "success!" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "faile" + FileName + beforeFileName, Toast.LENGTH_SHORT).show();
+                }
 
 
 //                afterFileName.delete();
@@ -388,16 +391,17 @@ private String current_lv;
         }); //취소버튼 끝
         recordname.show();
     }
-    public void metadata(String filePath){
-        MediaMetadataRetriever mediaMetadataRetriever= new MediaMetadataRetriever();
+
+    public void metadata(String filePath) {
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(filePath);
 
         duration = Long.valueOf(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
     }
 
-    public void updatadata(String FileName){
+    public void updatadata(String FileName) {
         ContentValues values = new ContentValues();
-        String mselection = MediaStore.Audio.Media.TITLE+" LIKE ?";
+        String mselection = MediaStore.Audio.Media.TITLE + " LIKE ?";
 //        String[] mselectionargs = {"%"+FileName+"%"};
         String[] mselectionargs = {FileName};
 
@@ -431,7 +435,7 @@ private String current_lv;
         recordRecyclerView.setLayoutManager(layoutManager);
 
         Log.e("다이얼로그 쇼 전에 커서데이터", "커서데이터");
-        Log.e("검색버튼 클릭 시 검색어   ", "검색어 "+serchfilename);
+        Log.e("검색버튼 클릭 시 검색어   ", "검색어 " + serchfilename);
         serchbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -458,6 +462,7 @@ private String current_lv;
 
         recordlistdialog.show();
     }
+
     // 녹음파일 리스트 어답터
     public void getAudioListFromMediaDatabase2() {
         long currentTime = System.currentTimeMillis();
@@ -467,7 +472,7 @@ private String current_lv;
         getSupportLoaderManager().restartLoader(lid, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                Log.e("겟리스트메서드", "메서드실행됨"  );
+                Log.e("겟리스트메서드", "메서드실행됨");
                 Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 //               String folder = "/storage/emulated/0/Music";
                 String[] projection = new String[]{
@@ -488,7 +493,7 @@ private String current_lv;
                         "%" + folder + "%",
                         "%" + folder + "/%/%"
                 };
-                Log.e("겟리스트", "폴더" + selectionArgs );
+                Log.e("겟리스트", "폴더" + selectionArgs);
                 String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
                 //               return new CursorLoader(getApplicationContext(), uri, projection, selection, null, sortOrder);
 //검색 쿼리가 들어있는 내장파일 커서로더.java 를 호출한다.
@@ -498,7 +503,7 @@ private String current_lv;
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 recordAdapter.swapCursor(data);
-                Log.e("커서데이터", "커서데이터" + data );
+                Log.e("커서데이터", "커서데이터" + data);
                 if (data != null && data.getCount() > 0) {
                     while (data.moveToNext()) {
                         Log.e("태그", "Title:" + data.getString(data.getColumnIndex(MediaStore.Audio.Media.TITLE)));
@@ -512,6 +517,7 @@ private String current_lv;
             }
         });
     }
+
     // 녹음파일 검색 어답터
     public void getSerchAudioListFromMediaDatabase() {
         long currentTime = System.currentTimeMillis();
@@ -564,30 +570,31 @@ private String current_lv;
             }
         });
     }
-    //녹음파일 검색 시 녹음파일 목록 다이얼로그 띄우기
+
+    //녹음파일 롱클릭시 전송, 삭제 다이얼로그 띄우기
     public void deletedialog(final String filenamevalue, final Uri filepathvalue) {
 
         //다이얼로그생성
         deletedialog = new Dialog(this);
         deletedialog.setContentView(R.layout.delete);
         TextView deletedialogtitle = (TextView) deletedialog.findViewById(R.id.deleltedialogtitle);
-        deletedialogtitle.setText("선택된 파일  : "+filenamevalue);
+        deletedialogtitle.setText("선택된 파일  : " + filenamevalue);
         ext = filepathvalue.toString().substring(filepathvalue.toString().lastIndexOf("."));
-        Log.e("롱클릭시 넘겨진자   ", ""+ext);
+        Log.e("롱클릭시 넘겨진자   ", "" + ext);
 //        folder = "/storage/emulated/0/englishclass/record";
-        Button  btn_send_firebase = (Button) deletedialog.findViewById(R.id.btn_send_firebase);
-        Button  btn_send_test = (Button) deletedialog.findViewById(R.id.btn_send_test);
+        Button btn_send_firebase = (Button) deletedialog.findViewById(R.id.btn_send_firebase);
+        Button btn_send_test = (Button) deletedialog.findViewById(R.id.btn_send_test);
         btn_send_test.setVisibility(View.GONE);
-        Button  deletebtn = (Button)  deletedialog.findViewById(R.id.deletebtn);
-        Button  deletecanclebtn = (Button)  deletedialog.findViewById(R.id.deletecanclebtn);
+        Button deletebtn = (Button) deletedialog.findViewById(R.id.deletebtn);
+        Button deletecanclebtn = (Button) deletedialog.findViewById(R.id.deletecanclebtn);
         Log.e("지워질 파일이름   ", filenamevalue);
 //파이어베이스 업로드
         btn_send_firebase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File  deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue+ext);
+                File deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue + ext);
                 Uri fileuri = Uri.fromFile(deletefile);
-                Log.e("파일패스에서 얻어지는 uri   ", ""+fileuri);
+                Log.e("파일패스에서 얻어지는 uri   ", "" + fileuri);
                 uploadfile(filenamevalue, fileuri);
             }
         }); //파이어베이스 업로드 끝
@@ -617,12 +624,12 @@ private String current_lv;
             @Override
             public void onClick(View view) {
 //                삭제시 지우기
-                File  deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue+ext);
+                File deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue + ext);
                 Uri fileuri = Uri.fromFile(deletefile);
-                Log.e("파일패스에서 얻어지는 uri   ", ""+fileuri);
-                if (deletefile.delete()){
+                Log.e("파일패스에서 얻어지는 uri   ", "" + fileuri);
+                if (deletefile.delete()) {
                     deletedata(filenamevalue);
-                    Toast.makeText(getApplicationContext(), "녹음파일  " + filenamevalue+ext+" 가 삭제되었습니다." , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "녹음파일  " + filenamevalue + ext + " 가 삭제되었습니다.", Toast.LENGTH_SHORT).show();
                     deletedialog.dismiss();
                 }
             }
@@ -640,12 +647,12 @@ private String current_lv;
     }
 
     //파이어베이스 업로드
-    public void uploadfile(final String FileName, Uri filepathvalue){
-        if(filepathvalue !=null) {
-            Log.e("업로드시 얻어지는 파일 uri   ", ""+filepathvalue);
+    public void uploadfile(final String FileName, Uri filepathvalue) {
+        if (filepathvalue != null) {
+            Log.e("업로드시 얻어지는 파일 uri   ", "" + filepathvalue);
 
             String ext = filepathvalue.toString().substring(filepathvalue.toString().lastIndexOf("."));
-            Log.e("업로드시 얻어지는 파일 확장자   ", ""+ext);
+            Log.e("업로드시 얻어지는 파일 확장자   ", "" + ext);
 //업로드 진행 Dialog 보이기
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("업로드중...");
@@ -662,6 +669,7 @@ private String current_lv;
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(FileName).setValue(upload);
                             progressDialog.dismiss();
+                            deletedialog.dismiss();
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -681,18 +689,20 @@ private String current_lv;
                             progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
                         }
                     });
-        }else{
+        } else {
             Toast.makeText(getApplicationContext(), "파일을 먼저 선택하세요.", Toast.LENGTH_SHORT).show();
         }
 
     }
-    public void deletedata(String FileName){
+
+    public void deletedata(String FileName) {
         ContentValues values = new ContentValues();
-        String mselection = MediaStore.Audio.Media.TITLE+" LIKE ?";
+        String mselection = MediaStore.Audio.Media.TITLE + " LIKE ?";
 //        String[] mselectionargs = {"%"+FileName+"%"};
         String[] mselectionargs = {FileName};
         getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mselection, mselectionargs);
     }
+
     public void registerBroadcast() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BroadcastActions.PLAY_STATE_CHANGED);
@@ -703,14 +713,15 @@ private String current_lv;
     public void unregisterBroadcast() {
         unregisterReceiver(mBroadcastReceiver);
     }
+
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("deletedialog")){
+            if (intent.getAction().equals("deletedialog")) {
                 String filenamevalue = intent.getStringExtra("filenamevalue");
 
-                Uri filepathvalue = Uri.parse("file:/"+intent.getStringExtra("filepathvalue"));
-                Log.e("다이얼로그 출력시 Uri 정보", " "+ filepathvalue);
+                Uri filepathvalue = Uri.parse("file:/" + intent.getStringExtra("filepathvalue"));
+                Log.e("다이얼로그 출력시 Uri 정보", " " + filepathvalue);
                 deletedialog(filenamevalue, filepathvalue);
             }
 //            updateUI();
