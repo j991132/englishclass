@@ -87,7 +87,10 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
-        bundle.putString(ln+lt+"lv"+index, "/storage/emulated/0/englishclass/lesson/l"+ln+"_"+lt+"_"+"lv"+index+".mp4");
+        if(lt.equals("let")){
+            bundle.putString(ln+lt+"lv"+index, "/storage/emulated/0/englishclass/lesson/l"+ln+"_let/l"+ln+"_"+lt+"_"+"lv"+index+".mp4");
+        }else{
+        bundle.putString(ln+lt+"lv"+index, "/storage/emulated/0/englishclass/lesson/l"+ln+"_"+lt+"_"+"lv"+index+".mp4");}
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -324,6 +327,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             //mediaPlayer.setVolume(0, 0); //볼륨 제거
             mediaPlayer.setDisplay(surfaceHolder); // 화면 호출
             mediaPlayer.prepare(); // 비디오 load 준비
+            mediaPlayer.seekTo(100);   // 비디오 첫화면 설정 1초 장면
             isPrepared = true;
             Log.e("MyTag","크리에이트_이즈프리페어드  "+isPrepared);
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -394,6 +398,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             //mediaPlayer.setVolume(0, 0); //볼륨 제거
             mediaPlayer.setDisplay(surfaceHolder); // 화면 호출
             mediaPlayer.prepare(); // 비디오 load 준비
+            mediaPlayer.seekTo(100);   // 비디오 첫화면 설정 1초 장면
             isPrepared = true;
             Log.e("MyTag","크리에이트_이즈프리페어드  "+isPrepared);
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

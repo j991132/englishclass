@@ -55,7 +55,7 @@ import static com.social.englishclass.englishlesson.REQUEST_AUDIO_PERMISSION_COD
 public class SelectLesson extends AppCompatActivity implements View.OnClickListener {
 
     private Intent intent;
-    private Dialog lesson_dialog, level_dialog, listenandrepeat_dialog;
+    private Dialog lesson_dialog, level_dialog, listenandrepeat_dialog, letsread_dialog;
     public static String lesson, lesson_type;
     private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
@@ -263,6 +263,70 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //Let's Read 다이얼로그
+    private  void letsreadDialog(String level_num){
+        letsread_dialog = new Dialog(this);
+        letsread_dialog.setContentView(R.layout.letsread_dialog);
+
+        ImageButton level1_btn = (ImageButton) letsread_dialog.findViewById(R.id.let_level1_btn);
+        ImageButton level2_btn = (ImageButton) letsread_dialog.findViewById(R.id.let_level2_btn);
+        ImageButton level3_btn = (ImageButton) letsread_dialog.findViewById(R.id.let_level3_btn);
+
+
+        TextView letsreaddialog_text = (TextView) letsread_dialog.findViewById(R.id.letsreaddialog_text);
+        letsreaddialog_text.setText(level_num);
+
+        View.OnClickListener letsreaddialog_listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(v.getContext(), level.class);
+                switch (v.getId()) {
+                    case R.id.let_level1_btn:
+
+                        intent.putExtra("lv_num", "0");
+                        intent.putExtra("login_school", login_school);
+                        intent.putExtra("login_name", login_name);
+                        intent.putExtra("token", token);
+                        intent.putExtra("lesson", lesson);
+                        intent.putExtra("lesson_type", lesson_type);
+                        startActivity(intent);
+
+                        letsread_dialog.dismiss();
+                        break;
+                    case R.id.let_level2_btn:
+                        intent.putExtra("lv_num", "1");
+                        intent.putExtra("login_school", login_school);
+                        intent.putExtra("login_name", login_name);
+                        intent.putExtra("token", token);
+                        intent.putExtra("lesson", lesson);
+                        intent.putExtra("lesson_type", lesson_type);
+                        startActivity(intent);
+                        letsread_dialog.dismiss();
+                        break;
+                    case R.id.let_level3_btn:
+                        intent.putExtra("lv_num", "2");
+                        intent.putExtra("login_school", login_school);
+                        intent.putExtra("login_name", login_name);
+                        intent.putExtra("token", token);
+                        intent.putExtra("lesson", lesson);
+                        intent.putExtra("lesson_type", lesson_type);
+                        startActivity(intent);
+                        letsread_dialog.dismiss();
+                        break;
+
+
+                }
+            }
+
+        };
+        level1_btn.setOnClickListener(letsreaddialog_listener);
+        level2_btn.setOnClickListener(letsreaddialog_listener);
+        level3_btn.setOnClickListener(letsreaddialog_listener);
+
+
+
+        letsread_dialog.show();
+    }
 //레벨 다이얼로그
     private  void levelDialog(String level_num){
         level_dialog = new Dialog(this);
@@ -287,6 +351,8 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("login_school", login_school);
                         intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
+                        intent.putExtra("lesson", lesson);
+                        intent.putExtra("lesson_type", lesson_type);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -296,6 +362,8 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("login_school", login_school);
                         intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
+                        intent.putExtra("lesson", lesson);
+                        intent.putExtra("lesson_type", lesson_type);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -305,6 +373,8 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("login_school", login_school);
                         intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
+                        intent.putExtra("lesson", lesson);
+                        intent.putExtra("lesson_type", lesson_type);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -314,6 +384,8 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("login_school", login_school);
                         intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
+                        intent.putExtra("lesson", lesson);
+                        intent.putExtra("lesson_type", lesson_type);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -370,7 +442,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         lesson_type = "rt";
                         break;
                     case R.id.letsread_btn:
-                        levelDialog("Lesson "+lesson+" - Let's Read");
+                        letsreadDialog("Lesson "+lesson+" - Let's Read");
                         lesson_type = "let";
                         break;
                 }

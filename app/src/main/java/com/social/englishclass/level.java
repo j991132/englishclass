@@ -74,6 +74,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
 
 
     private String current_lv;
+    public static String lesson_type, lesson;
     private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
@@ -97,6 +98,8 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         login_school = intent.getStringExtra("login_school");
         login_name = intent.getStringExtra("login_name");
         current_lv = intent.getStringExtra("lv_num");
+        lesson = intent.getStringExtra("lesson");
+        lesson_type = intent.getStringExtra("lesson_type");
 //뷰매칭
 //녹음버튼 관련
         startbtn = (Button) findViewById(R.id.btnRecord);

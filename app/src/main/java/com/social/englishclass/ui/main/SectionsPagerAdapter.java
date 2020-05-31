@@ -2,6 +2,7 @@ package com.social.englishclass.ui.main;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -13,6 +14,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.social.englishclass.R;
 import com.social.englishclass.SelectLesson;
+import com.social.englishclass.level;
+
+import java.io.File;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -49,20 +53,27 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        if (position == 0) return "lv 1";
-
-        else if (position == 1) return "lv 2";
-
-        else if (position == 2) return "lv 3";
-
-        else if (position == 3) return "lv 4";
-
-
+        for(int i=0; i<getCount();i++){
+            if(position == i) return "lv "+(i+1);
+        }
+//        if (position == 0) return "lv 1";
+//        else if (position == 1) return "lv 2";
+//        else if (position == 2) return "lv 3";
+//        else if (position == 3) return "lv 4";
+//
         return mContext.getResources().getString(TAB_TITLES[position]);
     }
 
     @Override
     public int getCount() {
+        Log.e("탭 페이퍼 어답터 겟카운트 ", ""+level.lesson_type);
+
+        if(level.lesson_type.equals("let")){
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/l"+level.lesson+"_let");
+            File[] files = file.listFiles();
+            int count = files.length;
+            return count;
+        }else
         // Show 2 total pages.
         return 4;
     }
