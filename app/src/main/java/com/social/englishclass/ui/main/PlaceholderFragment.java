@@ -134,11 +134,12 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
          pos = getArguments().getInt(ARG_SECTION_NUMBER);
         Log.e("MyTag","pos 번호  : " +pos);
 //        View root = null;
-//        root = inflater.inflate(R.layout.fragment_level, container, false);
-        if(pos==1){root = inflater.inflate(R.layout.fragment_level, container, false);}
-        else if(pos==2){root = inflater.inflate(R.layout.fragment_level, container, false);}
-        else if(pos==3){root = inflater.inflate(R.layout.fragment_level, container, false);}
-        else if(pos==4){root = inflater.inflate(R.layout.fragment_level, container, false);}
+        root = inflater.inflate(R.layout.fragment_level, container, false);
+
+//        if(pos==1){root = inflater.inflate(R.layout.fragment_level, container, false);}
+//        else if(pos==2){root = inflater.inflate(R.layout.fragment_level, container, false);}
+//        else if(pos==3){root = inflater.inflate(R.layout.fragment_level, container, false);}
+//        else if(pos==4){root = inflater.inflate(R.layout.fragment_level, container, false);}
 //        else if(pos==5){root = inflater.inflate(R.layout.fragment_level, container, false);}
         surfaceView = root.findViewById(R.id.surfaceView);
         surfaceHolder = surfaceView.getHolder();
@@ -209,12 +210,13 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         });
 
         final TextView textView = root.findViewById(R.id.section_label);
-        pageViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        textView.setText(level.level_text);
+//        pageViewModel.getText().observe(this, new Observer<String>() {
+//            @Override
+//            public void onChanged(@Nullable String s) {
+//                textView.setText(s);
+//            }
+//        });
         return root;
 
 

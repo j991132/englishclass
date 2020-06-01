@@ -4,18 +4,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/letsreaddialog_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="TextView"
-        android:textSize="18sp" />
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageButton
             android:id="@+id/let_level1_btn"
@@ -24,7 +27,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/level1" />
+            app:srcCompat="@drawable/letsreaslv1" />
 
         <ImageButton
             android:id="@+id/let_level2_btn"
@@ -33,16 +36,16 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/level2" />
+            app:srcCompat="@drawable/letsreadlv2" />
 
         <ImageButton
             android:id="@+id/let_level3_btn"
-            app:srcCompat="@drawable/level3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/letsreadlv3" />
     </LinearLayout>
 
 </LinearLayout>

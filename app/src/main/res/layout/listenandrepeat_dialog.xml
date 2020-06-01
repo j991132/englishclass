@@ -4,13 +4,15 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/listenandrepeat_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="TextView"
-        android:textSize="18sp" />
+        android:textSize="30sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +28,7 @@
             android:adjustViewBounds="true"
             android:background="#FFFFFF"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/listenandrepeat" />
+            app:srcCompat="@drawable/listenandrepeat1" />
 
         <ImageButton
             android:id="@+id/listenandrepeat2_btn"
@@ -37,7 +39,7 @@
             android:adjustViewBounds="true"
             android:background="#FFFFFF"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/listenandrepeat" />
+            app:srcCompat="@drawable/listenandrepeat2" />
     </LinearLayout>
 
 </LinearLayout>

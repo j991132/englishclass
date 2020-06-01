@@ -79,12 +79,13 @@ public class level extends AppCompatActivity implements View.OnClickListener {
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private int pause;
-    private File beforeFileName, afterFileName, beforesendtest, aftersendtest, exisitFileName;
+    private File beforeFileName, afterFileName;
     private Long duration;
     public static Dialog recordlistdialog, deletedialog;
     private String folder, fname, login_name, token, login_school;
     private AudioAdapter mAdapter, recordAdapter, serchAdapter;
     public String serchfilename, ext;
+    public static String  level_text;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
@@ -100,7 +101,10 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         current_lv = intent.getStringExtra("lv_num");
         lesson = intent.getStringExtra("lesson");
         lesson_type = intent.getStringExtra("lesson_type");
+        level_text = intent.getStringExtra("level_text");
 //뷰매칭
+        TextView level_title = (TextView)findViewById(R.id.level_text);
+        level_title.setText(level_text);
 //녹음버튼 관련
         startbtn = (Button) findViewById(R.id.btnRecord);
         stopbtn = (Button) findViewById(R.id.btnStop);
@@ -122,7 +126,16 @@ public class level extends AppCompatActivity implements View.OnClickListener {
 //탭 화면구성
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setOffscreenPageLimit(4); //탭은 보통 3개까지 로드 되고 죽지만 제한을 5개로 늘려준다
+        Log.e("레슨 타입  ", "lesson_type  "+lesson_type);
+        if(lesson_type.equals("let")) {
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/l" + lesson + "_let");
+            File[] files = file.listFiles();
+            int count = files.length;
+            viewPager.setOffscreenPageLimit(count);
+        }else{
+            viewPager.setOffscreenPageLimit(4); //탭은 보통 3개까지 로드 되고 죽지만 제한을 4개로 늘려준다
+        }
+
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setCurrentItem(Integer.parseInt(current_lv));  // 현재 보여줄 탭 세팅
         TabLayout tabs = findViewById(R.id.tabs);

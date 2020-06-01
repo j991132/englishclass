@@ -145,83 +145,49 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
 //                        startActivity(intent);
                         break;
                     case R.id.button2:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson2");
-                        startActivity(intent);
+                        lessonDialog("Lesson 2 - Do You Know Anything About Hanok?");
+                        lesson = "2";
                         break;
                     case R.id.button3:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson3");
-                        startActivity(intent);
+                        lessonDialog("Lesson 3 - When Is Earth Day?");
+                        lesson = "3";
                         break;
                     case R.id.button4:
                         lessonDialog("Lesson 4 - How Much Are There Pants?");
                         lesson = "4";
-//                        intent.putExtra("login_school", login_school);
-//                        intent.putExtra("login_name", login_name);
-//                        intent.putExtra("token", token);
-//                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson4");
-//                        startActivity(intent);
+
                         break;
                     case R.id.button5:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson5");
-                        startActivity(intent);
+                        lessonDialog("Lesson 5 - What's Wrong?");
+                        lesson = "5";
                         break;
                     case R.id.button6:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson6");
-                        startActivity(intent);
+                        lessonDialog("Lesson 6 - I'm Going to Go on a Trip");
+                        lesson = "6";
                         break;
                     case R.id.button7:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson7");
-                        startActivity(intent);
+                        lessonDialog("Lesson 7 - You Should Wear a Helmet");
+                        lesson = "7";
                         break;
                     case R.id.button8:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson8");
-                        startActivity(intent);
+                        lessonDialog("Lesson 8 - How Can I Get to the Museum?");
+                        lesson = "8";
                         break;
                     case R.id.button9:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson9");
-                        startActivity(intent);
+                        lessonDialog("Lesson 9 - How Often Do You Exercise?");
+                        lesson = "9";
                         break;
                     case R.id.button10:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson10");
-                        startActivity(intent);
+                        lessonDialog("Lesson 10 - Emily Is Faster than Yuna");
+                        lesson = "10";
                         break;
                     case R.id.button11:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson11");
-                        startActivity(intent);
+                        lessonDialog("Lesson 11 - Why Are You Happy?");
+                        lesson = "11";
                         break;
                     case R.id.button12:
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson12");
-                        startActivity(intent);
+                        lessonDialog("Lesson 12 - Would You Like to Come to My Graduation?");
+                        lesson = "12";
                         break;
                 }
             }
@@ -353,6 +319,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
+                        intent.putExtra("level_text", level_num);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -364,6 +331,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
+                        intent.putExtra("level_text", level_num);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -375,6 +343,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
+                        intent.putExtra("level_text", level_num);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -386,6 +355,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
+                        intent.putExtra("level_text", level_num);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -423,6 +393,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                 switch (v.getId()) {
                     case R.id.keyword_btn:
                         intent = new Intent(v.getContext(), Keyword.class);
+                        intent.putExtra("lesson", lesson);
                         startActivity(intent);
                         lesson_dialog.dismiss();
                         break;

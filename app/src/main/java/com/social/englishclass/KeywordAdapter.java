@@ -104,11 +104,11 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
             Log.e("키워드 파일 이름", "       " +item.mTitle );
             Uri albumArtUri = ContentUris.withAppendedId(artworkUri, item.mAlbumId);
 
-            Picasso.with(itemView.getContext()).load( Uri.parse("/storage/emulated/0/englishclass/lesson1keyword/picture/grade.jpg")).into(mImageView, new Callback() {
+            Picasso.with(itemView.getContext()).load( Uri.parse("/storage/emulated/0/englishclass/lesson1keyword/picture/grade.png")).into(mImageView, new Callback() {
                 @Override
                 public void onSuccess() {
                     Log.e("피카소 성공", "       "  );
-                    File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson"+ln+"keyword/picture", item.mTitle+".jpg");
+                    File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson"+ln+"keyword/picture", item.mTitle+".png");
 
                     if(imgFile.exists()){
 
@@ -123,7 +123,7 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
                 public void onError() {
                     Log.e("피카소 실패", "       "  );
                     Log.e("피카소 실패 파일 이름", "       " +item.mTitle );
-                    File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson"+ln+"keyword/picture", item.mTitle+".jpg");
+                    File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson"+ln+"keyword/picture", item.mTitle+".png");
                     Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
                     mImageView.setImageBitmap(myBitmap);

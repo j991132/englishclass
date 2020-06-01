@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioFormat;
@@ -52,7 +53,7 @@ public class Keyword extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private KeywordAdapter mAdapter;
     private final static int LOADER_ID = 0x001;
-    private String folder;
+    private String folder, lesson;
     int maxLenSpeech = 16000 * 45;
     private  byte [] speechData = null;
     int lenSpeech = 0;
@@ -66,7 +67,9 @@ public class Keyword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_keyword);
 
-        folder = "/storage/emulated/0/englishclass/lesson1keyword/sound";
+        Intent intent = getIntent();
+        lesson = intent.getStringExtra("lesson");
+        folder = "/storage/emulated/0/englishclass/lesson"+lesson+"keyword/sound";
         // OS가 Marshmallow 이상일 경우 권한체크를 해야 합니다.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
