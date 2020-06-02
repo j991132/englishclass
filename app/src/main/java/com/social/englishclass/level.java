@@ -63,6 +63,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.social.englishclass.ui.main.PlaceholderFragment;
 import com.social.englishclass.ui.main.SectionsPagerAdapter;
 
 import java.io.File;
@@ -78,7 +79,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
     private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
-    private int pause;
+    private int pause, index;
     private File beforeFileName, afterFileName;
     private Long duration;
     public static Dialog recordlistdialog, deletedialog;
@@ -89,6 +90,9 @@ public class level extends AppCompatActivity implements View.OnClickListener {
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
+    public  ViewPager viewPager;
+    public static MediaPlayer mediaPlayer;
+    private static boolean isPrepared ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,21 +129,44 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         registerBroadcast();
 //탭 화면구성
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager = findViewById(R.id.view_pager);
         Log.e("레슨 타입  ", "lesson_type  "+lesson_type);
         if(lesson_type.equals("let")) {
+            Log.e("if 문 안에 레슨타입  ", "lesson_type  "+lesson_type);
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/l" + lesson + "_let");
             File[] files = file.listFiles();
             int count = files.length;
-            viewPager.setOffscreenPageLimit(count);
+            Log.e("if 문 안에 카운트 수  ", "count  "+count);
+            viewPager.setOffscreenPageLimit(1);
         }else{
-            viewPager.setOffscreenPageLimit(4); //탭은 보통 3개까지 로드 되고 죽지만 제한을 4개로 늘려준다
+            Log.e("if 문 조건 실패  ", "lesson_type  "+lesson_type);
+            viewPager.setOffscreenPageLimit(0); //탭은 보통 3개까지 로드 되고 죽지만 제한을 4개로 늘려준다
+
         }
 
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setCurrentItem(Integer.parseInt(current_lv));  // 현재 보여줄 탭 세팅
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+//        medissetting();
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//                medissetting();
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//
+//                medissetting();
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
 
 // OS가 Marshmallow 이상일 경우 권한체크를 해야 합니다.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -247,6 +274,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                 break;
             case R.id.StopPlay:
                 // 녹음 재생중지
+//                Log.e("현재 뷰페이퍼 번호", "번호"+ viewPager.getCurrentItem());
                 stopbtn.setEnabled(false);
                 startbtn.setEnabled(true);
                 playbtn.setEnabled(true);
@@ -730,6 +758,62 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         unregisterReceiver(mBroadcastReceiver);
     }
 
+    private void medissetting(){
+        index = viewPager.getCurrentItem()+1;
+        if (mediaPlayer == null ) {
+
+            mediaPlayer = new MediaPlayer();
+            Log.e("MyTag","서피스 크리에이트 미디어 플레이어 널상태  index"+index +mediaPlayer);
+        } else {
+            try {
+
+                mediaPlayer.reset();
+                Log.e("MyTag","서피스 크리에이트 미디어 플레이어 널이 아닐때  index"+index +mediaPlayer);
+            }catch (Exception e) {
+                Log.e("MyTag","서피스 크리에이트 미디어 플레이어 오류 : index"+index + e.getMessage());
+            }
+        }
+
+        try {
+
+
+//            mediaPlayer.setDataSource(PlaceholderFragment.filepath);
+mediaPlayer.setDataSource("/storage/emulated/0/englishclass/lesson/l1_ll_lv"+index+".mp4");
+            //mediaPlayer.setVolume(0, 0); //볼륨 제거
+            mediaPlayer.setDisplay(PlaceholderFragment.surfaceHolder); // 화면 호출
+            mediaPlayer.prepare(); // 비디오 load 준비
+            mediaPlayer.seekTo(100);   // 비디오 첫화면 설정 1초 장면
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    isPrepared = true;
+                    Log.e("MyTag","크리에이트_이즈프리페어드  : pos  "+index +"    "+isPrepared);
+                }
+            });
+
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    if (mediaPlayer != null) {
+                        isPrepared = false;
+
+
+                        mediaPlayer.reset();
+
+//                        updateUI();
+//                        speedselect_server();
+                    }
+
+                }
+            }); // 비디오 재생 완료 리스너
+
+            mediaPlayer.start();
+
+        } catch (Exception e) {
+            Log.e("MyTag","surface view error : " + e.getMessage());
+        }
+    }
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

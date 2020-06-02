@@ -27,6 +27,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
     private final Context mContext;
+    public static int count;
 
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -71,7 +72,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         if(level.lesson_type.equals("let")){
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/l"+level.lesson+"_let");
             File[] files = file.listFiles();
-            int count = files.length;
+            count = files.length;
             return count;
         }else
         // Show 2 total pages.
