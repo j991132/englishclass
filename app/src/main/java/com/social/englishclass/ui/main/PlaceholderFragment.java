@@ -308,7 +308,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.e("MyTag","surfaceCreated");
-
+/*
         if (mediaPlayer == null ) {
 
             mediaPlayer = new MediaPlayer();
@@ -322,7 +322,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
                 Log.e("MyTag","서피스 크리에이트 미디어 플레이어 오류 : pos"+pos + e.getMessage());
             }
         }
-
+*/
         try {
 
 
@@ -376,7 +376,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         Log.e("MyTag","surfaceDestroyed   pos:  "+pos);
-
+/*
         if (mediaPlayer != null) {
             isPrepared = false;
             mediaPlayer.stop();
@@ -387,7 +387,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             Log.e("MyTag","서피스 디스트로이_미디어상태  null : pos  "+pos +"    "+mediaPlayer);
         }
 
-
+*/
     }
 
     @Override
