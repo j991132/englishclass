@@ -137,10 +137,10 @@ public class level extends AppCompatActivity implements View.OnClickListener {
             File[] files = file.listFiles();
             int count = files.length;
             Log.e("if 문 안에 카운트 수  ", "count  "+count);
-            viewPager.setOffscreenPageLimit(1);
+            viewPager.setOffscreenPageLimit(count);
         }else{
             Log.e("if 문 조건 실패  ", "lesson_type  "+lesson_type);
-            viewPager.setOffscreenPageLimit(0); //탭은 보통 3개까지 로드 되고 죽지만 제한을 4개로 늘려준다
+            viewPager.setOffscreenPageLimit(4); //탭은 보통 3개까지 로드 되고 죽지만 제한을 4개로 늘려준다
 
         }
 
@@ -148,6 +148,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         viewPager.setCurrentItem(Integer.parseInt(current_lv));  // 현재 보여줄 탭 세팅
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+
 //        medissetting();
 //        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 //            @Override
@@ -758,62 +759,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         unregisterReceiver(mBroadcastReceiver);
     }
 
-    private void medissetting(){
-        index = viewPager.getCurrentItem()+1;
-        if (mediaPlayer == null ) {
 
-            mediaPlayer = new MediaPlayer();
-            Log.e("MyTag","서피스 크리에이트 미디어 플레이어 널상태  index"+index +mediaPlayer);
-        } else {
-            try {
-
-                mediaPlayer.reset();
-                Log.e("MyTag","서피스 크리에이트 미디어 플레이어 널이 아닐때  index"+index +mediaPlayer);
-            }catch (Exception e) {
-                Log.e("MyTag","서피스 크리에이트 미디어 플레이어 오류 : index"+index + e.getMessage());
-            }
-        }
-
-        try {
-
-
-//            mediaPlayer.setDataSource(PlaceholderFragment.filepath);
-mediaPlayer.setDataSource("/storage/emulated/0/englishclass/lesson/l1_ll_lv"+index+".mp4");
-            //mediaPlayer.setVolume(0, 0); //볼륨 제거
-            mediaPlayer.setDisplay(PlaceholderFragment.surfaceHolder); // 화면 호출
-            mediaPlayer.prepare(); // 비디오 load 준비
-            mediaPlayer.seekTo(100);   // 비디오 첫화면 설정 1초 장면
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    isPrepared = true;
-                    Log.e("MyTag","크리에이트_이즈프리페어드  : pos  "+index +"    "+isPrepared);
-                }
-            });
-
-
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    if (mediaPlayer != null) {
-                        isPrepared = false;
-
-
-                        mediaPlayer.reset();
-
-//                        updateUI();
-//                        speedselect_server();
-                    }
-
-                }
-            }); // 비디오 재생 완료 리스너
-
-            mediaPlayer.start();
-
-        } catch (Exception e) {
-            Log.e("MyTag","surface view error : " + e.getMessage());
-        }
-    }
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

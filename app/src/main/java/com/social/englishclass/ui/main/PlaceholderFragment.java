@@ -58,10 +58,10 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private PageViewModel pageViewModel;
-    public SurfaceView surfaceView;
-    public static SurfaceHolder surfaceHolder;
+    private SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
     MediaPlayer mediaPlayer;
-    public static String filepath;
+    private String filepath;
     private static String lt;
     private Button videostart_btn;
     private Spinner spinner;
@@ -90,7 +90,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         if(lt.equals("let")){
             bundle.putString(ln+lt+"lv"+index, "/storage/emulated/0/englishclass/lesson/l"+ln+"_let/l"+ln+"_"+lt+"_"+"lv"+index+".mp4");
         }else{
-        bundle.putString(ln+lt+"lv"+index, "/storage/emulated/0/englishclass/lesson/l"+ln+"_"+lt+"_"+"lv"+index+".mp4");}
+            bundle.putString(ln+lt+"lv"+index, "/storage/emulated/0/englishclass/lesson/l"+ln+"_"+lt+"_"+"lv"+index+".mp4");}
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -105,7 +105,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
             Log.e("MyTag","인덱스 번호  : " +index);
-            String ln = level.lesson;
+            String ln = SelectLesson.lesson;
             filepath = getArguments().getString(ln+lt+"lv"+index);
 //            switch (index){
 //                case 1:
@@ -131,11 +131,10 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-         pos = getArguments().getInt(ARG_SECTION_NUMBER);
+        pos = getArguments().getInt(ARG_SECTION_NUMBER);
         Log.e("MyTag","pos 번호  : " +pos);
 //        View root = null;
         root = inflater.inflate(R.layout.fragment_level, container, false);
-
 //        if(pos==1){root = inflater.inflate(R.layout.fragment_level, container, false);}
 //        else if(pos==2){root = inflater.inflate(R.layout.fragment_level, container, false);}
 //        else if(pos==3){root = inflater.inflate(R.layout.fragment_level, container, false);}
@@ -304,25 +303,23 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         }
     }
 
-//서피스뷰 동작
+    //서피스뷰 동작
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.e("MyTag","surfaceCreated");
-/*
-        if (mediaPlayer == null ) {
 
-            mediaPlayer = new MediaPlayer();
+        if (mediaPlayer == null ) {
             Log.e("MyTag","서피스 크리에이트 미디어 플레이어 널상태  pos"+pos +mediaPlayer);
+            mediaPlayer = new MediaPlayer();
         } else {
             try {
-
-                mediaPlayer.reset();
                 Log.e("MyTag","서피스 크리에이트 미디어 플레이어 널이 아닐때  pos"+pos +mediaPlayer);
+                mediaPlayer.reset();
             }catch (Exception e) {
                 Log.e("MyTag","서피스 크리에이트 미디어 플레이어 오류 : pos"+pos + e.getMessage());
             }
         }
-*/
+
         try {
 
 
@@ -332,15 +329,8 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             mediaPlayer.setDisplay(surfaceHolder); // 화면 호출
             mediaPlayer.prepare(); // 비디오 load 준비
             mediaPlayer.seekTo(100);   // 비디오 첫화면 설정 1초 장면
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    isPrepared = true;
-                    Log.e("MyTag","크리에이트_이즈프리페어드  : pos  "+pos +"    "+isPrepared);
-                }
-            });
-
-
+            isPrepared = true;
+            Log.e("MyTag","크리에이트_이즈프리페어드  "+isPrepared);
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -376,23 +366,17 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         Log.e("MyTag","surfaceDestroyed   pos:  "+pos);
-/*
         if (mediaPlayer != null) {
             isPrepared = false;
             mediaPlayer.stop();
-            Log.e("MyTag","서피스 디스트로이_미디어상태 stop: pos  "+pos +"    "+mediaPlayer);
             mediaPlayer.release();
-            Log.e("MyTag","서피스 디스트로이_미디어상태 release : pos  "+pos +"    "+mediaPlayer);
             mediaPlayer = null;
-            Log.e("MyTag","서피스 디스트로이_미디어상태  null : pos  "+pos +"    "+mediaPlayer);
-        }
-
-*/
+            Log.e("MyTag","서피스 디스트로이_미디어상태  "+mediaPlayer);
+        }mediaPlayer = null;
     }
 
     @Override
     public void onResume(){
-
         if (mediaPlayer == null ) {
             Log.e("MyTag","온 리섬 미디어 플레이어 널상태  pos"+pos +mediaPlayer);
             mediaPlayer = new MediaPlayer();
@@ -416,13 +400,8 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             mediaPlayer.setDisplay(surfaceHolder); // 화면 호출
             mediaPlayer.prepare(); // 비디오 load 준비
             mediaPlayer.seekTo(100);   // 비디오 첫화면 설정 1초 장면
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    isPrepared = true;
-                    Log.e("MyTag","크리에이트_이즈프리페어드 : pos  "+pos +"    "+isPrepared);
-                }
-            });
+            isPrepared = true;
+            Log.e("MyTag","크리에이트_이즈프리페어드  "+isPrepared);
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
@@ -442,13 +421,11 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
 //            mediaPlayer.start();
 
         } catch (Exception e) {
-            Log.e("MyTag","온 리섬 에러  surface view error : " + e.getMessage());
+            Log.e("MyTag","surface view error : " + e.getMessage());
         }
-
-
         super.onResume();
-
-        Log.e("MyTag","on Resume  pos  "+pos +"    "+mediaPlayer);
+        Log.e("MyTag","파일패스  "+filepath);
+        Log.e("MyTag","on Resume  "+mediaPlayer);
     }
 
     @Override
@@ -456,13 +433,13 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
         if (mediaPlayer !=null){
             mediaPlayer.stop();
             updateUI();
-           mediaPlayer.release();
-            Log.e("MyTag","on Pause pos  "+pos +"    "+mediaPlayer);
+            mediaPlayer.release();
             mediaPlayer = null;
-        }
+//            mediaPlayer.reset();
+        }mediaPlayer = null;
         super.onPause();
 //
-        Log.e("MyTag","on Pause pos  "+pos +"    "+mediaPlayer);
+        Log.e("MyTag","on Pause  "+mediaPlayer);
 
 
     }
