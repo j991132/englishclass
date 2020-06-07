@@ -114,7 +114,10 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
 //            getAudioListFromMediaDatabase();
         }
 
+        if (CheckPermissions()) {} else {
 
+            RequestPermissions();
+        }
 
         ImageButton btn1 = (ImageButton) findViewById(R.id.button1);
         ImageButton btn2 = (ImageButton) findViewById(R.id.button2);

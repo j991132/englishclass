@@ -133,7 +133,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         Log.e("레슨 타입  ", "lesson_type  "+lesson_type);
         if(lesson_type.equals("let")) {
             Log.e("if 문 안에 레슨타입  ", "lesson_type  "+lesson_type);
-            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/l" + lesson + "_let");
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/letsread/l" + lesson + "_let_lv1_picture");
             File[] files = file.listFiles();
             int count = files.length;
             Log.e("if 문 안에 카운트 수  ", "count  "+count);
@@ -170,7 +170,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
 //        });
 
 // OS가 Marshmallow 이상일 경우 권한체크를 해야 합니다.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1000);
             } else {

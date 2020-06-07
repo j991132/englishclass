@@ -2,6 +2,7 @@ package com.social.englishclass;
 
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -96,6 +97,10 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
 
         }
 
+
+
+
+
         public void setAudioItem(KeywordItem item, int position) {
             String ln = SelectLesson.lesson;
             mItem = item;
@@ -126,7 +131,7 @@ public class KeywordAdapter  extends CursorRecyclerViewAdapter<RecyclerView.View
                     File imgFile = new  File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson"+ln+"keyword/picture", item.mTitle+".png");
                     Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
-                    mImageView.setImageBitmap(myBitmap);
+
                     if(imgFile.exists()){
                         Log.e("피카소 실패 이프 문", " imgFile.exists()  " +item.mTitle );
 //                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());

@@ -38,13 +38,19 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        if(level.lesson_type.equals("let")){
+            LetsreadFragment fragment = LetsreadFragment.newInstance(position);
+            return fragment;
+        }else {
 
-        PlaceholderFragment fragment = null;
-        fragment = PlaceholderFragment.newInstance(position + 1);
+            PlaceholderFragment fragment = null;
+            fragment = PlaceholderFragment.newInstance(position + 1);
 
-        Log.e("MyTag","프래그먼트 포지션   : " +fragment);
+            Log.e("MyTag", "프래그먼트 포지션   : " + fragment);
+            return fragment;
+        }
 
-        return fragment;
+
 
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
@@ -70,7 +76,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         Log.e("탭 페이퍼 어답터 겟카운트 ", ""+level.lesson_type);
 
         if(level.lesson_type.equals("let")){
-            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/l"+level.lesson+"_let");
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/letsread/l"+level.lesson+"_let_lv1_picture");
             File[] files = file.listFiles();
             count = files.length;
             return count;
