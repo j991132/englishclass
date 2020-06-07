@@ -83,12 +83,12 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
 
     public static PlaceholderFragment newInstance(int index) {
         String ln = SelectLesson.lesson;
-        lt = SelectLesson.lesson_type;
+        lt = level.lesson_type;
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
-        if(lt.equals("let")){
-            bundle.putString(ln+lt+"lv"+index, "/storage/emulated/0/englishclass/lesson/l"+ln+"_let/l"+ln+"_"+lt+"_"+"lv"+index+".mp4");
+        if(lt.equals("let_lv2")){
+            bundle.putString(ln+lt+"lv"+index, "/storage/emulated/0/englishclass/lesson/letsread/l"+ln+"_let/l"+ln+"_let_"+"lv"+index+".mp4");
         }else{
             bundle.putString(ln+lt+"lv"+index, "/storage/emulated/0/englishclass/lesson/l"+ln+"_"+lt+"_"+"lv"+index+".mp4");}
         fragment.setArguments(bundle);
@@ -107,6 +107,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             Log.e("MyTag","인덱스 번호  : " +index);
             String ln = SelectLesson.lesson;
             filepath = getArguments().getString(ln+lt+"lv"+index);
+            Log.e("MyTag","파일패스  : " +filepath);
 //            switch (index){
 //                case 1:
 //                    filepath = getArguments().getString(ln+lt+"lv1");

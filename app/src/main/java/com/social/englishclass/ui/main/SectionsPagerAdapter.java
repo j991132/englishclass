@@ -61,7 +61,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         for(int i=0; i<getCount();i++){
+            if(level.lesson_type.equals("let_lv2")) {
+                if (position == i) return "lv " + (i + 2);
+            }else if(level.lesson_type.equals("let")){
+                if (position == i) return ""+(i + 1);
+            }else{
             if(position == i) return "lv "+(i+1);
+            }
         }
 //        if (position == 0) return "lv 1";
 //        else if (position == 1) return "lv 2";
@@ -75,8 +81,13 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         Log.e("탭 페이퍼 어답터 겟카운트 ", ""+level.lesson_type);
 
-        if(level.lesson_type.equals("let")){
+        if(level.lesson_type.equals("let") ){
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/letsread/l"+level.lesson+"_let_lv1_picture");
+            File[] files = file.listFiles();
+            count = files.length;
+            return count;
+        }else if(level.lesson_type.equals("let_lv2")){
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/letsread/l"+level.lesson+"_let");
             File[] files = file.listFiles();
             count = files.length;
             return count;

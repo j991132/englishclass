@@ -263,22 +263,22 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         letsread_dialog.dismiss();
                         break;
                     case R.id.let_level2_btn:
+                        intent.putExtra("lv_num", "0");
+                        intent.putExtra("login_school", login_school);
+                        intent.putExtra("login_name", login_name);
+                        intent.putExtra("token", token);
+                        intent.putExtra("lesson", lesson);
+                        intent.putExtra("lesson_type", "let_lv2");
+                        startActivity(intent);
+                        letsread_dialog.dismiss();
+                        break;
+                    case R.id.let_level3_btn:
                         intent.putExtra("lv_num", "1");
                         intent.putExtra("login_school", login_school);
                         intent.putExtra("login_name", login_name);
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
-                        intent.putExtra("lesson_type", lesson_type);
-                        startActivity(intent);
-                        letsread_dialog.dismiss();
-                        break;
-                    case R.id.let_level3_btn:
-                        intent.putExtra("lv_num", "2");
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", lesson);
-                        intent.putExtra("lesson_type", lesson_type);
+                        intent.putExtra("lesson_type", "let_lv2");
                         startActivity(intent);
                         letsread_dialog.dismiss();
                         break;
