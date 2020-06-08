@@ -61,7 +61,8 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     private SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
     MediaPlayer mediaPlayer;
-    private String filepath;
+    public  String filepath;
+    public static String[] filepatharr = new String[5];
     private static String lt;
     private Button videostart_btn;
     private Spinner spinner;
@@ -107,6 +108,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             Log.e("MyTag","인덱스 번호  : " +index);
             String ln = SelectLesson.lesson;
             filepath = getArguments().getString(ln+lt+"lv"+index);
+            filepatharr[index] = filepath;
             Log.e("MyTag","파일패스  : " +filepath);
 //            switch (index){
 //                case 1:

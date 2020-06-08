@@ -58,6 +58,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private String pronunciation;
     private String login_name;
     private String login_name_fcm;
+    private static String filepath;
     private String login_name_teacher;
     private String send_token;
     private String login_school;
@@ -143,6 +144,40 @@ if(login_name != null && login_school !=null) {
         }
 */
     }//메인 끝
+    public static class CustomWaveformFragment2 extends WaveformFragment {
+
+        /**
+         * Provide path to your audio file.
+         *
+         * @return
+         */
+        @Override
+        protected String getFileName() {
+            Log.e("녹음파일에 대한 원본 경로 getname", "" + filepath);
+            return filepath;
+//            return "/storage/emulated/0/englishclass/lesson3/6-3-Look and Say.mp3";
+        }
+        @Override
+        public String getFileTitle() {
+                String sourcefile = filepath.toString().substring(filepath.toString().lastIndexOf("/")+1);
+            Log.e("녹음파일에 대한 원본 이름", "" + sourcefile);
+            return sourcefile;
+
+        }
+
+        /**
+         * Optional - provide list of segments (start and stop values in seconds) and their corresponding colors
+         *
+         * @return
+         */
+        @Override
+        protected List<Segment> getSegments() {
+            return Arrays.asList(
+                    new Segment(55.2, 55.8, Color.rgb(238, 23, 104)),
+                    new Segment(56.2, 56.6, Color.rgb(238, 23, 104)),
+                    new Segment(58.4, 59.9, Color.rgb(184, 92, 184)));
+        }
+    }
     public static class CustomWaveformFragment extends WaveformFragment {
 
         /**
@@ -243,6 +278,7 @@ if(login_name != null && login_school !=null) {
                                 try {
                                     login_name_fcm = upload.getUserId();
                                     Log.e("파이어베이스 저장된 로그인아이디  ", ""+login_name_fcm);
+                                    filepath = upload.getFilepath();
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }
@@ -489,7 +525,7 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
  //웨이브곡선 프래그먼트
 
                             getSupportFragmentManager().beginTransaction()
-                                    .add(R.id.container, new CustomWaveformFragment())
+                                    .add(R.id.container, new CustomWaveformFragment2())
                                     .add(R.id.container2, new CustomWaveformFragment())
                                     .commit();
 

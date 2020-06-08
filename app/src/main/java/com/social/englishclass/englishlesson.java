@@ -763,7 +763,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            Upload upload = new Upload(FileName, taskSnapshot.getUploadSessionUri().toString(), login_name);
+                            Upload upload = new Upload(FileName, taskSnapshot.getUploadSessionUri().toString(), login_name, "");
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(FileName).setValue(upload);
                             progressDialog.dismiss();

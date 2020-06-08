@@ -552,7 +552,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra("login_school", login_school);
                 intent.putExtra("login_name", login_name);
                 startActivity(intent);
-                finish();
+
                 break;
         }
     }
@@ -952,7 +952,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            Upload upload = new Upload(FileName, taskSnapshot.getUploadSessionUri().toString(), login_name);
+                            Upload upload = new Upload(FileName, taskSnapshot.getUploadSessionUri().toString(), login_name, "");
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(FileName).setValue(upload);
                             progressDialog.dismiss();

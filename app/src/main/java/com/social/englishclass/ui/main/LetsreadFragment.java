@@ -64,8 +64,8 @@ public class LetsreadFragment extends Fragment {
         private static final String ARG_SECTION_NUMBER = "section_number";
         public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
         private PageViewModel pageViewModel;
-
         MediaPlayer mediaPlayer;
+        public static String[] filepath = new String[30];
         private String filepath_sound, filepath_picture;
         private static String lt, ln;
         private Button videostart_btn;
@@ -112,7 +112,10 @@ public class LetsreadFragment extends Fragment {
                 Log.e("MyTag","인덱스 번호  : " +index);
                 String ln = SelectLesson.lesson;
                 filepath_sound = getArguments().getString(ln+lt+"sound"+index);
+
+                filepath[index] = filepath_sound;
                 filepath_picture = getArguments().getString(ln+lt+"picture"+index);
+
 
             }
             pageViewModel.setIndex(index);

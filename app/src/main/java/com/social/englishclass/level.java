@@ -63,6 +63,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.social.englishclass.ui.main.LetsreadFragment;
 import com.social.englishclass.ui.main.PlaceholderFragment;
 import com.social.englishclass.ui.main.SectionsPagerAdapter;
 
@@ -83,7 +84,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
     private File beforeFileName, afterFileName;
     private Long duration;
     public static Dialog recordlistdialog, deletedialog;
-    private String folder, fname, login_name, token, login_school;
+    private String folder, fname, login_name, token, login_school, filepath;
     private AudioAdapter mAdapter, recordAdapter, serchAdapter;
     public String serchfilename, ext;
     public static String  level_text;
@@ -698,6 +699,12 @@ public class level extends AppCompatActivity implements View.OnClickListener {
 
             String ext = filepathvalue.toString().substring(filepathvalue.toString().lastIndexOf("."));
             Log.e("업로드시 얻어지는 파일 확장자   ", "" + ext);
+            if (lesson_type.equals("let")){
+
+                filepath = LetsreadFragment.filepath[viewPager.getCurrentItem()];
+            }else{
+                filepath = PlaceholderFragment.filepatharr[viewPager.getCurrentItem()];
+            }
 //업로드 진행 Dialog 보이기
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("업로드중...");
@@ -710,7 +717,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            Upload upload = new Upload(FileName, taskSnapshot.getUploadSessionUri().toString(), login_name);
+                            Upload upload = new Upload(FileName, taskSnapshot.getUploadSessionUri().toString(), login_name, filepath);
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(FileName).setValue(upload);
                             progressDialog.dismiss();

@@ -5,12 +5,13 @@ public class Upload {
     private String mUrl;
     private String muserId;
     private String mtoken;
+    private String mfilepath;
 
     public Upload() {
         //empty constructor needed
     }
 
-    public Upload(String name, String Url, String userId) {
+    public Upload(String name, String Url, String userId, String filepath) {
         if (name.trim().equals("")) {
             name = "No Name";
         }
@@ -18,6 +19,7 @@ public class Upload {
         mName = name;
         mUrl = Url;
         muserId = userId;
+        mfilepath = filepath;
 //        mtoken = token;
     }
 
@@ -43,6 +45,14 @@ public class Upload {
 
     public void setUserId(String userId) {
         muserId = userId;
+    }
+
+    public String getFilepath() {
+        return mfilepath;
+    }
+
+    public void setFilepath(String filepath) {
+        mfilepath = filepath;
     }
 
 //    public String getToken() {

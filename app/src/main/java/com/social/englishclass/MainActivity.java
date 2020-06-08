@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity{
                                 startActivity(intent);
                                 finish();
                             }else {
-
+                                intent = new Intent(MainActivity.this, SelectLesson.class);
                                 startActivity(intent);
                                 finish();
                             }
