@@ -21,12 +21,17 @@
         <activity android:name=".SelectLesson" />
         <activity
             android:name=".recordserverplay"
+            android:windowSoftInputMode="stateHidden|adjustPan"
              />
         <activity
             android:name=".recordserver"
+            android:windowSoftInputMode="stateHidden|adjustPan"
              />
         <activity android:name=".englishlesson" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                  android:windowSoftInputMode="stateHidden|adjustPan"
+            >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

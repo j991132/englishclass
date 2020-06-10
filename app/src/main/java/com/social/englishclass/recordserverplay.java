@@ -105,8 +105,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         fold_btn = (Button)findViewById(R.id.fold_btn);
         fold_btn.setOnClickListener(this);
         comment = (EditText)findViewById(R.id.comment);
-        comment.setTextIsSelectable(true);
-        comment.setShowSoftInputOnFocus(false);
+
         recplay_txt_title.setText(filename);
         speedselect_server();
         mMediaplayer = new MediaPlayer();
