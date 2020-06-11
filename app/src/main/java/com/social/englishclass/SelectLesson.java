@@ -47,6 +47,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -70,6 +72,18 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
+    private static final int MULTIPLE_PERMISSIONS = 101;
+
+
+//멀티 퍼미션 지정
+private String[] permissions = {
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.RECORD_AUDIO, // 녹음
+        Manifest.permission.WRITE_EXTERNAL_STORAGE, // 기기, 사진, 미디어, 파일 엑세스 권한
+
+};
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +114,10 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
         registerBroadcast();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermissions();
+        }
+/*
         // OS가 Marshmallow 이상일 경우 권한체크를 해야 합니다.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -107,17 +125,18 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
             } else {
                 // READ_EXTERNAL_STORAGE 에 대한 권한이 있음.
 //                getAudioListFromMediaDatabase();
+                if (CheckPermissions()) {} else {
+
+                    RequestPermissions();
+                }
             }
         }
         // OS가 Marshmallow 이전일 경우 권한체크를 하지 않는다.
         else {
 //            getAudioListFromMediaDatabase();
         }
+*/
 
-        if (CheckPermissions()) {} else {
-
-            RequestPermissions();
-        }
 
         ImageButton btn1 = (ImageButton) findViewById(R.id.button1);
         ImageButton btn2 = (ImageButton) findViewById(R.id.button2);
@@ -210,6 +229,50 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
+    private boolean checkPermissions() {
+        int result;
+        List<String> permissionList = new ArrayList<>();
+        for (String pm : permissions) {
+            result = ContextCompat.checkSelfPermission(this, pm);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(pm);
+            }
+        }
+        if (!permissionList.isEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionList.toArray(new String[permissionList.size()]), MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MULTIPLE_PERMISSIONS: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < permissions.length; i++) {
+                        if (permissions[i].equals(this.permissions[i])) {
+                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                                showToast_PermissionDeny();
+                            }
+                        }
+                    }
+                } else {
+                    showToast_PermissionDeny();
+                }
+                return;
+            }
+        }
+
+    }
+
+    private void showToast_PermissionDeny() {
+        Toast.makeText(this, "권한 요청에 동의 해주셔야 이용 가능합니다. 설정에서 권한 허용 하시기 바랍니다.", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+   /*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -231,7 +294,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
+*/
     //Let's Read 다이얼로그
     private  void letsreadDialog(String level_num){
         letsread_dialog = new Dialog(this);
