@@ -704,6 +704,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                 filepath = LetsreadFragment.filepath[viewPager.getCurrentItem()];
             }else{
                 filepath = PlaceholderFragment.filepatharr[viewPager.getCurrentItem()];
+//                filepath = "";
             }
 //업로드 진행 Dialog 보이기
             final ProgressDialog progressDialog = new ProgressDialog(this);

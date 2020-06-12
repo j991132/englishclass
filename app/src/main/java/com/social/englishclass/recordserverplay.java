@@ -108,8 +108,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 
         recplay_txt_title.setText(filename);
         speedselect_server();
-        mMediaplayer = new MediaPlayer();
-        mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//        mMediaplayer = new MediaPlayer();
+//        mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         chat_view = (ListView)findViewById(R.id.chat_view);
         text_stress = (TextView)findViewById(R.id.text_stress);
         text_accent = (TextView)findViewById(R.id.text_accent);
@@ -215,20 +215,25 @@ if(login_name != null && login_school !=null) {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recplay_btn_play_pause:
+
 //                togglePlay((float) 1.00);
                 // 플레이어 화면으로 이동할 코드가 들어갈 예정
-                if (mMediaplayer.isPlaying() && pause == false) {
-                    Log.e("정지  ", "" + pause);
-                    mMediaplayer.pause();
-                    pause = true;
-                    updateUI();
-                }else if(pause == true){
-                    Log.e("재생  ", "" + pause);
-                    play(f);
-                    pause = false;
-                    updateUI();
-                }
+             if(mMediaplayer !=null) {
+                 if (mMediaplayer.isPlaying()) {
+                     Log.e("정지  ", "" + pause);
+                     mMediaplayer.pause();
+                     pause = true;
+                     updateUI();
+                 } else {
+                     Log.e("재생  ", "" + pause);
+                     play(f);
+                     pause = false;
+                     updateUI();
+                 }
+             }
                 else {
+                    mMediaplayer = new MediaPlayer();
+                    mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     Log.e("파이어베이스 불러오기  ", "");
                     getaudiourl(filename + ext);
                 }
@@ -521,13 +526,20 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
                         Log.e("다운로드받은 녹음파일 ","경로입력전");
                                 downfile = "/storage/emulated/0/englishclass/record/"+Filename;
                         Log.e("다운로드받은 녹음파일 ", "" + downfile);
+                        Log.e("레슨타입 let 가 아닐때  녹음파일 ", "" + filepath);
  //웨이브곡선 프래그먼트
+                            if(filepath.contains("ll") || filepath.contains("ls") || filepath.contains("lr") || filepath.equals("") ){
+//                                wave_fragment_layer.setVisibility(View.GONE);
+                                getSupportFragmentManager().beginTransaction()
 
-                            getSupportFragmentManager().beginTransaction()
-                                    .add(R.id.container, new CustomWaveformFragment2())
-                                    .add(R.id.container2, new CustomWaveformFragment())
-                                    .commit();
-
+                                        .add(R.id.container2, new CustomWaveformFragment())
+                                        .commit();
+                            }else {
+                                getSupportFragmentManager().beginTransaction()
+                                        .add(R.id.container, new CustomWaveformFragment2())
+                                        .add(R.id.container2, new CustomWaveformFragment())
+                                        .commit();
+                            }
                         progressDialog.dismiss();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -763,12 +775,21 @@ public void play(float a) {
 }
     @Override
     protected void onPause() {
+
         finish();
         super.onPause();
     }
     @Override
     public void onBackPressed()
     {
+        try {
+            mMediaplayer.stop();
+            mMediaplayer.release();
+            mMediaplayer = null;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         finish();
         super.onBackPressed();
     }
