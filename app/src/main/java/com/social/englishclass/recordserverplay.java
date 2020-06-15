@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -85,6 +86,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
     private static final String SERVER_KEY = "AAAAPWMRRUI:APA91bGaqqUJuVclBGOynB4TiyWFDyVFqGs1l_blyaxaHI7oaUKecEgXG5bx5WQ7B4Nq22kwFwf4fH3YfzHccdt4Sy2ux2Yx-DvBmEYgKRmefBVOhWzVsensa_zIe5pOVVCeymi3D5DK";
     private LinearLayout wave_fragment_layer;
+    private FrameLayout container;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +121,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         LinearLayout test_layout1 = (LinearLayout) findViewById(R.id.t_test1);
         LinearLayout test_layout2 = (LinearLayout) findViewById(R.id.t_test2);
         wave_fragment_layer = (LinearLayout)findViewById(R.id.wave_fragment_layer);
+        container = (FrameLayout)findViewById(R.id.container);
+
 if(login_name != null && login_school !=null) {
     if (!login_name.equals(login_school + "teacher")) {
         test_layout1.setVisibility(View.GONE);
@@ -528,7 +533,7 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
                         Log.e("다운로드받은 녹음파일 ", "" + downfile);
                         Log.e("레슨타입 let 가 아닐때  녹음파일 ", "" + filepath);
  //웨이브곡선 프래그먼트
-                        if(filepath.contains("_let_p") ){
+                        if(filepath != null && filepath.contains("_let_p") ){
 //                            if(filepath.contains("ll") || filepath.contains("ls") || filepath.contains("lr") || filepath.equals("") ){
 //                                wave_fragment_layer.setVisibility(View.GONE);
                                 getSupportFragmentManager().beginTransaction()
@@ -536,6 +541,7 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
                                         .add(R.id.container2, new CustomWaveformFragment())
                                         .commit();
                             }else {
+                                    container.setVisibility(View.GONE);
                                 getSupportFragmentManager().beginTransaction()
 
                                         .add(R.id.container2, new CustomWaveformFragment())

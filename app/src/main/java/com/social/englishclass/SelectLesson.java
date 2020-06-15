@@ -57,7 +57,7 @@ import static com.social.englishclass.englishlesson.REQUEST_AUDIO_PERMISSION_COD
 public class SelectLesson extends AppCompatActivity implements View.OnClickListener {
 
     private Intent intent;
-    private Dialog lesson_dialog, level_dialog, listenandrepeat_dialog, letsread_dialog;
+    private Dialog lesson_dialog, level_dialog, listenandrepeat_dialog, letsread_dialog, readandtalk_dialog;
     public static String lesson, lesson_type;
     private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
@@ -295,6 +295,37 @@ private String[] permissions = {
         }
     }
 */
+//Read and Talk 다이얼로그
+   private void  readandtalkDialog(){
+       readandtalk_dialog = new Dialog(this);
+       readandtalk_dialog.setContentView(R.layout.readandtalk_dialog);
+       ImageButton readandtalk1_btn = (ImageButton) readandtalk_dialog.findViewById(R.id.readandtalk1_btn);
+       ImageButton readandtalk2_btn = (ImageButton) readandtalk_dialog.findViewById(R.id.readandtalk2_btn);
+       TextView letsreaddialog_text = (TextView) readandtalk_dialog.findViewById(R.id.letsreaddialog_text);
+       letsreaddialog_text.setText("Lesson "+lesson+" Read and Talk");
+
+       View.OnClickListener listenandrepeat_listener = new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               switch (v.getId()) {
+                   case R.id.readandtalk1_btn:
+                       //액티비티 이동
+                       lesson_type = "rt1";
+                       readandtalk_dialog.dismiss();
+                       break;
+                   case R.id.readandtalk2_btn:
+                       //엑티비티 이동
+                       lesson_type = "rt2";
+                       readandtalk_dialog.dismiss();
+                       break;
+               }
+           }
+       };
+       readandtalk1_btn.setOnClickListener(listenandrepeat_listener);
+       readandtalk2_btn.setOnClickListener(listenandrepeat_listener);
+       readandtalk_dialog.show();
+   }
+
     //Let's Read 다이얼로그
     private  void letsreadDialog(String level_num){
         letsread_dialog = new Dialog(this);
@@ -475,8 +506,7 @@ private String[] permissions = {
                         listenandrepeatDialog();
                         break;
                     case R.id.readandtalk_btn:
-                        levelDialog("Lesson "+lesson+" - Read AND Talk");
-                        lesson_type = "rt";
+                        readandtalkDialog();
                         break;
                     case R.id.letsread_btn:
                         letsreadDialog("Lesson "+lesson+" - Let's Read");
