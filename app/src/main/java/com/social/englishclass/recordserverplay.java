@@ -124,7 +124,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         container = (FrameLayout)findViewById(R.id.container);
 
 if(login_name != null && login_school !=null) {
-    if (!login_name.equals(login_school + "teacher")) {
+    if (!login_name.contains("teacher")) {
         test_layout1.setVisibility(View.GONE);
         test_layout2.setVisibility(View.GONE);
     }

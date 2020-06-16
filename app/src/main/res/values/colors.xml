@@ -12,7 +12,7 @@
 
     <color name="selection_border">#ffffff</color>
 
-    <color name="playback_indicator">#ffff66</color>
+    <color name="playback_indicator">#D81B60</color>
 
     <color name="grid_line">#6D6D6D</color>
 
