@@ -86,6 +86,7 @@ public class LetsreadFragment extends Fragment {
         private int pos, index;
         private ImageView letsread_image;
         private Bitmap myBitmap = null;
+        private  File imgFile;
 
 
         public static LetsreadFragment newInstance(int index) {
@@ -94,8 +95,13 @@ public class LetsreadFragment extends Fragment {
             LetsreadFragment fragment = new LetsreadFragment();
             Bundle bundle = new Bundle();
             bundle.putInt(ARG_SECTION_NUMBER, index);
-            bundle.putString(ln+lt+"sound"+index, "/storage/emulated/0/englishclass/lesson/letsread/l"+ln+"_let_lv1_sound/l"+ln+"_let_p"+index+".mp3");
-            bundle.putString(ln+lt+"picture"+index, "/storage/emulated/0/englishclass/lesson/letsread/l"+ln+"_let_lv1_sound/l"+ln+"_let_p"+index+".png");
+            if(lt.equals("let")) {
+                bundle.putString(ln + lt + "sound" + index, "/storage/emulated/0/englishclass/lesson/letsread/l" + ln + "_let_lv1_sound/l" + ln + "_let_p" + index + ".mp3");
+                bundle.putString(ln + lt + "picture" + index, "/storage/emulated/0/englishclass/lesson/letsread/l" + ln + "_let_lv1_picture/l" + ln + "_let_p" + index + ".png");
+            }else{
+                bundle.putString(ln + lt + "sound" + index, "/storage/emulated/0/englishclass/lesson/readandtalk/l" + ln + "_rt1_sound/l" + ln + "_rt_k" + index + ".mp3");
+                bundle.putString(ln + lt + "picture" + index, "/storage/emulated/0/englishclass/lesson/letsread/l" + ln + "_rt1_picture/l" + ln + "_rt_k" + index + ".png");
+            }
             fragment.setArguments(bundle);
             return fragment;
         }
@@ -225,8 +231,11 @@ public class LetsreadFragment extends Fragment {
 
 //이미지 세팅
         private void setimage() {
-            File imgFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/letsread/l" + ln + "_let_lv1_picture/l" + ln + "_let_p" + index + ".png");
-
+            if(lt.equals("let")) {
+               imgFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/letsread/l" + ln + "_let_lv1_picture/l" + ln + "_let_p" + index + ".png");
+            }else{
+                imgFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/readandtalk/l" + ln + "_rt1_picture/l" + ln + "_rt_k" + index + ".png");
+            }
 
             myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             makeBitmapSmall(myBitmap);

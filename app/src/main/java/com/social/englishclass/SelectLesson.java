@@ -310,12 +310,22 @@ private String[] permissions = {
                switch (v.getId()) {
                    case R.id.readandtalk1_btn:
                        //액티비티 이동
+                       intent = new Intent(v.getContext(), level.class);
                        lesson_type = "rt1";
+                       intent.putExtra("lv_num", "0");
+                       intent.putExtra("login_school", login_school);
+                       intent.putExtra("login_name", login_name);
+                       intent.putExtra("token", token);
+                       intent.putExtra("lesson", lesson);
+                       intent.putExtra("lesson_type", lesson_type);
+                       startActivity(intent);
                        readandtalk_dialog.dismiss();
                        break;
                    case R.id.readandtalk2_btn:
                        //엑티비티 이동
+                       intent = new Intent(v.getContext(), Dialogflow.class);
                        lesson_type = "rt2";
+                       startActivity(intent);
                        readandtalk_dialog.dismiss();
                        break;
                }

@@ -133,11 +133,16 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         viewPager = findViewById(R.id.view_pager);
         Log.e("레슨 타입  ", "lesson_type  "+lesson_type);
         if(lesson_type.equals("let")) {
-            Log.e("if 문 안에 레슨타입  ", "lesson_type  "+lesson_type);
+            Log.e("if 문 안에 레슨타입  ", "lesson_type  " + lesson_type);
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/letsread/l" + lesson + "_let_lv1_picture");
             File[] files = file.listFiles();
             int count = files.length;
-            Log.e("if 문 안에 카운트 수  ", "count  "+count);
+            Log.e("if 문 안에 카운트 수  ", "count  " + count);
+            viewPager.setOffscreenPageLimit(count);
+        }else if(lesson_type.equals("rt1")){
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/readandtalk/l" + lesson + "_rt1_picture");
+            File[] files = file.listFiles();
+            int count = files.length;
             viewPager.setOffscreenPageLimit(count);
         }else{
             Log.e("if 문 조건 실패  ", "lesson_type  "+lesson_type);
