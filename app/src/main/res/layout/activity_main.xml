@@ -46,7 +46,8 @@
                 android:layout_weight="1"
                 android:background="#F5EDED"
                 android:hint="예)용현초"
-                android:text="용현초" />
+                android:text="용현초"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -71,7 +72,8 @@
 
                 android:background="#F5EDED"
 
-                android:hint="예)60801" />
+                android:hint="예) 60801홍길동  (띄어쓰지 마세요!)"
+                android:textSize="20sp" />
 
             <!--            android:text="60801"-->
 

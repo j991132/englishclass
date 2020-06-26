@@ -35,6 +35,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -59,7 +61,8 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
     private Intent intent;
     private Dialog lesson_dialog, level_dialog, listenandrepeat_dialog, letsread_dialog, readandtalk_dialog;
     public static String lesson, lesson_type;
-    private Button startbtn, stopbtn, playbtn, stopplay, btn_server;
+
+    private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private int pause;
@@ -96,11 +99,11 @@ private String[] permissions = {
         token = login_intent.getStringExtra("token");
 
         //녹음버튼 관련
-        startbtn = (Button) findViewById(R.id.btnRecord);
-        stopbtn = (Button) findViewById(R.id.btnStop);
-        playbtn = (Button) findViewById(R.id.btnPlay);
-        stopplay = (Button) findViewById(R.id.StopPlay);
-        btn_server = (Button) findViewById(R.id.btn_server);
+        startbtn = (ImageButton) findViewById(R.id.btnRecord);
+        stopbtn = (ImageButton) findViewById(R.id.btnStop);
+        playbtn = (ImageButton) findViewById(R.id.btnPlay);
+        stopplay = (ImageButton) findViewById(R.id.StopPlay);
+        btn_server = (ImageButton) findViewById(R.id.btn_server);
         stopbtn.setEnabled(false);
         playbtn.setEnabled(true);
         stopplay.setEnabled(false);
@@ -584,15 +587,18 @@ private String[] permissions = {
                         AudioApplication.getInstance().getServiceInterface().record3gp();
                         isRecording = true;
                         pause = 0;
-                        startbtn.setText("일시정지");
+                        recording_btn();
+//                        startbtn.setText("일시정지");
                     } else if (isRecording == true && pause == 0) {
                         AudioApplication.getInstance().getServiceInterface().recordpause();
-
-                        startbtn.setText("녹음시작");
+                        pause = 1;
+startbtn.setImageResource(R.drawable.record_btn);
+//                        startbtn.setText("녹음시작");
                     } else if (isRecording == true && pause == 1) {
                         AudioApplication.getInstance().getServiceInterface().recordresume();
                         pause = 0;
-                        startbtn.setText("일시정지");
+                        recording_btn();
+//                        startbtn.setText("일시정지");
                     }
                 } else {
 
@@ -606,7 +612,8 @@ private String[] permissions = {
                 playbtn.setEnabled(true);
                 stopplay.setEnabled(false);
                 isRecording = false;
-                startbtn.setText("녹음시작");
+                startbtn.setImageResource(R.drawable.record_btn);
+//                startbtn.setText("녹음시작");
                 AudioApplication.getInstance().getServiceInterface().recrecordstop();
                 recordname();
 
@@ -680,7 +687,7 @@ private String[] permissions = {
         okbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String FileName = edit.getText().toString();
+                String FileName = login_name+"_"+edit.getText().toString();
 //파일명에 날짜시간 넣기
                 SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
                 String time = format.format(System.currentTimeMillis());
@@ -1117,6 +1124,11 @@ private String[] permissions = {
 //            updateUI();
         }
     };
+
+    public void recording_btn() {
+        GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(startbtn);
+        Glide.with(this).load(R.drawable.recording2).into(gifImage);
+    }
 
     @Override
     protected void onDestroy() {
