@@ -18,14 +18,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="(예) LL1 또는 LS3"
+        android:text="(예) L2LL1 또는 L4LS3"
         android:textSize="18sp" />
 
     <EditText
         android:id="@+id/edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="(예) LL1 또는 LS3" />
+        android:hint="(예) L2LL1 또는 L4LS3" />
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -352,6 +352,7 @@ public class Keyword extends AppCompatActivity {
             int target1num = r.indexOf(target1);
             String target2 = "\",\"score\":";
             int target2num = r.indexOf(target2);
+            Log.e("평가결과 다이얼로그   ", ""+ r);
             String text = r.substring(target1num+14,target2num);
             String score = r.substring(target2num+10, target2num+13);
             Log.e("스코어", "점수는    "+score);
