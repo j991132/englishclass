@@ -17,13 +17,16 @@
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="오른쪽 TALK 버튼을 누르고 대화를 시작하세요. ->  "
-            android:textColor="#1B28F0" />
+            android:text="TALK 버튼을 누르고 대화를 시작하세요. ->  "
+            android:textColor="#1B28F0"
+            android:textSize="15sp" />
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:onClick="buttonClicked"
+            android:src="@drawable/talk"
             android:text="Talk" />
 
     </LinearLayout>

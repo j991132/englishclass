@@ -107,7 +107,7 @@ public class WaveformView extends View {
         mGridPaint.setAntiAlias(false);
         mGridPaint.setColor(getResources().getColor(R.color.grid_line));
         mSelectedLinePaint = new Paint();
-        mSelectedLinePaint.setAntiAlias(true);
+        mSelectedLinePaint.setAntiAlias(false);
         mSelectedLinePaint.setColor(getResources().getColor(R.color.waveform_selected));
         mUnselectedLinePaint = new Paint();
         mUnselectedLinePaint.setAntiAlias(false);
@@ -323,7 +323,7 @@ public class WaveformView extends View {
     }
 
     protected void drawWaveformLine(Canvas canvas, int x, int y0, int y1, Paint paint) {
-        canvas.drawLine(x*2, y0, x*2, y1, paint);
+        canvas.drawLine(x, y0, x, y1, paint);
     }
 
     @Override
@@ -341,12 +341,12 @@ public class WaveformView extends View {
         if (width > measuredWidth)
             width = measuredWidth;
 
-        double onePixelInSecs = pixelsToSeconds(1)*0.5;    //1초당 간격
+        double onePixelInSecs = pixelsToSeconds(1);
         boolean onlyEveryFiveSecs = (onePixelInSecs > 1.0 / 50.0);
         double fractionalSecs = mOffset * onePixelInSecs;
         int integerSecs = (int) fractionalSecs;
 
-        double timecodeIntervalSecs = 1.0;    //한 칸단 초
+        double timecodeIntervalSecs = 1.0;
 
         int factor = 1;
         while (timecodeIntervalSecs / onePixelInSecs < 50) {
@@ -357,7 +357,7 @@ public class WaveformView extends View {
         int integerTimecode = (int) (fractionalSecs / timecodeIntervalSecs);
 
         int i = 0;
-        while (i < width*2) {     //  세로선
+        while (i < width) {
             fractionalSecs += onePixelInSecs;
             int integerSecsNew = (int) fractionalSecs;
             if (integerSecsNew != integerSecs) {
@@ -392,7 +392,7 @@ public class WaveformView extends View {
         // Draw grid
         fractionalSecs = mOffset * onePixelInSecs;
         i = 0;
-        while (i < width*2) {     //표시되는 초 갯수
+        while (i < width) {
             i++;
             fractionalSecs += onePixelInSecs;
             int integerSecs2 = (int) fractionalSecs;
@@ -434,7 +434,7 @@ public class WaveformView extends View {
                 paint);
 
         if (i + start == mPlaybackPos) {
-            canvas.drawLine(i*2, 0, i*2, measuredHeight, mPlaybackLinePaint);       //진행 노란색 세로바 움직임
+            canvas.drawLine(i, 0, i, measuredHeight, mPlaybackLinePaint);
         }
     }
 
@@ -632,4 +632,3 @@ public class WaveformView extends View {
         return getZoomedInHeight(zoomLevel, i);
     }
 }
-

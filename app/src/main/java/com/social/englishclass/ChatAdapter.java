@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,6 +52,7 @@ public class ChatAdapter extends BaseAdapter {
 //어떤 레이아웃을 만들어 줄 것인지, 속할 컨테이너, 자식뷰가 될 것인지
             convertView = inflater.inflate(layout, parent, false); //아이디를 가지고 view를 만든다
             holder = new ViewHolder();
+            holder.samimage = (ImageView)convertView.findViewById(R.id.samimage);
             holder.my_msg = (TextView)convertView.findViewById(R.id.text_chat);
             holder.text_layout = (LinearLayout)convertView.findViewById(R.id.chat_layout);
             holder.text_parent_layout = (LinearLayout)convertView.findViewById(R.id.chat_parent_layout);
@@ -59,6 +61,7 @@ public class ChatAdapter extends BaseAdapter {
         }else{
             holder= (ViewHolder) convertView.getTag();
         }
+        holder.samimage.setImageResource(R.drawable.sam);
         holder.my_msg.setText(chatData.get(position).toString());
 
 //누군지 판별
@@ -66,11 +69,12 @@ public class ChatAdapter extends BaseAdapter {
             Log.e("포지션",""+position);
             holder.text_parent_layout.setHorizontalGravity(Gravity.RIGHT);
 //            holder.my_msg.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-
+            holder.samimage.setVisibility(View.GONE);
             holder.text_layout.setBackgroundResource(R.drawable.mychat);
 
         }else{
             Log.e("포지션",""+position);
+            holder.samimage.setVisibility(View.VISIBLE);
             holder.text_parent_layout.setGravity(Gravity.LEFT);
 //            holder.my_msg.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
             holder.text_layout.setBackgroundResource(R.drawable.yourchat);
@@ -82,7 +86,7 @@ public class ChatAdapter extends BaseAdapter {
 
     //뷰홀더패턴
     public class ViewHolder{
-
+        ImageView samimage;
         TextView my_msg;
         LinearLayout text_layout;
         LinearLayout text_parent_layout;

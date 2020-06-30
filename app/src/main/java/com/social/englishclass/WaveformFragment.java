@@ -402,7 +402,7 @@ public abstract class WaveformFragment extends Fragment implements MarkerView.Ma
         mStartMarker.setImageAlpha(255);
         mStartMarker.setFocusable(true);
         mStartMarker.setFocusableInTouchMode(true);
-        mStartMarker.setVisibility(View.GONE);
+//        mStartMarker.setVisibility(View.GONE);
         mStartVisible = true;
 
         mEndMarker = (MarkerView) view.findViewById(R.id.endmarker);
@@ -410,7 +410,7 @@ public abstract class WaveformFragment extends Fragment implements MarkerView.Ma
         mEndMarker.setImageAlpha(255);
         mEndMarker.setFocusable(true);
         mEndMarker.setFocusableInTouchMode(true);
-        mEndMarker.setVisibility(View.GONE);
+//        mEndMarker.setVisibility(View.GONE);
         mEndVisible = true;
 
         updateDisplay();
