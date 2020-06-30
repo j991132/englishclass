@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,10 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class recordserver extends AppCompatActivity implements View.OnClickListener {
@@ -63,7 +68,8 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
         search_server_btn = (ImageButton)findViewById(R.id.search_server_btn);
         mRecyclerView = (RecyclerView) findViewById(R.id.rec_recyclerview);
         search_server_btn.setOnClickListener(this);
-
+        LinearLayout reclayout = (LinearLayout)findViewById(R.id.rec_lin_miniplayer);
+        reclayout.setVisibility(View.GONE);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -76,6 +82,9 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
         mUploads = new ArrayList<>();
         Log.e("입력전 리스트  ", " " + mUploads);
 
+
+
+
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
 
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
@@ -87,6 +96,7 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
                     Upload upload = postSnapshot.getValue(Upload.class);
                     mUploads.add(upload);
+
                 }
  /*
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");

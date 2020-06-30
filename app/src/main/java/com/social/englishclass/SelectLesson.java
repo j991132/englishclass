@@ -327,7 +327,14 @@ private String[] permissions = {
                    case R.id.readandtalk2_btn:
                        //엑티비티 이동
                        intent = new Intent(v.getContext(), Dialogflow.class);
+                       intent.putExtra("lv_num", "0");
+                       intent.putExtra("login_school", login_school);
+                       intent.putExtra("login_name", login_name);
+                       intent.putExtra("token", token);
+                       intent.putExtra("lesson", lesson);
                        lesson_type = "rt2";
+                       intent.putExtra("lesson_type", lesson_type);
+
                        startActivity(intent);
                        readandtalk_dialog.dismiss();
                        break;

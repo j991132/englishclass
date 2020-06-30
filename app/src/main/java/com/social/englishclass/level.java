@@ -710,7 +710,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
 
             String ext = filepathvalue.toString().substring(filepathvalue.toString().lastIndexOf("."));
             Log.e("업로드시 얻어지는 파일 확장자   ", "" + ext);
-            if (lesson_type.equals("let")){
+            if (lesson_type.equals("let") || lesson_type.equals("rt1")){
 
                 filepath = LetsreadFragment.filepath[viewPager.getCurrentItem()];
             }else{

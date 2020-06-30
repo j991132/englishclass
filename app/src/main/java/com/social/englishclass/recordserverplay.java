@@ -533,7 +533,7 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
                         Log.e("다운로드받은 녹음파일 ", "" + downfile);
                         Log.e("레슨타입 let 가 아닐때  녹음파일 ", "" + filepath);
  //웨이브곡선 프래그먼트
-                        if(filepath != null && filepath.contains("_let_p") ){
+                        if(filepath != null && filepath.contains("_let_p") ||  filepath != null && filepath.contains("_rt_k")){
 //                            if(filepath.contains("ll") || filepath.contains("ls") || filepath.contains("lr") || filepath.equals("") ){
 //                                wave_fragment_layer.setVisibility(View.GONE);
                                 getSupportFragmentManager().beginTransaction()
