@@ -6,11 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,23 +19,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
+import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 public class recordserver extends AppCompatActivity implements View.OnClickListener {
@@ -89,6 +81,7 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
 
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mUploads.clear();
@@ -96,6 +89,8 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
                     Upload upload = postSnapshot.getValue(Upload.class);
                     mUploads.add(upload);
+
+                    Collections.sort(mUploads, sortByTotalCall);
 
                 }
  /*
@@ -143,6 +138,17 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
         });
     }
+    private final static Comparator<Upload> sortByTotalCall= new Comparator<Upload>() {
+
+        @Override
+
+        public int compare(Upload object1, Upload object2) {
+
+            return Collator.getInstance().compare(object2.getName().substring(object2.getName().lastIndexOf("_")+1), object1.getName().substring(object1.getName().lastIndexOf("_")+1));
+
+        }
+
+    };
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -231,6 +237,7 @@ if(recordserverAdapter.reset ){
                     if(found){
                         Upload upload = ds.getValue(Upload.class);
                         mUploads.add(upload);
+                        Collections.sort(mUploads, sortByTotalCall);
                     }
                 }
 //                mAdapter = new recordserverAdapter(recordserver.this, mUploads);
