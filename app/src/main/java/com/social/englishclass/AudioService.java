@@ -197,10 +197,16 @@ public class AudioService extends Service {
 
     }
 
+    public void pcmplay(){
+        String filename = Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record/KeywordRecording.pcm";
+        isPlaying = true;
+        playthread(filename);
+    }
     public void play(int position) {
 
         queryAudioItem(position);
         ext = mAudioItem.mDataPath.substring(mAudioItem.mDataPath.length()-3, mAudioItem.mDataPath.length());
+
         Log.e("선택된 음악파일 확장자", ""+ext);
 
         stop();

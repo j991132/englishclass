@@ -55,6 +55,11 @@ public class AudioServiceInterface {
             mService.play2(a);
         }
     }
+    public void pcmplay() {
+        if (mService != null) {
+            mService.pcmplay();
+        }
+    }
 
     public void pause() {
         if (mService != null) {

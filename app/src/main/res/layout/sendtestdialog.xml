@@ -65,6 +65,12 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/myrec_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="나의 발음" />
+
+        <Button
             android:id="@+id/test_cancle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
