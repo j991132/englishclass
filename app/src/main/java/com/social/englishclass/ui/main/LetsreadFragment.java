@@ -36,6 +36,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.gson.Gson;
+import com.social.englishclass.AudioApplication;
 import com.social.englishclass.R;
 import com.social.englishclass.SelectLesson;
 import com.social.englishclass.level;
@@ -46,9 +47,12 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -430,17 +434,36 @@ public class LetsreadFragment extends Fragment {
                     forceStop = false;
                     isRecording = true;
                     audio.startRecording();
-                    while (!forceStop) {
-                        int ret = audio.read(inBuffer, 0, bufferSize);
-                        for (int i = 0; i < ret ; i++ ) {
-                            if (lenSpeech >= maxLenSpeech) {
-                                forceStop = true;
-                                break;
+                    try {
+                        Log.e("녹음 트라이", "트라이 시작");
+                        String filename = Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record/KeywordRecording.pcm";
+                        OutputStream os  = new FileOutputStream(filename);
+                        while (!forceStop) {
+                            int ret = audio.read(inBuffer, 0, bufferSize);
+                            for (int i = 0; i < ret ; i++ ) {
+                                if (lenSpeech >= maxLenSpeech) {
+                                    forceStop = true;
+                                    break;
+                                }
+                                speechData[lenSpeech*2] = (byte)(inBuffer[i] & 0x00FF);
+                                speechData[lenSpeech*2+1] = (byte)((inBuffer[i] & 0xFF00) >> 8);
+                                lenSpeech++;
                             }
-                            speechData[lenSpeech*2] = (byte)(inBuffer[i] & 0x00FF);
-                            speechData[lenSpeech*2+1] = (byte)((inBuffer[i] & 0xFF00) >> 8);
-                            lenSpeech++;
+
                         }
+
+                        //AI 녹음시 파일생성
+
+// 말한길이만큼 파일에 써준다
+                        os.write(speechData,0,lenSpeech*2);
+                        os.close();
+                        Log.e("녹음 트라이 파일쓰기 끝", "파일쓰기 끝");
+                    } catch (FileNotFoundException e) {
+                        Log.e("녹음 트라이 파일익셉션", "파일익셉션");
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        Log.e("녹음 트라이 IO익셉션", " IO익셉션");
+                        e.printStackTrace();
                     }
                     audio.stop();
                     audio.release();
@@ -569,6 +592,7 @@ public class LetsreadFragment extends Fragment {
                 TextView textResult = (TextView) sendtestdialog.findViewById(R.id.textresult);
                 TextView scoreResult = (TextView) sendtestdialog.findViewById(R.id.scoreresult);
                 Button test_cancle = (Button)sendtestdialog.findViewById(R.id.test_cancle);
+                Button myrec_btn = (Button)sendtestdialog.findViewById(R.id.myrec_btn);
                 ImageView imageresult = (ImageView)sendtestdialog.findViewById(R.id.imageresult);
 
                 test_cancle.setOnClickListener(new View.OnClickListener() {
@@ -577,7 +601,12 @@ public class LetsreadFragment extends Fragment {
                         sendtestdialog.dismiss();
                     }
                 });
-
+                myrec_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AudioApplication.getInstance().getServiceInterface().pcmplay();
+                    }
+                });
                 String r = StringEscapeUtils.unescapeJava(result);
                 String target1 = "\"recognized\":\"";
                 int target1num = r.indexOf(target1);
