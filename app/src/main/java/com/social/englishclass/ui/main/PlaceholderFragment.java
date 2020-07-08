@@ -286,6 +286,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
                         break;
 
                 }
+                updateUI();
                 //               Toast.makeText(getApplicationContext(),arrayList.get(i)+"가 선택되었습니다. f값은 " + f, Toast.LENGTH_SHORT).show();
 
 

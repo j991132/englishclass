@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -55,7 +56,9 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import ai.api.AIListener;
 import ai.api.android.AIConfiguration;
@@ -86,13 +89,14 @@ public class Dialogflow extends AppCompatActivity implements AIListener, View.On
     private File beforeFileName, afterFileName, beforesendtest, aftersendtest, exisitFileName;
     private Long duration;
     public static Dialog recordlistdialog, deletedialog;
-    private String folder, fname, login_name, token, login_school, filepath;
+    private String folder, fname, login_name, token, login_school, filepath, lesson_type;
     private AudioAdapter mAdapter, recordAdapter, serchAdapter;
     public String serchfilename, ext;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
+    private Voice v;
 
 
     @Override
@@ -104,6 +108,7 @@ public class Dialogflow extends AppCompatActivity implements AIListener, View.On
         Intent intent = getIntent();
         login_school = intent.getStringExtra("login_school");
         login_name = intent.getStringExtra("login_name");
+        lesson_type = intent.getStringExtra("lesson_type");
 
 
         t= (TextView) findViewById(R.id.textView);
@@ -142,7 +147,11 @@ public class Dialogflow extends AppCompatActivity implements AIListener, View.On
 
             makeRequest();
         }
-
+if(lesson_type.equals("rt2")){
+    String accesstoken = "d3f41084aac04fafaa76b5edefb3b60d";
+}else if(lesson_type.equals("lr3")){
+    String accesstoken = "d3f41084aac04fafaa76b5edefb3b60d";
+}
         final AIConfiguration config = new AIConfiguration("d3f41084aac04fafaa76b5edefb3b60d",
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
@@ -152,12 +161,19 @@ public class Dialogflow extends AppCompatActivity implements AIListener, View.On
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR){
+//                    Set<String> a= new HashSet<>();
+//                    a.add("female");
+//                    v = new Voice("en-us-x-sfg#female_2-local", new Locale("en","US"),400,200,true, a);
+
+  //      textToSpeech.setVoice(v);
+                    textToSpeech.setPitch(1.2f);
+                    textToSpeech.setSpeechRate(0.9f);
                     Log.e("TTS 상태 에러아님",""+status);
                     textToSpeech.setLanguage(Locale.US);
                 }
             }
-        });
-
+        }, "com.google.android.tts");
+//        });
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -303,6 +319,9 @@ public class Dialogflow extends AppCompatActivity implements AIListener, View.On
             adapter1.notifyDataSetChanged();
 //            adapter.add(result1.getFulfillment().getSpeech());
         }
+//        textToSpeech.setPitch(1f);
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             textToSpeech.speak(result1.getFulfillment().getSpeech(), TextToSpeech.QUEUE_FLUSH, null, null);
         }else{
