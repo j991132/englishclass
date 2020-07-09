@@ -127,6 +127,8 @@ public class Dialogflow extends AppCompatActivity implements AIListener, View.On
         playbtn = (ImageButton) findViewById(R.id.btnPlay);
         stopplay = (ImageButton) findViewById(R.id.StopPlay);
         btn_server = (ImageButton) findViewById(R.id.btn_server);
+        LinearLayout l = (LinearLayout)findViewById(R.id.reclayout);
+        l.setVisibility(View.GONE);
         stopbtn.setEnabled(false);
         playbtn.setEnabled(true);
         stopplay.setEnabled(false);
