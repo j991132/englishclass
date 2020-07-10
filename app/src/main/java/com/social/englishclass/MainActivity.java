@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity{
         final EditText login_name = (EditText)findViewById(R.id.login_name);
 
         Button login_btn= (Button) findViewById(R.id.login_btn);
+        Button textdown_btn=(Button)findViewById(R.id.textdown_btn);
         RadioButton online_rbtn = (RadioButton)findViewById(R.id.online_rbtn);
         RadioButton offline_rbtn = (RadioButton)findViewById(R.id.offline_rbtn);
 //테스트중 넘어가기
@@ -82,6 +83,9 @@ public class MainActivity extends AppCompatActivity{
                     case R.id.offline_rbtn:
                         line = 2;
                         break;
+                    case R.id.textdown_btn:
+
+                        break;
 
                 }
             }
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity{
         login_btn.setOnClickListener(Listener);
         online_rbtn.setOnClickListener(Listener);
         offline_rbtn.setOnClickListener(Listener);
-
+        textdown_btn.setOnClickListener(Listener);
 
     }
 }
