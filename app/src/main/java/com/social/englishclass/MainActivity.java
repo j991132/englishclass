@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity{
     private String downfile;
     private String _zipFile;  //저장된 zip 파일 위치
     private String _location; //압출을 풀 위치
+    private long total_len, total_installed_len;
+    private int per;
 
 
 
@@ -114,7 +117,9 @@ public class MainActivity extends AppCompatActivity{
                         line = 2;
                         break;
                     case R.id.textdown_btn:
-                        getrecuri("englishclass.zip");
+//                        getrecuri("englishclass.zip");
+                        CheckTypesTask ziptask = new CheckTypesTask();
+                       ziptask.execute();
                         break;
 
                 }
@@ -184,7 +189,8 @@ public class MainActivity extends AppCompatActivity{
     public void Decompress(String zipFile, String location) {
         _zipFile = zipFile;
         _location = location;
-
+        total_len = _zipFile.length();
+        total_installed_len = 0;
         _dirChecker(""); //폴더를 만들기 위한 함수로 아래에 정의 되어 있습니다.
         unzip();
     }
@@ -195,7 +201,9 @@ public class MainActivity extends AppCompatActivity{
             ZipInputStream zin = new ZipInputStream(fin);
             ZipEntry ze = null;
             while ((ze = zin.getNextEntry()) != null) {
-                Log.v("Decompress", "Unzipping " + ze.getName());   //압축이 풀리면서 logcat으로 zip 안에 있던 파일 들을 볼 수 있습니다.
+                Log.e("Decompress", "Unzipping " + ze.getName());   //압축이 풀리면서 logcat으로 zip 안에 있던 파일 들을 볼 수 있습니다.
+                total_installed_len +=ze.getCompressedSize();
+                per = (int)(total_installed_len*100/total_len);
                 if(ze.isDirectory()) {
 
                 _dirChecker(ze.getName());
@@ -232,7 +240,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    private class CheckTypesTask extends AsyncTask<Integer, String, Integer> {
+    private class CheckTypesTask extends AsyncTask<Integer, Integer, Integer> {
 
         ProgressDialog asyncDialog = new ProgressDialog(
                 MainActivity.this);
@@ -251,6 +259,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         protected Integer doInBackground(Integer... params) {
+/*
             //프로그래스바 최대치가 몇인지 설정하는 변수
             final int taskCnt = params[0];
             //프로그래스바 최대치 설정
@@ -269,16 +278,24 @@ public class MainActivity extends AppCompatActivity{
 
             //PostExecute로 리턴
             return taskCnt;
+*/
+            String zipFile = Environment.getExternalStorageDirectory() + "/englishclass/englishclass.zip";  //zip 파일이 있는 위치 정의
+            String unzipLocation = Environment.getExternalStorageDirectory() + "/";  //unzip 하고자 하는 위치
 
+            Decompress(zipFile, unzipLocation);
+            return per;
         }
         @Override
-        protected void onProgressUpdate(String... values) {
-            if (values[0].equals("progress")) {
+        protected void onProgressUpdate(Integer... values) {
+ /*           if (values[0].equals("progress")) {
                 asyncDialog.setProgress(Integer.parseInt(values[1]));
                 asyncDialog.setMessage(values[2]);
             } else if (values[0].equals("max")){
                 asyncDialog.setMax(Integer.parseInt(values[1]));
             }
+
+  */
+            asyncDialog.setMessage("압축 푸는 중 " + ((int) per) + "% ...");
         }
 
 
