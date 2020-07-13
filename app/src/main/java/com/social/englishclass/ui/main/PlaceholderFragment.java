@@ -653,24 +653,30 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             int target1num = r.indexOf(target1);
             String target2 = "\",\"score\":";
             int target2num = r.indexOf(target2);
-            String text = r.substring(target1num+14,target2num);
-            String score = r.substring(target2num+10, target2num+13);
-            Log.e("스코어", "점수는    "+score);
-            float s = Math.round(Float.parseFloat(score)*100/5);
-            Log.e("평가결과 다이얼로그   ", ""+ r);
-            Log.e("평가결과 텍스트   ", ""+ text);
-            Log.e("평가결과 점수   ", ""+ score);
-            if(!text.equals("")){
-                textResult.setText(text);
-            }else{textResult.setText("녹음된 문장이 없습니다.");}
+            if(!r.contains("ERROR")) {
+                String text = r.substring(target1num + 14, target2num);
+                String score = r.substring(target2num + 10, target2num + 13);
+                Log.e("스코어", "점수는    " + score);
+                float s = Math.round(Float.parseFloat(score) * 100 / 5);
+                Log.e("평가결과 다이얼로그   ", "" + r);
+                Log.e("평가결과 텍스트   ", "" + text);
+                Log.e("평가결과 점수   ", "" + score);
+                if (!text.equals("")) {
+                    textResult.setText(text);
+                } else {
+                    textResult.setText("녹음된 문장이 없습니다.");
+                }
 
-            scoreResult.setText(Float.toString(s)+"%");
-            if(s<50){
-                imageresult.setImageResource(R.drawable.star1);
-            }else if(50<=s && s<70 ){
-                imageresult.setImageResource(R.drawable.star2);
-            }else {imageresult.setImageResource(R.drawable.star3);}
-
+                scoreResult.setText(Float.toString(s) + "%");
+                if (s < 50) {
+                    imageresult.setImageResource(R.drawable.star1);
+                } else if (50 <= s && s < 70) {
+                    imageresult.setImageResource(R.drawable.star2);
+                } else {
+                    imageresult.setImageResource(R.drawable.star3);
+                }
+            }else{
+                textResult.setText("인터넷 연결이 불안정합니다. 다시 시도해 보세요");}
             sendtestdialog.show();
             speechData = null;
         }
