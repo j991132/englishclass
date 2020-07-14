@@ -41,6 +41,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 public class MainActivity extends AppCompatActivity{
@@ -50,10 +51,7 @@ public class MainActivity extends AppCompatActivity{
     private int line=0;
     private StorageReference mStorageRef;
     private String downfile;
-    private String _zipFile;  //저장된 zip 파일 위치
-    private String _location; //압출을 풀 위치
-    private long total_len, total_installed_len;
-    private int per;
+
 
 
 
@@ -117,9 +115,13 @@ public class MainActivity extends AppCompatActivity{
                         line = 2;
                         break;
                     case R.id.textdown_btn:
-//                        getrecuri("englishclass.zip");
-                        CheckTypesTask ziptask = new CheckTypesTask();
-                       ziptask.execute();
+                        gettextdata("englishclass.zip");
+//                        CheckTypesTask ziptask = new CheckTypesTask();
+//                       ziptask.execute();
+//                        String zipFile = Environment.getExternalStorageDirectory() + "/englishclass/englishclass.zip";  //zip 파일이 있는 위치 정의
+//                        String unzipLocation = Environment.getExternalStorageDirectory() + "/englishclass/";  //unzip 하고자 하는 위치
+//                        Decompress d =  new Decompress(zipFile, unzipLocation);
+//                        d.execute();
                         break;
 
                 }
@@ -132,7 +134,7 @@ public class MainActivity extends AppCompatActivity{
 
     }
 //textbook 데이터 다운받기
-    public void getrecuri(String Filename){
+    private void gettextdata(String Filename){
 
 
         mStorageRef = FirebaseStorage.getInstance().getReference("textbook").child(Filename);
@@ -161,7 +163,10 @@ public class MainActivity extends AppCompatActivity{
                             Log.e("다운로드받은 녹음파일 ", "경로입력전");
                             downfile = "/storage/emulated/0/englishclass/" + Filename;
                             Log.e("다운로드받은 녹음파일 ", "" + downfile);
-
+                            String zipFile = Environment.getExternalStorageDirectory() + "/englishclass/englishclass.zip";  //zip 파일이 있는 위치 정의
+                            String unzipLocation = Environment.getExternalStorageDirectory() + "/englishclass/";  //unzip 하고자 하는 위치
+                            Decompress d =  new Decompress(zipFile, unzipLocation);
+                            d.execute();
                             progressDialog.dismiss();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -186,65 +191,24 @@ public class MainActivity extends AppCompatActivity{
             e.printStackTrace();
         }
     }
-    public void Decompress(String zipFile, String location) {
-        _zipFile = zipFile;
-        _location = location;
-        total_len = _zipFile.length();
-        total_installed_len = 0;
-        _dirChecker(""); //폴더를 만들기 위한 함수로 아래에 정의 되어 있습니다.
-        unzip();
-    }
-
-    public void unzip() {
-        try  {
-            FileInputStream fin = new FileInputStream(_zipFile);
-            ZipInputStream zin = new ZipInputStream(fin);
-            ZipEntry ze = null;
-            while ((ze = zin.getNextEntry()) != null) {
-                Log.e("Decompress", "Unzipping " + ze.getName());   //압축이 풀리면서 logcat으로 zip 안에 있던 파일 들을 볼 수 있습니다.
-                total_installed_len +=ze.getCompressedSize();
-                per = (int)(total_installed_len*100/total_len);
-                if(ze.isDirectory()) {
-
-                _dirChecker(ze.getName());
-            } else {
-                FileOutputStream fout = new FileOutputStream(_location + ze.getName());
-                BufferedInputStream in = new BufferedInputStream(zin);  //이렇게 지정하지 않고 unzip을 수행하면 속도가 매우 느려집니다.
-                BufferedOutputStream out = new BufferedOutputStream(fout);
-                byte b[] = new byte[1024];
-                int n;
-                while ((n = in.read(b,0,1024)) >= 0) {
-                    out.write(b,0,n);
-                }
-
-                zin.closeEntry();
-                fout.close();
-            }
-
-        }
-        zin.close();
-    } catch(Exception e) {
-        Log.e("Decompress", "unzip", e);
-    }
-
-}
-
-
-    //변수 location에 저장된 directory의 폴더를 만듭니다.
-    private void _dirChecker(String dir) {
-        File f = new File(_location + dir);
-
-        if(!f.isDirectory()) {
-            f.mkdirs();
-        }
-    }
-
-
-    private class CheckTypesTask extends AsyncTask<Integer, Integer, Integer> {
-
+    private class Decompress extends AsyncTask<Void, Integer, Integer>{
+        private String _zipFile;  //저장된 zip 파일 위치
+        private String _location; //압출을 풀 위치
+//        private long total_len, total_installed_len;
+        private int per;
         ProgressDialog asyncDialog = new ProgressDialog(
                 MainActivity.this);
 
+
+
+        public  Decompress(String zipFile, String location) {
+            _zipFile = zipFile;
+            _location = location;
+//            total_len = _zipFile.length();
+//            total_installed_len = 0;
+            _dirChecker(""); //폴더를 만들기 위한 함수로 아래에 정의 되어 있습니다.
+
+        }
 
 
 
@@ -252,50 +216,59 @@ public class MainActivity extends AppCompatActivity{
         protected void onPreExecute() {
             asyncDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             asyncDialog.setMessage("교과서 파일을 설치중입니다...");
-
+            asyncDialog.setCancelable(false);
             // show dialog
             asyncDialog.show();
             super.onPreExecute();
         }
 
-        protected Integer doInBackground(Integer... params) {
-/*
-            //프로그래스바 최대치가 몇인지 설정하는 변수
-            final int taskCnt = params[0];
-            //프로그래스바 최대치 설정
-            publishProgress("max", Integer.toString(taskCnt));
+        @Override
+        protected Integer doInBackground(Void... voids) {
 
-            for (int i = 0; i < taskCnt; i ++) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            try  {
+                ZipFile zip = new ZipFile(_zipFile);
+                asyncDialog.setMax(zip.size());
+                FileInputStream fin = new FileInputStream(_zipFile);
+                ZipInputStream zin = new ZipInputStream(fin);
+                ZipEntry ze = null;
+                while ((ze = zin.getNextEntry()) != null) {
+                    Log.e("Decompress", "Unzipping " + ze.getName());   //압축이 풀리면서 logcat으로 zip 안에 있던 파일 들을 볼 수 있습니다.
+//                    total_installed_len +=ze.getCompressedSize();
+                      per++;
+                      publishProgress(per);
+//                    per = (int)((total_installed_len/total_len)*100);
+//                    Log.e("압축해제 율", "total_installed_len " + total_installed_len);
+//                    Log.e("압축해제 율", "total_len " + total_len);
+                    Log.e("압축해제 율", "Unzipping " + per);
+                    if(ze.isDirectory()) {
+
+                        _dirChecker(ze.getName());
+                    } else {
+                        FileOutputStream fout = new FileOutputStream(_location + ze.getName());
+                        BufferedInputStream in = new BufferedInputStream(zin);  //이렇게 지정하지 않고 unzip을 수행하면 속도가 매우 느려집니다.
+                        BufferedOutputStream out = new BufferedOutputStream(fout);
+                        byte b[] = new byte[1024];
+                        int n;
+                        while ((n = in.read(b,0,1024)) >= 0) {
+                            out.write(b,0,n);
+                        }
+                        out.close();
+                        zin.closeEntry();
+                        fout.close();
+                    }
+
                 }
-                //프로그래스바 현재 진행상황 설정
-                publishProgress("progress", Integer.toString(i),
-                        "Task " + Integer.toString(i) + " number");
+                zin.close();
+            } catch(Exception e) {
+                Log.e("Decompress", "unzip", e);
             }
-
-            //PostExecute로 리턴
-            return taskCnt;
-*/
-            String zipFile = Environment.getExternalStorageDirectory() + "/englishclass/englishclass.zip";  //zip 파일이 있는 위치 정의
-            String unzipLocation = Environment.getExternalStorageDirectory() + "/";  //unzip 하고자 하는 위치
-
-            Decompress(zipFile, unzipLocation);
             return per;
         }
+
         @Override
         protected void onProgressUpdate(Integer... values) {
- /*           if (values[0].equals("progress")) {
-                asyncDialog.setProgress(Integer.parseInt(values[1]));
-                asyncDialog.setMessage(values[2]);
-            } else if (values[0].equals("max")){
-                asyncDialog.setMax(Integer.parseInt(values[1]));
-            }
-
-  */
-            asyncDialog.setMessage("압축 푸는 중 " + ((int) per) + "% ...");
+            asyncDialog.setProgress( per);
+//            asyncDialog.setMessage("압축 푸는 중 " + ((int) per) + "% ...");
         }
 
 
@@ -307,10 +280,33 @@ public class MainActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(), Integer.toString(integer) + " total sum",
                     Toast.LENGTH_SHORT).show();
 
-
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://"+ Environment.getExternalStorageDirectory() + "/englishclass/lesson1keyword/sound/art.mp3")));
 
 
         }
+        //변수 location에 저장된 directory의 폴더를 만듭니다.
+        private void _dirChecker(String dir) {
+            File f = new File(_location + dir);
+
+            if(!f.isDirectory()) {
+                f.mkdirs();
+            }
+        }
+
     }
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+

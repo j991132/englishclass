@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -24,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -73,6 +75,10 @@ public class Keyword extends AppCompatActivity {
 
         Intent intent = getIntent();
         lesson = intent.getStringExtra("lesson");
+
+
+
+//        getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
         folder = "/storage/emulated/0/englishclass/lesson"+lesson+"keyword/sound";
         // OS가 Marshmallow 이상일 경우 권한체크를 해야 합니다.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -137,6 +143,7 @@ public class Keyword extends AppCompatActivity {
     }//온크리에이트 끝
 
     public void getAudioListFromMediaDatabase() {
+
         getSupportLoaderManager().initLoader(LOADER_ID, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
