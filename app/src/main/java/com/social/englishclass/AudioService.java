@@ -75,7 +75,10 @@ public class AudioService extends Service {
 
 //녹음스레드
 
-
+        File recordpath = new File("/storage/emulated/0/englishclass/record/");
+        if (!recordpath.exists()){
+            recordpath.mkdirs();
+        }
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/englishclass/record/AudioRecording.3gp";
 
