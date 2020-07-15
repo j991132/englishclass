@@ -138,14 +138,18 @@ public class level extends AppCompatActivity implements View.OnClickListener {
             Log.e("if 문 안에 레슨타입  ", "lesson_type  " + lesson_type);
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/letsread/l" + lesson + "_let_lv1_picture");
             File[] files = file.listFiles();
-            int count = files.length;
-            Log.e("if 문 안에 카운트 수  ", "count  " + count);
-            viewPager.setOffscreenPageLimit(count);
+            if(files != null) {
+                int count = files.length;
+                Log.e("if 문 안에 카운트 수  ", "count  " + count);
+                viewPager.setOffscreenPageLimit(count);
+            }
         }else if(lesson_type.equals("rt1")){
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/readandtalk/l" + lesson + "_rt1_picture");
             File[] files = file.listFiles();
-            int count = files.length;
-            viewPager.setOffscreenPageLimit(count);
+            if(files != null) {
+                int count = files.length;
+                viewPager.setOffscreenPageLimit(count);
+            }
         }else{
             Log.e("if 문 조건 실패  ", "lesson_type  "+lesson_type);
             viewPager.setOffscreenPageLimit(4); //탭은 보통 3개까지 로드 되고 죽지만 제한을 4개로 늘려준다

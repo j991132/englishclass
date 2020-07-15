@@ -84,17 +84,23 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         if(level.lesson_type.equals("let") ){
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/letsread/l"+level.lesson+"_let_lv1_picture");
             File[] files = file.listFiles();
-            count = files.length;
+            if(files != null) {
+                count = files.length;
+            }
             return count;
         }else if(level.lesson_type.equals("let_lv2")) {
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/letsread/l" + level.lesson + "_let");
             File[] files = file.listFiles();
-            count = files.length;
+            if(files != null) {
+                count = files.length;
+            }
             return count;
         }else if(level.lesson_type.equals("rt1")){
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/lesson/readandtalk/l"+level.lesson+"_rt1_picture");
             File[] files = file.listFiles();
-            count = files.length;
+            if(files != null) {
+                count = files.length;
+            }
             return count;
         }else
         // Show 2 total pages.
