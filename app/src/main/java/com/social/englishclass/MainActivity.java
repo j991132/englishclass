@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -221,6 +222,7 @@ private void gettextdata(String Filename){
 
         } else if (textbook_num == 2) {
 //            fileURL = "https://docs.google.com/uc?export=download&id=1S5XOnvaq55hRDFp0sM6OonmpwZ3aVgDx";
+
               fileURL = "http://iyh.icees.kr/boardCnts/fileDown.do?fileSeq=ba8000d6c16c069d999289c7bad8401f";
         }
         downfile = Filename;

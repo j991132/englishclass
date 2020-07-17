@@ -414,7 +414,7 @@ public class Keyword extends AppCompatActivity {
                     imageresult.setImageResource(R.drawable.star3);
                 }
             }else{
-            textResult.setText("인터넷 연결이 불안정합니다. 다시 시도해 보세요");}
+            textResult.setText("인터넷 연결이 불안정합니다. 밖으로 빠져 나갔다가 다시 시도해 보세요");}
             sendtestdialog.show();
             speechData = null;
         }
