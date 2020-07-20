@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -61,12 +62,13 @@ public class MainActivity extends AppCompatActivity{
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private int line=0;
     private StorageReference mStorageRef;
-    private String downfile;
+    private String downfile, howtouse;
     private int textbook_num;
     private File outputFile; //파일명까지 포함한 경로
     private ProgressDialog progressBar;
     private String fileURL;
     static final int PERMISSION_REQUEST_CODE = 1;
+    private int howtopagenum = 1;
     String[] PERMISSIONS = {"android.permission.READ_EXTERNAL_STORAGE","android.permission.WRITE_EXTERNAL_STORAGE"};
 
     private boolean hasPermissions(String[] permissions) {
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity{
 
         Button login_btn= (Button) findViewById(R.id.login_btn);
         Button textdown_btn=(Button)findViewById(R.id.textdown_btn);
+        Button howtouse_btn=(Button)findViewById(R.id.howtouse_btn);
         RadioButton online_rbtn = (RadioButton)findViewById(R.id.online_rbtn);
         RadioButton offline_rbtn = (RadioButton)findViewById(R.id.offline_rbtn);
 //테스트중 넘어가기
@@ -197,6 +200,52 @@ public class MainActivity extends AppCompatActivity{
                         });
                         textbookdialog.show();
                         break;
+                    case R.id.howtouse_btn:
+                        final Dialog howtousedialog = new Dialog(MainActivity.this);
+                        howtousedialog.setContentView(R.layout.howtouse_dialog);
+
+                        ImageButton howtouse_pre_btn = (ImageButton) howtousedialog.findViewById(R.id.howtouse_pre_btn);
+                        ImageButton howtouse_next_btn = (ImageButton) howtousedialog.findViewById(R.id.howtouse_next_btn);
+                        ImageButton howtouse_cancle_btn = (ImageButton) howtousedialog.findViewById(R.id.howtouse_cancle_btn);
+                        ImageView   howtouse_image = (ImageView)howtousedialog.findViewById(R.id.howtouse_image);
+                        howtouse_image.setImageResource(R.drawable.howtouse1);
+                        howtouse_pre_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(howtopagenum == 1){
+                                    Toast.makeText(getApplicationContext(), "사용 방법 첫 화면 입니다.", Toast.LENGTH_LONG).show();
+                                }else{
+                                    howtopagenum = howtopagenum-1;
+                                    howtouse = "howtouse"+howtopagenum;
+                                    int lid = MainActivity.this.getResources().getIdentifier(howtouse, "drawable", MainActivity.this.getPackageName());
+                                    ((ImageView) howtousedialog.findViewById(R.id.howtouse_image)).setImageResource(lid);
+                               }
+
+                            }
+                        });
+                        howtouse_next_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(howtopagenum == 7){
+                                    Toast.makeText(getApplicationContext(), "사용 방법 마지막 화면 입니다.", Toast.LENGTH_LONG).show();
+                                }else{
+                                    howtopagenum = howtopagenum+1;
+                                    howtouse = "howtouse"+howtopagenum;
+                                    int lid = MainActivity.this.getResources().getIdentifier(howtouse, "drawable", MainActivity.this.getPackageName());
+                                    ((ImageView) howtousedialog.findViewById(R.id.howtouse_image)).setImageResource(lid);
+                                }
+
+                            }
+                        });
+                        howtouse_cancle_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                howtousedialog.dismiss();
+                            }
+                        });
+                        howtousedialog.show();
+                        break;
 
                 }
             }
@@ -205,9 +254,11 @@ public class MainActivity extends AppCompatActivity{
         online_rbtn.setOnClickListener(Listener);
         offline_rbtn.setOnClickListener(Listener);
         textdown_btn.setOnClickListener(Listener);
+        howtouse_btn.setOnClickListener(Listener);
 
     }
 //textbook 데이터 다운받기 http 주소 이용
+/*
 private void gettextdata(String Filename){
     File path1 = new File("/storage/emulated/0/englishclass/lesson1keyword/");
     File path2 = new File("/storage/emulated/0/englishclass/lesson7keyword/");
@@ -230,7 +281,9 @@ private void gettextdata(String Filename){
         downloadTask.execute(fileURL);
     }
 }
-/*
+
+ */
+
 //textbook 데이터 다운받기
     private void gettextdata(String Filename){
 
@@ -299,7 +352,7 @@ private void gettextdata(String Filename){
             e.printStackTrace();
         }
     }
-    */
+
     private class Decompress extends AsyncTask<Void, Integer, Integer>{
         private String _zipFile;  //저장된 zip 파일 위치
         private String _location; //압출을 풀 위치

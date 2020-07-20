@@ -128,12 +128,27 @@
                 android:textColor="#FAD886" />
         </RadioGroup>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/textdown_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#F7C25F"
             android:text="책 다운로드" />
+
+        <Button
+            android:id="@+id/howtouse_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#F7C25F"
+            android:text="사용방법" />
     </LinearLayout>
 
 
