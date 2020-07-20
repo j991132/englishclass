@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity{
                         textbookdialog.show();
                         break;
                     case R.id.howtouse_btn:
-                        final Dialog howtousedialog = new Dialog(MainActivity.this);
+                        final Dialog howtousedialog = new Dialog(MainActivity.this, android.R.style.Theme_Black_NoTitleBar);
                         howtousedialog.setContentView(R.layout.howtouse_dialog);
 
                         ImageButton howtouse_pre_btn = (ImageButton) howtousedialog.findViewById(R.id.howtouse_pre_btn);
@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity{
                         ImageButton howtouse_cancle_btn = (ImageButton) howtousedialog.findViewById(R.id.howtouse_cancle_btn);
                         ImageView   howtouse_image = (ImageView)howtousedialog.findViewById(R.id.howtouse_image);
                         howtouse_image.setImageResource(R.drawable.howtouse1);
+                        howtouse_image.setScaleType(ImageView.ScaleType.FIT_XY);
                         howtouse_pre_btn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -240,7 +241,7 @@ public class MainActivity extends AppCompatActivity{
                         howtouse_cancle_btn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
+                                howtopagenum = 1;
                                 howtousedialog.dismiss();
                             }
                         });

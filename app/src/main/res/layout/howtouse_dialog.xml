@@ -15,6 +15,7 @@
             android:id="@+id/howtouse_cancle_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             app:srcCompat="@android:drawable/ic_delete" />
 
     </LinearLayout>
@@ -29,6 +30,8 @@
             android:id="@+id/howtouse_pre_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
             app:srcCompat="@android:drawable/ic_media_previous" />
 
         <ImageView
@@ -42,6 +45,8 @@
             android:id="@+id/howtouse_next_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
             app:srcCompat="@android:drawable/ic_media_next" />
 
     </LinearLayout>
