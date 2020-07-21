@@ -69,6 +69,14 @@
                 android:gravity="right"
                 android:orientation="horizontal">
 
+                <ImageButton
+                    android:id="@+id/dictionary_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:paddingRight="20dp"
+                    android:src="@drawable/dictionary_btn" />
+
                 <Button
                     android:id="@+id/fold_btn"
                     android:layout_width="wrap_content"

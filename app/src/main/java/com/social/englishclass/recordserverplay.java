@@ -87,6 +87,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private static final String SERVER_KEY = "AAAAPWMRRUI:APA91bGaqqUJuVclBGOynB4TiyWFDyVFqGs1l_blyaxaHI7oaUKecEgXG5bx5WQ7B4Nq22kwFwf4fH3YfzHccdt4Sy2ux2Yx-DvBmEYgKRmefBVOhWzVsensa_zIe5pOVVCeymi3D5DK";
     private LinearLayout wave_fragment_layer;
     private FrameLayout container;
+    private ImageButton dictionary_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +109,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         fold_btn = (Button)findViewById(R.id.fold_btn);
         fold_btn.setOnClickListener(this);
         comment = (EditText)findViewById(R.id.comment);
-
+        dictionary_btn = (ImageButton) findViewById(R.id.dictionary_btn);
+        dictionary_btn.setOnClickListener(this);
         recplay_txt_title.setText(filename);
         speedselect_server();
 //        mMediaplayer = new MediaPlayer();
@@ -271,6 +273,13 @@ if(login_name != null && login_school !=null) {
                 }else {wave_fragment_layer.setVisibility(View.GONE);
                 fold_btn.setText("그래프 펼치기");}
                 break;
+
+            case R.id.dictionary_btn:
+
+                Intent intent_dic = new Intent(Intent.ACTION_VIEW, Uri.parse("https://en.dict.naver.com/#/main"));
+                startActivity(intent_dic);
+                break;
+
         }
     }//클릭 끝
 //파이어베이스에서 뷰에 해당하는 업로드시 저장된 로그인아이디 가져오기

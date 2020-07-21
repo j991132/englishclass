@@ -62,7 +62,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
     private Dialog lesson_dialog, level_dialog, listenandrepeat_dialog, letsread_dialog, readandtalk_dialog;
     public static String lesson, lesson_type;
 
-    private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server;
+    private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server, dictionary_btn;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private int pause;
@@ -104,6 +104,7 @@ private String[] permissions = {
         playbtn = (ImageButton) findViewById(R.id.btnPlay);
         stopplay = (ImageButton) findViewById(R.id.StopPlay);
         btn_server = (ImageButton) findViewById(R.id.btn_server);
+        dictionary_btn = (ImageButton) findViewById(R.id.dictionary_btn);
         stopbtn.setEnabled(false);
         playbtn.setEnabled(true);
         stopplay.setEnabled(false);
@@ -112,6 +113,7 @@ private String[] permissions = {
         startbtn.setOnClickListener(this);
         stopplay.setOnClickListener(this);
         btn_server.setOnClickListener(this);
+        dictionary_btn.setOnClickListener(this);
 //녹음버튼 끝
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
@@ -501,6 +503,7 @@ private String[] permissions = {
         ImageButton listenandrepeat_btn = (ImageButton) lesson_dialog.findViewById(R.id.listenandrepeat_btn);
         ImageButton readandtalk_btn = (ImageButton) lesson_dialog.findViewById(R.id.readandtalk_btn);
         ImageButton letsread_btn = (ImageButton) lesson_dialog.findViewById(R.id.letsread_btn);
+
         TextView lessondialog_text = (TextView) lesson_dialog.findViewById(R.id.lessondialog_text);
         lessondialog_text.setText(lesson_num);
 
@@ -670,6 +673,12 @@ startbtn.setImageResource(R.drawable.record_btn);
                 intent.putExtra("login_name", login_name);
                 startActivity(intent);
 
+                break;
+
+            case R.id.dictionary_btn:
+
+                Intent intent_dic = new Intent(Intent.ACTION_VIEW, Uri.parse("https://en.dict.naver.com/#/main"));
+                startActivity(intent_dic);
                 break;
         }
     }

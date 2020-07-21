@@ -79,7 +79,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
 
     private String current_lv;
     public static String lesson_type, lesson;
-    private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server;
+    private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server, dictionary_btn;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private int pause, index;
@@ -118,6 +118,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         playbtn = (ImageButton) findViewById(R.id.btnPlay);
         stopplay = (ImageButton) findViewById(R.id.StopPlay);
         btn_server = (ImageButton) findViewById(R.id.btn_server);
+        dictionary_btn = (ImageButton) findViewById(R.id.dictionary_btn);
         stopbtn.setEnabled(false);
         playbtn.setEnabled(true);
         stopplay.setEnabled(false);
@@ -126,6 +127,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         startbtn.setOnClickListener(this);
         stopplay.setOnClickListener(this);
         btn_server.setOnClickListener(this);
+        dictionary_btn.setOnClickListener(this);
 //녹음버튼 끝
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
@@ -324,6 +326,12 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                 intent.putExtra("login_name", login_name);
                 startActivity(intent);
                 finish();
+                break;
+
+            case R.id.dictionary_btn:
+
+                Intent intent_dic = new Intent(Intent.ACTION_VIEW, Uri.parse("https://en.dict.naver.com/#/main"));
+                startActivity(intent_dic);
                 break;
         }
 
