@@ -16,9 +16,12 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioAttributes;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.media.SoundPool;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -67,6 +70,8 @@ public class Keyword extends AppCompatActivity {
     boolean forceStop = false;
     String result;
     private ImageButton sendtest_btn;
+    private SoundPool soundPool;
+    int soundPlay1,soundPlay2,soundPlay3 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +144,24 @@ public class Keyword extends AppCompatActivity {
         GridLayoutManager layoutManager = new GridLayoutManager(this,2);
         mRecyclerView.setLayoutManager(layoutManager);
 
+        //효과음 설정
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
 
+            soundPool = new SoundPool.Builder().setAudioAttributes(audioAttributes).setMaxStreams(3).build();
+        }else{
+            //롤리팝 이하 버전일 경우
+            // new SoundPool(1번,2번,3번)
+            // 1번 - 음악 파일 갯수
+            // 2번 - 스트림 타입
+            // 3번 - 음질
+            soundPool = new SoundPool(3, AudioManager.STREAM_MUSIC,0); }
+            soundPlay1 = soundPool.load(this, R.raw.wawawa, 1);
+            soundPlay2 = soundPool.load(this, R.raw.clapping2, 1);
+            soundPlay3 = soundPool.load(this, R.raw.clapping1, 1);
     }//온크리에이트 끝
 
     public void getAudioListFromMediaDatabase() {
@@ -366,6 +388,7 @@ public class Keyword extends AppCompatActivity {
             //영어평가 결과 다이얼로그 띄우기
             final Dialog sendtestdialog = new Dialog(Keyword.this);
             sendtestdialog.setContentView(R.layout.sendtestdialog);
+            sendtestdialog.setCancelable(false);
             TextView textResult = (TextView) sendtestdialog.findViewById(R.id.textresult);
             TextView scoreResult = (TextView) sendtestdialog.findViewById(R.id.scoreresult);
             Button test_cancle = (Button)sendtestdialog.findViewById(R.id.test_cancle);
@@ -403,14 +426,21 @@ public class Keyword extends AppCompatActivity {
                     textResult.setText(text);
                 } else {
                     textResult.setText("녹음된 문장이 없습니다.");
+                    imageresult.setVisibility(View.INVISIBLE);
                 }
 
                 scoreResult.setText(Float.toString(s) + "%");
-                if (s < 50) {
+                if (s < 50 && s>0) {
+//                    soundPlay = soundPool.load(sendtestdialog.getContext(), R.raw.wawawa, 1);
+                    soundPool.play(soundPlay1, 1f,1f,0,0,1f);
                     imageresult.setImageResource(R.drawable.star1);
                 } else if (50 <= s && s < 70) {
+//                    soundPlay = soundPool.load(sendtestdialog.getContext(), R.raw.clapping2, 1);
+                    soundPool.play(soundPlay2, 1f,1f,0,0,1f);
                     imageresult.setImageResource(R.drawable.star2);
                 } else {
+//                    soundPlay = soundPool.load(sendtestdialog.getContext(), R.raw.clapping1, 1);
+                    soundPool.play(soundPlay3, 1f,1f,0,0,1f);
                     imageresult.setImageResource(R.drawable.star3);
                 }
             }else{

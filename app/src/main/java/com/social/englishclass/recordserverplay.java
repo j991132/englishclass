@@ -393,8 +393,8 @@ if(login_name != null && login_school !=null) {
                                         JSONObject notification = new JSONObject();
                                         notification.put("body", msg);
                                         Log.e("전송하는 메세지  ", ""+notification+msg);
-
-                                        notification.put("title", getString(R.string.app_name));
+                                        notification.put("title", "English Class");
+//                                        notification.put("title", getString(R.string.app_name));
                                         root.put("notification", notification);
 
                                         root.put("to", send_token);

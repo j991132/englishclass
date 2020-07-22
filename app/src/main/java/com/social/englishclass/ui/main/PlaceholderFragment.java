@@ -2,11 +2,15 @@ package com.social.englishclass.ui.main;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.media.AudioAttributes;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.media.SoundPool;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
@@ -85,6 +89,8 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     boolean forceStop = false;
     String result;
     private int pos;
+    private SoundPool soundPool;
+    int soundPlay1,soundPlay2,soundPlay3 ;
 
 
     public static PlaceholderFragment newInstance(int index) {
@@ -132,6 +138,24 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
 
         }
         pageViewModel.setIndex(index);
+        //효과음 설정
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+
+            soundPool = new SoundPool.Builder().setAudioAttributes(audioAttributes).setMaxStreams(3).build();
+        }else{
+            //롤리팝 이하 버전일 경우
+            // new SoundPool(1번,2번,3번)
+            // 1번 - 음악 파일 갯수
+            // 2번 - 스트림 타입
+            // 3번 - 음질
+            soundPool = new SoundPool(3, AudioManager.STREAM_MUSIC,0); }
+        soundPlay1 = soundPool.load(getContext(), R.raw.wawawa, 1);
+        soundPlay2 = soundPool.load(getContext(), R.raw.clapping2, 1);
+        soundPlay3 = soundPool.load(getContext(), R.raw.clapping1, 1);
 
     }
 
@@ -629,6 +653,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             //영어평가 결과 다이얼로그 띄우기
             final Dialog sendtestdialog = new Dialog(root.getContext());
             sendtestdialog.setContentView(R.layout.sendtestdialog);
+            sendtestdialog.setCancelable(false);
             TextView textResult = (TextView) sendtestdialog.findViewById(R.id.textresult);
             TextView scoreResult = (TextView) sendtestdialog.findViewById(R.id.scoreresult);
             Button test_cancle = (Button)sendtestdialog.findViewById(R.id.test_cancle);
@@ -665,14 +690,21 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
                     textResult.setText(text);
                 } else {
                     textResult.setText("녹음된 문장이 없습니다.");
+                    imageresult.setVisibility(View.INVISIBLE);
                 }
 
                 scoreResult.setText(Float.toString(s) + "%");
-                if (s < 50) {
+                if (s < 50 && s>0) {
+//                    soundPlay = soundPool.load(sendtestdialog.getContext(), R.raw.wawawa, 1);
+                    soundPool.play(soundPlay1, 1f,1f,0,0,1f);
                     imageresult.setImageResource(R.drawable.star1);
                 } else if (50 <= s && s < 70) {
+//                    soundPlay = soundPool.load(sendtestdialog.getContext(), R.raw.clapping2, 1);
+                    soundPool.play(soundPlay2, 1f,1f,0,0,1f);
                     imageresult.setImageResource(R.drawable.star2);
                 } else {
+//                    soundPlay = soundPool.load(sendtestdialog.getContext(), R.raw.clapping1, 1);
+                    soundPool.play(soundPlay3, 1f,1f,0,0,1f);
                     imageresult.setImageResource(R.drawable.star3);
                 }
             }else{
