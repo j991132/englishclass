@@ -79,7 +79,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
 
     private String current_lv;
     public static String lesson_type, lesson;
-    private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server, dictionary_btn;
+    private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server, dictionary_btn, extrawork_btn;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private int pause, index;
@@ -119,6 +119,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         stopplay = (ImageButton) findViewById(R.id.StopPlay);
         btn_server = (ImageButton) findViewById(R.id.btn_server);
         dictionary_btn = (ImageButton) findViewById(R.id.dictionary_btn);
+        extrawork_btn = (ImageButton)findViewById(R.id.extrawork_btn);
         stopbtn.setEnabled(false);
         playbtn.setEnabled(true);
         stopplay.setEnabled(false);
@@ -128,6 +129,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         stopplay.setOnClickListener(this);
         btn_server.setOnClickListener(this);
         dictionary_btn.setOnClickListener(this);
+        extrawork_btn.setOnClickListener(this);
 //녹음버튼 끝
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
@@ -333,6 +335,10 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                 Intent intent_dic = new Intent(Intent.ACTION_VIEW, Uri.parse("https://en.dict.naver.com/#/main"));
                 startActivity(intent_dic);
                 break;
+            case R.id.extrawork_btn:
+                Intent intent_extrawork = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/textbookshadowinglab/0420-4%EA%B5%90%EC%8B%9C-%EC%98%81%EC%96%B4"));
+                startActivity(intent_extrawork);
+                break;
         }
 
     }
@@ -352,6 +358,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         //다이얼로그생성
         final Dialog recordname = new Dialog(this);
         recordname.setContentView(R.layout.recordname);
+        recordname.setCancelable(false);
         Button okbtn = (Button) recordname.findViewById(R.id.ok);
         Button canclebtn = (Button) recordname.findViewById(R.id.cancle);
         final EditText edit = (EditText) recordname.findViewById(R.id.edittext);

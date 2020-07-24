@@ -612,6 +612,7 @@ public class LetsreadFragment extends Fragment {
                 //영어평가 결과 다이얼로그 띄우기
                 final Dialog sendtestdialog = new Dialog(root.getContext());
                 sendtestdialog.setContentView(R.layout.sendtestdialog);
+                sendtestdialog.setCancelable(false);
                 TextView textResult = (TextView) sendtestdialog.findViewById(R.id.textresult);
                 TextView scoreResult = (TextView) sendtestdialog.findViewById(R.id.scoreresult);
                 Button test_cancle = (Button)sendtestdialog.findViewById(R.id.test_cancle);

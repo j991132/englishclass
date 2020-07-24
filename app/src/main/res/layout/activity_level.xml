@@ -92,6 +92,14 @@
                 android:layout_weight="1"
                 android:src="@drawable/dictionary_btn" />
 
+            <ImageButton
+                android:id="@+id/extrawork_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:layout_weight="1"
+                android:src="@drawable/extrawork" />
+
         </LinearLayout>
 
     </LinearLayout><![CDATA[
