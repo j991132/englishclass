@@ -29,10 +29,10 @@
 
         <ImageButton
             android:id="@+id/howtouse_pre_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
             android:src="@drawable/pre_btn" />
 
         <ImageView
@@ -44,10 +44,10 @@
 
         <ImageButton
             android:id="@+id/howtouse_next_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:scaleType="fitXY"
+            android:scaleType="centerInside"
             android:src="@drawable/next_btn" />
 
     </LinearLayout>
