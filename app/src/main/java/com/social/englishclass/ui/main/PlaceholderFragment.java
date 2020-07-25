@@ -702,7 +702,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
 //                    soundPlay = soundPool.load(sendtestdialog.getContext(), R.raw.clapping2, 1);
                     soundPool.play(soundPlay2, 1f,1f,0,0,1f);
                     imageresult.setImageResource(R.drawable.star2);
-                } else {
+                } else if(70 <= s){
 //                    soundPlay = soundPool.load(sendtestdialog.getContext(), R.raw.clapping1, 1);
                     soundPool.play(soundPlay3, 1f,1f,0,0,1f);
                     imageresult.setImageResource(R.drawable.star3);
