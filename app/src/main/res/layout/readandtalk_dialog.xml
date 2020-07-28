@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <ImageButton
             android:id="@+id/readandtalk1_btn"
@@ -36,6 +36,15 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/speakingtest" />
+
+        <ImageButton
+            android:id="@+id/readandtalk3_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/speakingtest3" />
 
 
     </LinearLayout>

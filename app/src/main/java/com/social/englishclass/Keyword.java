@@ -38,6 +38,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.gson.Gson;
 import com.social.englishclass.ui.main.PlaceholderFragment;
 
@@ -72,6 +74,7 @@ public class Keyword extends AppCompatActivity {
     private ImageButton sendtest_btn;
     private SoundPool soundPool;
     int soundPlay1,soundPlay2,soundPlay3 ;
+    private ImageView mic_help;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +101,8 @@ public class Keyword extends AppCompatActivity {
         else {
             getAudioListFromMediaDatabase();
         }
-
+        mic_help = (ImageView)findViewById(R.id.mic_help_image);
+        mic_help();
         sendtest_btn = (ImageButton)findViewById(R.id.keyword_sendtest_btn);
         sendtest_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,7 +115,8 @@ public class Keyword extends AppCompatActivity {
                     task.execute();
 
                 } else {
-                    sendtest_btn.setImageResource(R.drawable.mic_rec);
+//                    sendtest_btn.setImageResource(R.drawable.mic_rec);
+                    mic_rec_stop();
                     try {
                         new Thread(new Runnable() {
                             public void run() {
@@ -448,5 +453,13 @@ public class Keyword extends AppCompatActivity {
             sendtestdialog.show();
             speechData = null;
         }
+    }
+    public void mic_help() {
+        GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(mic_help);
+        Glide.with(this).load(R.drawable.mic_help).override(80,80).into(gifImage);
+    }
+    public void mic_rec_stop() {
+        GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(sendtest_btn);
+        Glide.with(this).load(R.drawable.mic_rec_stop).override(80,80).into(gifImage);
     }
 }//메인 끝

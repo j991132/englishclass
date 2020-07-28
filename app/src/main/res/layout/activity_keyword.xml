@@ -20,7 +20,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/keyword_sendtest_btn"
@@ -30,6 +30,12 @@
             android:background="#FFFFFF"
             android:scaleType="fitCenter"
             android:src="@drawable/mic_normal" />
+
+        <ImageView
+            android:id="@+id/mic_help_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/border" />
     </LinearLayout>
 
 

@@ -207,7 +207,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:padding="0sp"
-            android:scaleType="centerCrop"
+            android:scaleType="centerInside"
             android:src="@drawable/record_btn" />
 
         <ImageButton
@@ -217,7 +217,7 @@
             android:background="@null"
             android:layout_weight="1"
             android:padding="0sp"
-            android:scaleType="centerCrop"
+            android:scaleType="centerInside"
             android:src="@drawable/recstop_btn"
              />
 
@@ -228,7 +228,7 @@
             android:background="@null"
             android:layout_weight="1"
             android:padding="0sp"
-            android:scaleType="centerCrop"
+            android:scaleType="centerInside"
             android:src="@drawable/recplaylist_btn"
              />
 
@@ -239,7 +239,7 @@
             android:background="@null"
             android:layout_weight="1"
             android:padding="0sp"
-            android:scaleType="centerCrop"
+            android:scaleType="centerInside"
             android:src="@drawable/recplaystop_btn"/>
 
         <ImageButton
@@ -249,7 +249,7 @@
             android:background="@null"
             android:layout_weight="1"
             android:padding="0sp"
-            android:scaleType="centerCrop"
+            android:scaleType="centerInside"
             android:src="@drawable/upload_btn" />
 
         <ImageButton
@@ -259,7 +259,7 @@
             android:background="@null"
             android:layout_weight="1"
             android:padding="0sp"
-            android:scaleType="centerCrop"
+            android:scaleType="centerInside"
             android:src="@drawable/dictionary_btn" />
 
         <ImageButton
@@ -269,7 +269,7 @@
             android:layout_weight="1"
             android:background="@null"
             android:paddingLeft="5dp"
-            android:scaleType="centerCrop"
+            android:scaleType="centerInside"
             android:src="@drawable/extrawork" />
 
     </LinearLayout>

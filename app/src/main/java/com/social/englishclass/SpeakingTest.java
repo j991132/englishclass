@@ -3,15 +3,12 @@ package com.social.englishclass;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -19,7 +16,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -32,6 +28,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,20 +46,12 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
-import static android.Manifest.permission.RECORD_AUDIO;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.social.englishclass.englishlesson.REQUEST_AUDIO_PERMISSION_CODE;
-
-public class SelectLesson extends AppCompatActivity implements View.OnClickListener {
+public class SpeakingTest extends AppCompatActivity implements View.OnClickListener{
 
     private Intent intent;
-    private Dialog lesson_dialog, level_dialog, listenandrepeat_dialog, letsread_dialog, readandtalk_dialog;
     public static String lesson, lesson_type;
     private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server, dictionary_btn, extrawork_btn;
-    public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private int pause;
     private File beforeFileName, afterFileName, beforesendtest, aftersendtest, exisitFileName;
@@ -74,27 +63,18 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
-    private static final int MULTIPLE_PERMISSIONS = 101;
-
-
-    //멀티 퍼미션 지정
-    private String[] permissions = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.RECORD_AUDIO, // 녹음
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, // 기기, 사진, 미디어, 파일 엑세스 권한
-
-    };
-
+    private ImageView stl_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_lesson);
+        setContentView(R.layout.activity_speaking_test);
 
         Intent login_intent = getIntent();
         login_school = login_intent.getStringExtra("login_school");
         login_name = login_intent.getStringExtra("login_name");
-        token = login_intent.getStringExtra("token");
+        lesson = login_intent.getStringExtra("lesson");
+        lesson_type = login_intent.getStringExtra("lesson_type");
 
         //녹음버튼 관련
         startbtn = (ImageButton) findViewById(R.id.btnRecord);
@@ -103,7 +83,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         stopplay = (ImageButton) findViewById(R.id.StopPlay);
         btn_server = (ImageButton) findViewById(R.id.btn_server);
         dictionary_btn = (ImageButton) findViewById(R.id.dictionary_btn);
-        extrawork_btn = (ImageButton) findViewById(R.id.extrawork_btn);
+        extrawork_btn = (ImageButton)findViewById(R.id.extrawork_btn);
         stopbtn.setEnabled(false);
         playbtn.setEnabled(true);
         stopplay.setEnabled(false);
@@ -115,486 +95,52 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         dictionary_btn.setOnClickListener(this);
         extrawork_btn.setOnClickListener(this);
 //녹음버튼 끝
+        stl_image = (ImageView)findViewById(R.id.stl_image);
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
         registerBroadcast();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermissions();
-        }
-/*
-        // OS가 Marshmallow 이상일 경우 권한체크를 해야 합니다.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1000);
-            } else {
-                // READ_EXTERNAL_STORAGE 에 대한 권한이 있음.
-//                getAudioListFromMediaDatabase();
-                if (CheckPermissions()) {} else {
+        switch (lesson){
+            case "1":
+                stl_image.setImageResource(R.drawable.stl1);
+                break;
+            case "2":
+                stl_image.setImageResource(R.drawable.stl2);
+                break;
+            case "3":
+                stl_image.setImageResource(R.drawable.stl3);
+                break;
+            case "4":
+                stl_image.setImageResource(R.drawable.stl4);
+                break;
+            case "5":
+                stl_image.setImageResource(R.drawable.stl5);
+                break;
+            case "6":
+                stl_image.setImageResource(R.drawable.stl6);
+                break;
+            case "7":
+                stl_image.setImageResource(R.drawable.stl7);
+                break;
+            case "8":
+                stl_image.setImageResource(R.drawable.stl8);
+                break;
+            case "9":
+                stl_image.setImageResource(R.drawable.stl9);
+                break;
+            case "10":
+                stl_image.setImageResource(R.drawable.stl10);
+                break;
+            case "11":
+                stl_image.setImageResource(R.drawable.stl11);
+                break;
+            case "12":
+                stl_image.setImageResource(R.drawable.stl12);
+                break;
 
-                    RequestPermissions();
-                }
-            }
-        }
-        // OS가 Marshmallow 이전일 경우 권한체크를 하지 않는다.
-        else {
-//            getAudioListFromMediaDatabase();
-        }
-*/
-
-
-        ImageButton btn1 = (ImageButton) findViewById(R.id.button1);
-        ImageButton btn2 = (ImageButton) findViewById(R.id.button2);
-        ImageButton btn3 = (ImageButton) findViewById(R.id.button3);
-        ImageButton btn4 = (ImageButton) findViewById(R.id.button4);
-        ImageButton btn5 = (ImageButton) findViewById(R.id.button5);
-        ImageButton btn6 = (ImageButton) findViewById(R.id.button6);
-        ImageButton btn7 = (ImageButton) findViewById(R.id.button7);
-        ImageButton btn8 = (ImageButton) findViewById(R.id.button8);
-        ImageButton btn9 = (ImageButton) findViewById(R.id.button9);
-        ImageButton btn10 = (ImageButton) findViewById(R.id.button10);
-        ImageButton btn11 = (ImageButton) findViewById(R.id.button11);
-        ImageButton btn12 = (ImageButton) findViewById(R.id.button12);
-//        intent = new Intent(this, englishlesson.class);
-
-        View.OnClickListener Listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.button1:
-                        lessonDialog("Lesson 1 - What Grade Are You In?");
-                        lesson = "1";
-
-//                        intent.putExtra("login_school", login_school);
-//                        intent.putExtra("login_name", login_name);
-//                        intent.putExtra("token", token);
-//                        intent.putExtra("lesson", "/storage/emulated/0/englishclass/lesson1");
-//                        startActivity(intent);
-                        break;
-                    case R.id.button2:
-                        lessonDialog("Lesson 2 - Do You Know Anything About Hanok?");
-                        lesson = "2";
-                        break;
-                    case R.id.button3:
-                        lessonDialog("Lesson 3 - When Is Earth Day?");
-                        lesson = "3";
-                        break;
-                    case R.id.button4:
-                        lessonDialog("Lesson 4 - How Much Are There Pants?");
-                        lesson = "4";
-
-                        break;
-                    case R.id.button5:
-                        lessonDialog("Lesson 5 - What's Wrong?");
-                        lesson = "5";
-                        break;
-                    case R.id.button6:
-                        lessonDialog("Lesson 6 - I'm Going to Go on a Trip");
-                        lesson = "6";
-                        break;
-                    case R.id.button7:
-                        lessonDialog("Lesson 7 - You Should Wear a Helmet");
-                        lesson = "7";
-                        break;
-                    case R.id.button8:
-                        lessonDialog("Lesson 8 - How Can I Get to the Museum?");
-                        lesson = "8";
-                        break;
-                    case R.id.button9:
-                        lessonDialog("Lesson 9 - How Often Do You Exercise?");
-                        lesson = "9";
-                        break;
-                    case R.id.button10:
-                        lessonDialog("Lesson 10 - Emily Is Faster than Yuna");
-                        lesson = "10";
-                        break;
-                    case R.id.button11:
-                        lessonDialog("Lesson 11 - Why Are You Happy?");
-                        lesson = "11";
-                        break;
-                    case R.id.button12:
-                        lessonDialog("Lesson 12 - Would You Like to Come to My Graduation?");
-                        lesson = "12";
-                        break;
-                }
-            }
-        };
-        btn1.setOnClickListener(Listener);
-        btn2.setOnClickListener(Listener);
-        btn3.setOnClickListener(Listener);
-        btn4.setOnClickListener(Listener);
-        btn5.setOnClickListener(Listener);
-        btn6.setOnClickListener(Listener);
-        btn7.setOnClickListener(Listener);
-        btn8.setOnClickListener(Listener);
-        btn9.setOnClickListener(Listener);
-        btn10.setOnClickListener(Listener);
-        btn11.setOnClickListener(Listener);
-        btn12.setOnClickListener(Listener);
-
-
-    }
-
-    private boolean checkPermissions() {
-        int result;
-        List<String> permissionList = new ArrayList<>();
-        for (String pm : permissions) {
-            result = ContextCompat.checkSelfPermission(this, pm);
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                permissionList.add(pm);
-            }
-        }
-        if (!permissionList.isEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionList.toArray(new String[permissionList.size()]), MULTIPLE_PERMISSIONS);
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MULTIPLE_PERMISSIONS: {
-                if (grantResults.length > 0) {
-                    for (int i = 0; i < permissions.length; i++) {
-                        if (permissions[i].equals(this.permissions[i])) {
-                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                                showToast_PermissionDeny();
-                            }
-                        }
-                    }
-                } else {
-                    showToast_PermissionDeny();
-                }
-                return;
-            }
         }
 
-    }
-
-    private void showToast_PermissionDeny() {
-        Toast.makeText(this, "권한 요청에 동의 해주셔야 이용 가능합니다. 설정에서 권한 허용 하시기 바랍니다.", Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-    /*
-     @Override
-     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-             // READ_EXTERNAL_STORAGE 에 대한 권한 획득.
- //                getAudioListFromMediaDatabase();
-         }
-         switch (requestCode) {
-             case REQUEST_AUDIO_PERMISSION_CODE:
-                 if (grantResults.length > 0) {
-                     boolean permissionToRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                     boolean permissionToStore = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                     if (permissionToRecord && permissionToStore) {
-                         Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
-                     } else {
-                         Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_LONG).show();
-                     }
-                 }
-                 break;
-         }
-     }
- */
-//Read and Talk 다이얼로그
-    private void readandtalkDialog() {
-        readandtalk_dialog = new Dialog(this);
-        readandtalk_dialog.setContentView(R.layout.readandtalk_dialog);
-        ImageButton readandtalk1_btn = (ImageButton) readandtalk_dialog.findViewById(R.id.readandtalk1_btn);
-        ImageButton readandtalk2_btn = (ImageButton) readandtalk_dialog.findViewById(R.id.readandtalk2_btn);
-        ImageButton readandtalk3_btn = (ImageButton) readandtalk_dialog.findViewById(R.id.readandtalk3_btn);
-        TextView letsreaddialog_text = (TextView) readandtalk_dialog.findViewById(R.id.letsreaddialog_text);
-        letsreaddialog_text.setText("Lesson " + lesson + " Read and Talk");
-
-        View.OnClickListener listenandrepeat_listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.readandtalk1_btn:
-                        //액티비티 이동
-                        intent = new Intent(v.getContext(), level.class);
-                        lesson_type = "rt1";
-                        intent.putExtra("lv_num", "0");
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", lesson);
-                        intent.putExtra("lesson_type", lesson_type);
-                        startActivity(intent);
-                        readandtalk_dialog.dismiss();
-                        break;
-                    case R.id.readandtalk2_btn:
-                        //엑티비티 이동
-                        intent = new Intent(v.getContext(), Dialogflow.class);
-                        intent.putExtra("lv_num", "0");
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", lesson);
-                        lesson_type = "rt2";
-                        intent.putExtra("lesson_type", lesson_type);
-
-                        startActivity(intent);
-                        readandtalk_dialog.dismiss();
-                        break;
-
-                    case R.id.readandtalk3_btn:
-                        //엑티비티 이동
-                        intent = new Intent(v.getContext(), SpeakingTest.class);
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("lesson", lesson);
-                        lesson_type = "rt3";
-                        intent.putExtra("lesson_type", lesson_type);
-
-                        startActivity(intent);
-                        readandtalk_dialog.dismiss();
-                        break;
-                }
-            }
-        };
-        readandtalk1_btn.setOnClickListener(listenandrepeat_listener);
-        readandtalk2_btn.setOnClickListener(listenandrepeat_listener);
-        readandtalk3_btn.setOnClickListener(listenandrepeat_listener);
-        readandtalk_dialog.show();
-    }
-
-    //Let's Read 다이얼로그
-    private void letsreadDialog(String level_num) {
-        letsread_dialog = new Dialog(this);
-        letsread_dialog.setContentView(R.layout.letsread_dialog);
-
-        ImageButton level1_btn = (ImageButton) letsread_dialog.findViewById(R.id.let_level1_btn);
-        ImageButton level2_btn = (ImageButton) letsread_dialog.findViewById(R.id.let_level2_btn);
-        ImageButton level3_btn = (ImageButton) letsread_dialog.findViewById(R.id.let_level3_btn);
-
-
-        TextView letsreaddialog_text = (TextView) letsread_dialog.findViewById(R.id.letsreaddialog_text);
-        letsreaddialog_text.setText(level_num);
-
-        View.OnClickListener letsreaddialog_listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intent = new Intent(v.getContext(), level.class);
-                switch (v.getId()) {
-                    case R.id.let_level1_btn:
-
-                        intent.putExtra("lv_num", "0");
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", lesson);
-                        intent.putExtra("lesson_type", lesson_type);
-                        startActivity(intent);
-
-                        letsread_dialog.dismiss();
-                        break;
-                    case R.id.let_level2_btn:
-                        intent.putExtra("lv_num", "0");
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", lesson);
-                        intent.putExtra("lesson_type", "let_lv2");
-                        startActivity(intent);
-                        letsread_dialog.dismiss();
-                        break;
-                    case R.id.let_level3_btn:
-                        intent.putExtra("lv_num", "1");
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", lesson);
-                        intent.putExtra("lesson_type", "let_lv2");
-                        startActivity(intent);
-                        letsread_dialog.dismiss();
-                        break;
-
-
-                }
-            }
-
-        };
-        level1_btn.setOnClickListener(letsreaddialog_listener);
-        level2_btn.setOnClickListener(letsreaddialog_listener);
-        level3_btn.setOnClickListener(letsreaddialog_listener);
-
-
-        letsread_dialog.show();
-    }
-
-    //레벨 다이얼로그
-    private void levelDialog(String level_num) {
-        level_dialog = new Dialog(this);
-        level_dialog.setContentView(R.layout.level_dialog);
-
-        ImageButton level1_btn = (ImageButton) level_dialog.findViewById(R.id.level1_btn);
-        ImageButton level2_btn = (ImageButton) level_dialog.findViewById(R.id.level2_btn);
-        ImageButton level3_btn = (ImageButton) level_dialog.findViewById(R.id.level3_btn);
-        ImageButton level4_btn = (ImageButton) level_dialog.findViewById(R.id.level4_btn);
-
-        TextView leveldialog_text = (TextView) level_dialog.findViewById(R.id.leveldialog_text);
-        leveldialog_text.setText(level_num);
-
-        View.OnClickListener leveldialog_listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intent = new Intent(v.getContext(), level.class);
-                switch (v.getId()) {
-                    case R.id.level1_btn:
-
-                        intent.putExtra("lv_num", "0");
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", lesson);
-                        intent.putExtra("lesson_type", lesson_type);
-                        intent.putExtra("level_text", level_num);
-                        startActivity(intent);
-//                        lesson_dialog.dismiss();
-                        level_dialog.dismiss();
-                        break;
-                    case R.id.level2_btn:
-                        intent.putExtra("lv_num", "1");
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", lesson);
-                        intent.putExtra("lesson_type", lesson_type);
-                        intent.putExtra("level_text", level_num);
-                        startActivity(intent);
-//                        lesson_dialog.dismiss();
-                        level_dialog.dismiss();
-                        break;
-                    case R.id.level3_btn:
-                        intent.putExtra("lv_num", "2");
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", lesson);
-                        intent.putExtra("lesson_type", lesson_type);
-                        intent.putExtra("level_text", level_num);
-                        startActivity(intent);
-//                        lesson_dialog.dismiss();
-                        level_dialog.dismiss();
-                        break;
-                    case R.id.level4_btn:
-                        intent.putExtra("lv_num", "3");
-                        intent.putExtra("login_school", login_school);
-                        intent.putExtra("login_name", login_name);
-                        intent.putExtra("token", token);
-                        intent.putExtra("lesson", lesson);
-                        intent.putExtra("lesson_type", lesson_type);
-                        intent.putExtra("level_text", level_num);
-                        startActivity(intent);
-//                        lesson_dialog.dismiss();
-                        level_dialog.dismiss();
-                        break;
-
-                }
-            }
-
-        };
-        level1_btn.setOnClickListener(leveldialog_listener);
-        level2_btn.setOnClickListener(leveldialog_listener);
-        level3_btn.setOnClickListener(leveldialog_listener);
-        level4_btn.setOnClickListener(leveldialog_listener);
-
-
-        level_dialog.show();
-    }
-
-    //레슨 다이얼로그
-    private void lessonDialog(String lesson_num) {
-        lesson_dialog = new Dialog(this);
-        lesson_dialog.setContentView(R.layout.lesson_dialog);
-
-        ImageButton keyword_btn = (ImageButton) lesson_dialog.findViewById(R.id.keyword_btn);
-        ImageButton lookandlisten_btn = (ImageButton) lesson_dialog.findViewById(R.id.lookandlisten_btn);
-        ImageButton lookandsay_btn = (ImageButton) lesson_dialog.findViewById(R.id.lookandsay_btn);
-        ImageButton listenandrepeat_btn = (ImageButton) lesson_dialog.findViewById(R.id.listenandrepeat_btn);
-        ImageButton readandtalk_btn = (ImageButton) lesson_dialog.findViewById(R.id.readandtalk_btn);
-        ImageButton letsread_btn = (ImageButton) lesson_dialog.findViewById(R.id.letsread_btn);
-
-        TextView lessondialog_text = (TextView) lesson_dialog.findViewById(R.id.lessondialog_text);
-        lessondialog_text.setText(lesson_num);
-
-        View.OnClickListener lessondialog_listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.keyword_btn:
-                        intent = new Intent(v.getContext(), Keyword.class);
-                        intent.putExtra("lesson", lesson);
-                        startActivity(intent);
-                        lesson_dialog.dismiss();
-                        break;
-                    case R.id.lookandlisten_btn:
-                        levelDialog("Lesson " + lesson + " - Look And Listen");
-                        lesson_type = "ll";
-                        break;
-                    case R.id.lookandsay_btn:
-                        levelDialog("Lesson " + lesson + " - Look And Say");
-                        lesson_type = "ls";
-                        break;
-                    case R.id.listenandrepeat_btn:
-                        listenandrepeatDialog();
-                        break;
-                    case R.id.readandtalk_btn:
-                        readandtalkDialog();
-                        break;
-                    case R.id.letsread_btn:
-                        letsreadDialog("Lesson " + lesson + " - Let's Read");
-                        lesson_type = "let";
-                        break;
-                }
-            }
-
-        };
-        keyword_btn.setOnClickListener(lessondialog_listener);
-        lookandlisten_btn.setOnClickListener(lessondialog_listener);
-        lookandsay_btn.setOnClickListener(lessondialog_listener);
-        listenandrepeat_btn.setOnClickListener(lessondialog_listener);
-        readandtalk_btn.setOnClickListener(lessondialog_listener);
-        letsread_btn.setOnClickListener(lessondialog_listener);
-
-        lesson_dialog.show();
-    }//레슨다이얼로그 끝
-
-    private void listenandrepeatDialog() {
-        listenandrepeat_dialog = new Dialog(this);
-        listenandrepeat_dialog.setContentView(R.layout.listenandrepeat_dialog);
-        ImageButton listenandrepeat1_btn = (ImageButton) listenandrepeat_dialog.findViewById(R.id.listenandrepeat1_btn);
-        ImageButton listenandrepeat2_btn = (ImageButton) listenandrepeat_dialog.findViewById(R.id.listenandrepeat2_btn);
-        TextView listenandrepeat_text = (TextView) listenandrepeat_dialog.findViewById(R.id.listenandrepeat_text);
-        listenandrepeat_text.setText("Lesson " + lesson + " Listen and Repeat");
-
-        View.OnClickListener listenandrepeat_listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.listenandrepeat1_btn:
-                        levelDialog("Lesson " + lesson + " - Listen And Repeat");
-                        lesson_type = "lr1";
-                        listenandrepeat_dialog.dismiss();
-                        break;
-                    case R.id.listenandrepeat2_btn:
-                        levelDialog("Lesson " + lesson + " - Listen And Repeat");
-                        lesson_type = "lr2";
-                        listenandrepeat_dialog.dismiss();
-                        break;
-                }
-            }
-        };
-        listenandrepeat1_btn.setOnClickListener(listenandrepeat_listener);
-        listenandrepeat2_btn.setOnClickListener(listenandrepeat_listener);
-        listenandrepeat_dialog.show();
-    }
-
+    }//온크리에이트 끝
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
@@ -603,7 +149,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                 // 녹음 시작
 
 //                Log.d( "녹음버튼클릭" , "조건문 이전" );
-                if (CheckPermissions()) {
+
                     if (isRecording == false) {
 
                         stopbtn.setEnabled(true);
@@ -626,10 +172,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         recording_btn();
 //                        startbtn.setText("일시정지");
                     }
-                } else {
 
-                    RequestPermissions();
-                }
                 break;
             case R.id.btnStop:
                 // 녹음 중지
@@ -666,23 +209,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_server:
- /*               // 파이어베이스에서 가져오기
-                mStorageRef.child("1_2020년 04월 16일.3gp").getMetadata()
-                        .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-                            @Override
-                            public void onSuccess(StorageMetadata storageMetadata) {
-                                String name = String.valueOf(storageMetadata.getName());
-                                Log.e("파이어베이스에서 불러온 이름  ", name);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e("조회 실패  ", "조회실패");
-                            }
-                        });
 
-  */
 // 녹음서버 목록 보여주는 엑티비티 띄우기
                 Intent intent = new Intent(this, recordserver.class);
                 intent.putExtra("login_school", login_school);
@@ -701,16 +228,6 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent_extrawork);
                 break;
         }
-    }
-
-    public boolean CheckPermissions() {
-        int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
-        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void RequestPermissions() {
-        ActivityCompat.requestPermissions(this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, REQUEST_AUDIO_PERMISSION_CODE);
     }
 
     //녹음중지 버튼 시 이름바꿔저장 매서드 실행
@@ -1178,5 +695,5 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         finish();
 
     }
-}
 
+}
