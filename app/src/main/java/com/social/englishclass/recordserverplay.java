@@ -650,9 +650,9 @@ private void updateUI() {
         ArrayAdapter<String> umd_arrayAdapter;
         umd_arrayList = new ArrayList<>();
         umd_arrayList.add("평가선택");
-        umd_arrayList.add("상");
-        umd_arrayList.add("중");
-        umd_arrayList.add("하");
+        umd_arrayList.add("좋아요.");
+        umd_arrayList.add("괜찮아요.");
+        umd_arrayList.add("힘내세요.");
 
         umd_arrayAdapter = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item, umd_arrayList);
 
@@ -662,51 +662,51 @@ private void updateUI() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (umd_arrayList.get(i)) {
-                    case "상":
+                    case "좋아요.":
 switch (spiner_name){
     case "eng_stress":
-        stress = "상";
+        stress = "좋아요.";
         break;
     case "eng_accent":
-        accent = "상";
+        accent = "좋아요.";
         break;
     case "eng_speed":
-        speed = "상";
+        speed = "좋아요.";
         break;
     case "eng_pronunciation":
-        pronunciation = "상";
+        pronunciation = "좋아요.";
         break;
 }
                         break;
-                    case "중":
+                    case "괜찮아요.":
                         switch (spiner_name){
                             case "eng_stress":
-                                stress = "중";
+                                stress = "괜찮아요.";
                                 break;
                             case "eng_accent":
-                                accent = "중";
+                                accent = "괜찮아요.";
                                 break;
                             case "eng_speed":
-                                speed = "중";
+                                speed = "괜찮아요.";
                                 break;
                             case "eng_pronunciation":
-                                pronunciation = "중";
+                                pronunciation = "괜찮아요.";
                                 break;
                         }
                         break;
-                    case "하":
+                    case "힘내세요.":
                         switch (spiner_name){
                             case "eng_stress":
-                                stress = "하";
+                                stress = "힘내세요.";
                                 break;
                             case "eng_accent":
-                                accent = "하";
+                                accent = "힘내세요.";
                                 break;
                             case "eng_speed":
-                                speed = "하";
+                                speed = "힘내세요.";
                                 break;
                             case "eng_pronunciation":
-                                pronunciation = "하";
+                                pronunciation = "힘내세요.";
                                 break;
                         }
                         break;
