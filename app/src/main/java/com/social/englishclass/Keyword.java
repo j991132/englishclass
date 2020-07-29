@@ -16,6 +16,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.drawable.AnimatedImageDrawable;
 import android.media.AudioAttributes;
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -40,6 +41,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.signature.StringSignature;
 import com.google.gson.Gson;
 import com.social.englishclass.ui.main.PlaceholderFragment;
 
@@ -58,13 +60,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Keyword extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private KeywordAdapter mAdapter;
     private final static int LOADER_ID = 0x001;
-    private String folder, lesson;
+    private String folder, lesson, login_name, login_number, accessKey;
     int maxLenSpeech = 16000 * 45;
     private  byte [] speechData = null;
     int lenSpeech = 0;
@@ -73,8 +76,8 @@ public class Keyword extends AppCompatActivity {
     String result;
     private ImageButton sendtest_btn;
     private SoundPool soundPool;
-    int soundPlay1,soundPlay2,soundPlay3 ;
-    private ImageView mic_help;
+    int soundPlay1,soundPlay2,soundPlay3, privite_number ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +86,10 @@ public class Keyword extends AppCompatActivity {
 
         Intent intent = getIntent();
         lesson = intent.getStringExtra("lesson");
-
-
+        login_name = intent.getStringExtra("login_name");
+        login_number = intent.getStringExtra("login_number");
+        String log_num = login_number.substring(0,5);
+        privite_number = Integer.parseInt(log_num);
 
 //        getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
         folder = "/storage/emulated/0/englishclass/lesson"+lesson+"keyword/sound";
@@ -101,8 +106,9 @@ public class Keyword extends AppCompatActivity {
         else {
             getAudioListFromMediaDatabase();
         }
-        mic_help = (ImageView)findViewById(R.id.mic_help_image);
-        mic_help();
+//        mic_help = (ImageView)findViewById(R.id.mic_help_image);
+//        mic_help();
+        howtouse_keyword_dialog();
         sendtest_btn = (ImageButton)findViewById(R.id.keyword_sendtest_btn);
         sendtest_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -279,7 +285,16 @@ public class Keyword extends AppCompatActivity {
     }
     public String sendDataAndGetResult () {
         String openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";
-        String accessKey = "68c063de-3739-4796-ba10-5c6c3152d760";
+        if(privite_number%4 == 1) {
+            accessKey = "e91b9924-679e-49ca-9f90-71704d3ce8b0";
+        }else if(privite_number%4 == 2){
+            accessKey = "fcea3de7-d5d2-4441-8160-a46764c090ed";
+        }else if(privite_number%4 == 3){
+             accessKey = "0fe29a05-1d6a-4f79-b253-d24b673f6bc7";
+        }else {
+            accessKey = "68c063de-3739-4796-ba10-5c6c3152d760";
+        }
+        Log.e("서버키", ""+accessKey);
 //        String accessKey = editID.getText().toString().trim();
         String languageCode = "english";
         String audioContents;
@@ -454,12 +469,38 @@ public class Keyword extends AppCompatActivity {
             speechData = null;
         }
     }
-    public void mic_help() {
-        GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(mic_help);
-        Glide.with(this).load(R.drawable.mic_help).override(80,80).into(gifImage);
-    }
+
     public void mic_rec_stop() {
         GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(sendtest_btn);
-        Glide.with(this).load(R.drawable.mic_rec_stop).override(80,80).into(gifImage);
+        Glide.clear(sendtest_btn);
+        Glide.with(this).load(R.drawable.mic_rec_stop).override(80,80).signature(new StringSignature(UUID.randomUUID().toString())).into(gifImage);
+    }
+    public void howtouse_keyword_dialog(){
+        final Dialog howtouse_keyword_dialog = new Dialog(Keyword.this);
+        howtouse_keyword_dialog.setContentView(R.layout.howtouse_keyword);
+        howtouse_keyword_dialog.setCancelable(false);
+        howtouse_keyword_dialog.getWindow().setBackgroundDrawableResource(R.color.translucent_black);
+
+        ImageButton howtouse_cancle_btn = (ImageButton) howtouse_keyword_dialog.findViewById(R.id.howtouse_cancle_btn);
+        ImageView keyword_picture_image = (ImageView) howtouse_keyword_dialog.findViewById(R.id.keyword_picture_image);
+        ImageView ai_test_image = (ImageView) howtouse_keyword_dialog.findViewById(R.id.ai_test_image);
+
+
+        GlideDrawableImageViewTarget gifImage2 = new GlideDrawableImageViewTarget(ai_test_image);
+        Glide.clear(ai_test_image);
+        Glide.with(this).load(R.drawable.mic_help).signature(new StringSignature(UUID.randomUUID().toString())).into(gifImage2);
+
+        GlideDrawableImageViewTarget gifImage1 = new GlideDrawableImageViewTarget(keyword_picture_image);
+        Glide.clear(keyword_picture_image);
+        Glide.with(this).load(R.drawable.wordclick).signature(new StringSignature(UUID.randomUUID().toString())).into(gifImage1);
+
+        howtouse_cancle_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                howtouse_keyword_dialog.dismiss();
+            }
+        });
+        howtouse_keyword_dialog.show();
     }
 }//메인 끝

@@ -68,7 +68,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
     private File beforeFileName, afterFileName, beforesendtest, aftersendtest, exisitFileName;
     private Long duration;
     public static Dialog recordlistdialog, deletedialog;
-    private String folder, fname, login_name, token, login_school;
+    private String folder, fname, login_name, token, login_school, login_number;
     private AudioAdapter mAdapter, recordAdapter, serchAdapter;
     public String serchfilename, ext;
     private StorageReference mStorageRef;
@@ -94,6 +94,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         Intent login_intent = getIntent();
         login_school = login_intent.getStringExtra("login_school");
         login_name = login_intent.getStringExtra("login_name");
+        login_number = login_intent.getStringExtra("login_number");
         token = login_intent.getStringExtra("token");
 
         //녹음버튼 관련
@@ -530,6 +531,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                     case R.id.keyword_btn:
                         intent = new Intent(v.getContext(), Keyword.class);
                         intent.putExtra("lesson", lesson);
+                        intent.putExtra("login_number", login_number);
                         startActivity(intent);
                         lesson_dialog.dismiss();
                         break;

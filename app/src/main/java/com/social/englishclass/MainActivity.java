@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent = new Intent(MainActivity.this, SelectLesson.class);
                                 intent.putExtra("login_school", schoolID);
                                 intent.putExtra("login_name", schoolID + userdata.userID);
+                                intent.putExtra("login_number", userdata.userID);
                                 intent.putExtra("token", userdata.fcmToken);
                                 startActivity(intent);
                                 finish();
