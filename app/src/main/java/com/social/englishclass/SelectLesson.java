@@ -1175,7 +1175,9 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         unregisterBroadcast();
+        isRecording = false;
         AudioApplication.getInstance().getServiceInterface().stop();
+        AudioApplication.getInstance().getServiceInterface().recrecordstop();
         AudioApplication.getInstance().getServiceInterface().clearPlayList();
         finish();
 
