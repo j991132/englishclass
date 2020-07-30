@@ -82,6 +82,7 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
 
 
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mUploads.clear();
