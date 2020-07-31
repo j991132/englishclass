@@ -51,6 +51,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -685,6 +687,32 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         });
 
   */
+                ProgressDialog progressDialog = new ProgressDialog(SelectLesson.this);
+                progressDialog.setMessage("서버에서 녹음파일 목록을 불러오는 중입니다...\n잠시만 기다려주세요.");
+                progressDialog.show();
+
+                Thread thread = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // 3초가 지나면 다이얼로그 닫기
+                        TimerTask task = new TimerTask(){
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+
+                            }
+                        };
+
+                        Timer timer = new Timer();
+                        timer.schedule(task, 2000);
+                    }
+                });
+                thread.start();
+
+
+
+
 // 녹음서버 목록 보여주는 엑티비티 띄우기
                 Intent intent = new Intent(this, recordserver.class);
                 intent.putExtra("login_school", login_school);

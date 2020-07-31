@@ -5,11 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -26,6 +31,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,11 +58,14 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
     private EditText search_server_text;
     public static String login_name, login_school;
     String filename;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recordserver);
+
+
 
         Intent intent = getIntent();
         login_school = intent.getStringExtra("login_school");
@@ -71,20 +87,24 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
         registerBroadcast();
 //        mProgressCircle = findViewById(R.id.progress_circle);
 
+
+
         mUploads = new ArrayList<>();
         Log.e("입력전 리스트  ", " " + mUploads);
 
-
-
+        progressDialog = new ProgressDialog(recordserver.this);
+        progressDialog.setMessage("서버에서 녹음파일 목록을 불러오는 중입니다...");
+        progressDialog.show();
+//        Log.e("프로그래스다이얼로그  ", " "+progressDialog);
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
-
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
 
 
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 mUploads.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
@@ -126,8 +146,8 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
                 mRecyclerView.setAdapter(mAdapter);
 //                mProgressCircle.setVisibility(View.INVISIBLE);
-
-
+                progressDialog.dismiss();
+                Log.e("프로그래스다이얼로그 사라짐 ", " "+progressDialog);
             }
 
             @Override
@@ -138,6 +158,8 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
 
         });
+
+
     }
     private final static Comparator<Upload> sortByTotalCall= new Comparator<Upload>() {
 
@@ -154,6 +176,7 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         unregisterBroadcast();
+        progressDialog =null;
 
         finish();
 
@@ -259,6 +282,8 @@ if(recordserverAdapter.reset ){
         finish();
         super.onBackPressed();
     }
+
+
 }
 
 

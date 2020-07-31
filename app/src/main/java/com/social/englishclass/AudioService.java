@@ -371,12 +371,18 @@ public class AudioService extends Service {
         Toast.makeText(getApplicationContext(), "녹음 재개", Toast.LENGTH_LONG).show();
     }
     public void recrecordstop() {
-         isRecording = false;
-        mRecorder.stop();
-        mRecorder.release();
-        mRecorder = null;
+        try {
+            isRecording = false;
+            mRecorder.stop();
+            mRecorder.release();
+            mRecorder = null;
 
-        Toast.makeText(getApplicationContext(), "Recording Stopped", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+ //       Toast.makeText(getApplicationContext(), "Recording Stopped", Toast.LENGTH_LONG).show();
     }
     public void recordstop() {
         forceStop = true;
