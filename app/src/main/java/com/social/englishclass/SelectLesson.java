@@ -687,6 +687,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         });
 
   */
+ /*
                 ProgressDialog progressDialog = new ProgressDialog(SelectLesson.this);
                 progressDialog.setMessage("서버에서 녹음파일 목록을 불러오는 중입니다...\n잠시만 기다려주세요.");
                 progressDialog.show();
@@ -695,7 +696,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void run() {
-                        // 3초가 지나면 다이얼로그 닫기
+//                         3초가 지나면 다이얼로그 닫기
                         TimerTask task = new TimerTask(){
                             @Override
                             public void run() {
@@ -709,7 +710,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                     }
                 });
                 thread.start();
-
+*/
 
 
 
@@ -906,7 +907,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 EditText serchname = (EditText) recordlistdialog.findViewById(R.id.serchtext);
-                serchfilename = serchname.getText().toString();
+                serchfilename = serchname.getText().toString().trim();
                 getSerchAudioListFromMediaDatabase();
                 RecyclerView serchRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
                 serchAdapter = new AudioAdapter(getApplicationContext(), null);

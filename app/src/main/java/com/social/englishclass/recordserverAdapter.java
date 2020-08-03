@@ -58,12 +58,12 @@ public class recordserverAdapter extends RecyclerView.Adapter<recordserverAdapte
         Upload uploadCurrent = mUploads.get(position);
 
         holder. mTxtTitle.setText(uploadCurrent.getName());
-        Log.e("바인드된 파일이름   ", ""+mUploads);
+//        Log.e("바인드된 파일이름   ", ""+mUploads);
         uri = Uri.parse(uploadCurrent.getUrl());
-        Log.e("바인드된 uri   ", ""+uri);
+//        Log.e("바인드된 uri   ", ""+uri);
         ext1 = uri.toString().substring(uri.toString().lastIndexOf("."));
         ext = ext1.substring(0,4);
-        Log.e("리사이클뷰에서 얻어지는 파일 확장자   ", ""+ext);
+//        Log.e("리사이클뷰에서 얻어지는 파일 확장자   ", ""+ext);
     }
 
     @Override

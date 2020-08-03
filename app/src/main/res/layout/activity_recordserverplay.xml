@@ -123,9 +123,13 @@
 
                     <TextView
                         android:id="@+id/textView12"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="- 선생님의 평가 -" />
+                        android:background="#FFC107"
+                        android:text="- 선생님의 평가 -"
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -141,6 +145,7 @@
                         android:layout_weight="1"
                         android:text="강        세"
                         android:textColor="#000000"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <Spinner
@@ -155,6 +160,7 @@
                         android:layout_weight="1"
                         android:text="억      양"
                         android:textColor="#000000"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <Spinner
@@ -177,6 +183,7 @@
                         android:layout_weight="1"
                         android:text="머뭇거림"
                         android:textColor="#000000"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <Spinner
@@ -191,6 +198,7 @@
                         android:layout_weight="1"
                         android:text="발      음"
                         android:textColor="#000000"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <Spinner
@@ -211,8 +219,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:shadowColor="#000000"
+                        android:shadowDx="5.0"
+                        android:shadowDy="5.0"
+                        android:shadowRadius="5.0"
                         android:text="강        세"
-                        android:textColor="#000000"
+                        android:textColor="#FC1717"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -222,15 +235,21 @@
                         android:layout_weight="1"
                         android:text="미평가"
                         android:textColor="#000000"
-                        android:textStyle="bold"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:shadowColor="#000000"
+                        android:shadowDx="5.0"
+                        android:shadowDy="5.0"
+                        android:shadowRadius="5.0"
                         android:text="억      양"
-                        android:textColor="#000000"
+                        android:textColor="#008847"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -240,7 +259,8 @@
                         android:layout_weight="1"
                         android:text="미평가"
                         android:textColor="#000000"
-                        android:textStyle="bold"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -254,9 +274,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:shadowColor="#000000"
+                        android:shadowDx="5.0"
+                        android:shadowDy="5.0"
+                        android:shadowRadius="5.0"
                         android:text="머뭇거림"
-                        android:textColor="#000000"
-                        android:textStyle="bold"/>
+                        android:textColor="#C529FC"
+                        android:textSize="16.5sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/text_speed"
@@ -265,15 +290,21 @@
                         android:layout_weight="1"
                         android:text="미평가"
                         android:textColor="#000000"
-                        android:textStyle="bold"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:shadowColor="#000000"
+                        android:shadowDx="5.0"
+                        android:shadowDy="5.0"
+                        android:shadowRadius="5.0"
                         android:text="발      음"
-                        android:textColor="#000000"
+                        android:textColor="#1874FD"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -283,7 +314,8 @@
                         android:layout_weight="1"
                         android:text="미평가"
                         android:textColor="#000000"
-                        android:textStyle="bold"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -296,8 +328,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="배움 Talk :  "
-                        android:textColor="#000000"
-                        android:textStyle="bold"/>
+                        android:textColor="#F87502"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:shadowColor="#000000"
+                        android:shadowDx="5.0"
+                        android:shadowDy="5.0"
+                        android:shadowRadius="5.0"/>
 
                     <EditText
                         android:id="@+id/comment"

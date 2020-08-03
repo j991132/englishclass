@@ -49,7 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SpeakingTest extends AppCompatActivity implements View.OnClickListener{
+public class SpeakingTest extends AppCompatActivity implements View.OnClickListener {
 
     private Intent intent;
     public static String lesson, lesson_type;
@@ -85,7 +85,7 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
         stopplay = (ImageButton) findViewById(R.id.StopPlay);
         btn_server = (ImageButton) findViewById(R.id.btn_server);
         dictionary_btn = (ImageButton) findViewById(R.id.dictionary_btn);
-        extrawork_btn = (ImageButton)findViewById(R.id.extrawork_btn);
+        extrawork_btn = (ImageButton) findViewById(R.id.extrawork_btn);
         stopbtn.setEnabled(false);
         playbtn.setEnabled(true);
         stopplay.setEnabled(false);
@@ -97,12 +97,12 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
         dictionary_btn.setOnClickListener(this);
         extrawork_btn.setOnClickListener(this);
 //녹음버튼 끝
-        stl_image = (ImageView)findViewById(R.id.stl_image);
+        stl_image = (ImageView) findViewById(R.id.stl_image);
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
         registerBroadcast();
 
-        switch (lesson){
+        switch (lesson) {
             case "1":
                 stl_image.setImageResource(R.drawable.stl1);
                 break;
@@ -143,6 +143,7 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
         }
 
     }//온크리에이트 끝
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
@@ -152,28 +153,28 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
 
 //                Log.d( "녹음버튼클릭" , "조건문 이전" );
 
-                    if (isRecording == false) {
+                if (isRecording == false) {
 
-                        stopbtn.setEnabled(true);
-                        startbtn.setEnabled(true);
-                        playbtn.setEnabled(true);
-                        stopplay.setEnabled(false);
-                        AudioApplication.getInstance().getServiceInterface().record3gp();
-                        isRecording = true;
-                        pause = 0;
-                        recording_btn();
+                    stopbtn.setEnabled(true);
+                    startbtn.setEnabled(true);
+                    playbtn.setEnabled(true);
+                    stopplay.setEnabled(false);
+                    AudioApplication.getInstance().getServiceInterface().record3gp();
+                    isRecording = true;
+                    pause = 0;
+                    recording_btn();
 //                        startbtn.setText("일시정지");
-                    } else if (isRecording == true && pause == 0) {
-                        AudioApplication.getInstance().getServiceInterface().recordpause();
-                        pause = 1;
-                        startbtn.setImageResource(R.drawable.record_btn);
+                } else if (isRecording == true && pause == 0) {
+                    AudioApplication.getInstance().getServiceInterface().recordpause();
+                    pause = 1;
+                    startbtn.setImageResource(R.drawable.record_btn);
 //                        startbtn.setText("녹음시작");
-                    } else if (isRecording == true && pause == 1) {
-                        AudioApplication.getInstance().getServiceInterface().recordresume();
-                        pause = 0;
-                        recording_btn();
+                } else if (isRecording == true && pause == 1) {
+                    AudioApplication.getInstance().getServiceInterface().recordresume();
+                    pause = 0;
+                    recording_btn();
 //                        startbtn.setText("일시정지");
-                    }
+                }
 
                 break;
             case R.id.btnStop:
@@ -211,6 +212,7 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_server:
+                /*
                 ProgressDialog progressDialog = new ProgressDialog(SpeakingTest.this);
                 progressDialog.setMessage("서버에서 녹음파일 목록을 불러오는 중입니다...\n  잠시만 기다려주세요.");
                 progressDialog.show();
@@ -220,7 +222,7 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void run() {
                         // 3초가 지나면 다이얼로그 닫기
-                        TimerTask task = new TimerTask(){
+                        TimerTask task = new TimerTask() {
                             @Override
                             public void run() {
                                 progressDialog.dismiss();
@@ -233,6 +235,8 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
                     }
                 });
                 thread.start();
+
+                 */
 // 녹음서버 목록 보여주는 엑티비티 띄우기
                 Intent intent = new Intent(this, recordserver.class);
                 intent.putExtra("login_school", login_school);
@@ -416,7 +420,7 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 EditText serchname = (EditText) recordlistdialog.findViewById(R.id.serchtext);
-                serchfilename = serchname.getText().toString();
+                serchfilename = serchname.getText().toString().trim();
                 getSerchAudioListFromMediaDatabase();
                 RecyclerView serchRecyclerView = (RecyclerView) recordlistdialog.findViewById(R.id.recordrecyclerview);
                 serchAdapter = new AudioAdapter(getApplicationContext(), null);

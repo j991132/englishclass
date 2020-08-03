@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -87,14 +88,18 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
         registerBroadcast();
 //        mProgressCircle = findViewById(R.id.progress_circle);
 
+//        final ServerListTask serverListTask = new ServerListTask(recordserver.this);
+//        serverListTask.execute();
 
-
+        progressDialog = new ProgressDialog(recordserver.this);
+        progressDialog.setMessage("서버에서 녹음파일 목록을 불러오는 중입니다...\n잠시만 기다려주세요");
+        progressDialog.show();
         mUploads = new ArrayList<>();
         Log.e("입력전 리스트  ", " " + mUploads);
 
-        progressDialog = new ProgressDialog(recordserver.this);
-        progressDialog.setMessage("서버에서 녹음파일 목록을 불러오는 중입니다...");
-        progressDialog.show();
+//        progressDialog = new ProgressDialog(recordserver.this);
+//        progressDialog.setMessage("서버에서 녹음파일 목록을 불러오는 중입니다...");
+//        progressDialog.show();
 //        Log.e("프로그래스다이얼로그  ", " "+progressDialog);
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
@@ -110,10 +115,10 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
                     Upload upload = postSnapshot.getValue(Upload.class);
                     mUploads.add(upload);
-//시간역순 정렬
-                    Collections.sort(mUploads, sortByTotalCall);
-
+                    //                       Log.e("mUPloads 에 추가됨 ", " "+mUploads);
                 }
+                //시간역순 정렬
+                Collections.sort(mUploads, sortByTotalCall);
  /*
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
@@ -145,9 +150,11 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
                 mAdapter = new recordserverAdapter(recordserver.this, mUploads);
 
                 mRecyclerView.setAdapter(mAdapter);
+                Log.e("mRecyclerView 에 뿌려짐 ", " "+mRecyclerView);
+
 //                mProgressCircle.setVisibility(View.INVISIBLE);
                 progressDialog.dismiss();
-                Log.e("프로그래스다이얼로그 사라짐 ", " "+progressDialog);
+
             }
 
             @Override
@@ -158,8 +165,6 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
 
         });
-
-
     }
     private final static Comparator<Upload> sortByTotalCall= new Comparator<Upload>() {
 
@@ -283,6 +288,141 @@ if(recordserverAdapter.reset ){
         super.onBackPressed();
     }
 
+    private class ServerListTask extends AsyncTask<Void, Void, String> {
+
+        private Context context;
+        private PowerManager.WakeLock mWakeLock;
+       ProgressDialog progressDialog = new ProgressDialog(recordserver.this);
+
+        public ServerListTask(Context context) {
+            this.context = context;
+        }
+
+
+
+
+        //파일 다운로드를 시작하기 전에 프로그레스바를 화면에 보여줍니다.
+        @Override
+        protected void onPreExecute() { //2
+
+            super.onPreExecute();
+            //사용자가 다운로드 중 파워 버튼을 누르더라도 CPU가 잠들지 않도록 해서
+            //다시 파워버튼 누르면 그동안 다운로드가 진행되고 있게 됩니다.
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
+            mWakeLock.acquire();
+
+            progressDialog.setMessage("서버에서 녹음파일 목록을 불러오는 중입니다...");
+            progressDialog.show();
+            Log.e("프로그래스다이얼로그 생성 ", " "+progressDialog);
+
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            mUploads = new ArrayList<>();
+            Log.e("입력전 리스트  ", " " + mUploads);
+
+//        progressDialog = new ProgressDialog(recordserver.this);
+//        progressDialog.setMessage("서버에서 녹음파일 목록을 불러오는 중입니다...");
+//        progressDialog.show();
+//        Log.e("프로그래스다이얼로그  ", " "+progressDialog);
+
+            mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+            mDatabaseRef.addValueEventListener(new ValueEventListener() {
+
+
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    mUploads.clear();
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+                        Upload upload = postSnapshot.getValue(Upload.class);
+                        mUploads.add(upload);
+ //                       Log.e("mUPloads 에 추가됨 ", " "+mUploads);
+//시간역순 정렬
+                        Collections.sort(mUploads, sortByTotalCall);
+
+                    }
+ /*
+        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
+
+        // 파이어베이스에서 가져오기
+        mStorageRef.child("1_2020년 04월 16일.3gp").getMetadata()
+                .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+                    @Override
+                    public void onSuccess(StorageMetadata storageMetadata) {
+                        String name = String.valueOf(storageMetadata.getName());
+                        Log.e("2  파이어베이스에서 불러온 이름  ", name);
+                       Upload upload = new Upload();
+                       upload.setName(name);
+//                        Upload upload = new Upload(name);
+                        Log.e("리스트 전 업로드자료  ", " "+upload.getName());
+
+                        mUploads.add(upload);
+                        Log.e("리스트  ", " "+mUploads);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("조회 실패2  ", "조회실패2");
+                    }
+                });
+*/
+
+
+                    mAdapter = new recordserverAdapter(recordserver.this, mUploads);
+
+                    mRecyclerView.setAdapter(mAdapter);
+                    Log.e("mRecyclerView 에 뿌려짐 ", " "+mRecyclerView);
+//                mProgressCircle.setVisibility(View.INVISIBLE);
+//                progressDialog.dismiss();
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(recordserver.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+
+
+            });
+
+            return mUploads.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            Log.e("프로그래스다이얼로그 사라짐 ", " "+progressDialog);
+
+        }
+
+
+/*
+        //다운로드 중 프로그레스바 업데이트
+        @Override
+        protected void onProgressUpdate(String... progress) { //4
+            super.onProgressUpdate(progress);
+
+            // if we get here, length is known, now set indeterminate to false
+            progressBar.setIndeterminate(false);
+            progressBar.setMax(100);
+            progressBar.setProgress(Integer.parseInt(progress[0]));
+            progressBar.setMessage(progress[1]);
+        }
+ */
+
+
+
+
+    }
 
 }
 
