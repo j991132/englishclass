@@ -847,7 +847,10 @@ public class level extends AppCompatActivity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         unregisterBroadcast();
-        isRecording = false;
+        PlaceholderFragment.forceStop = true;
+        LetsreadFragment.forceStop = true;
+
+       isRecording = false;
         AudioApplication.getInstance().getServiceInterface().stop();
         AudioApplication.getInstance().getServiceInterface().recrecordstop();
         AudioApplication.getInstance().getServiceInterface().clearPlayList();

@@ -473,7 +473,7 @@ public class Keyword extends AppCompatActivity {
     public void mic_rec_stop() {
         GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(sendtest_btn);
         Glide.clear(sendtest_btn);
-        Glide.with(this).load(R.drawable.mic_rec_stop).override(80,80).signature(new StringSignature(UUID.randomUUID().toString())).into(gifImage);
+        Glide.with(this).load(R.drawable.mic_rec_stop).signature(new StringSignature(UUID.randomUUID().toString())).into(gifImage);
     }
     public void howtouse_keyword_dialog(){
         final Dialog howtouse_keyword_dialog = new Dialog(Keyword.this);
@@ -502,5 +502,13 @@ public class Keyword extends AppCompatActivity {
             }
         });
         howtouse_keyword_dialog.show();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        forceStop = true;
+        isRecording = false;
+        finish();
+
     }
 }//메인 끝

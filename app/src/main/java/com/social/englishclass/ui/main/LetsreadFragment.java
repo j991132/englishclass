@@ -39,6 +39,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.signature.StringSignature;
 import com.google.gson.Gson;
 import com.social.englishclass.AudioApplication;
 import com.social.englishclass.R;
@@ -62,6 +65,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -89,7 +93,7 @@ public class LetsreadFragment extends Fragment {
         private  byte [] speechData = null;
         int lenSpeech = 0;
         boolean isRecording = false;
-        boolean forceStop = false;
+        public static boolean forceStop = false;
         String result;
         private int pos, index;
         private ImageView letsread_image;
@@ -208,7 +212,8 @@ public class LetsreadFragment extends Fragment {
                         task.execute();
 
                     } else {
-                        sendtest_btn.setImageResource(R.drawable.mic_rec);
+//                        sendtest_btn.setImageResource(R.drawable.mic_rec);
+                        mic_rec_stop();
                         try {
                             new Thread(new Runnable() {
                                 public void run() {
@@ -671,6 +676,11 @@ public class LetsreadFragment extends Fragment {
                 speechData = null;
             }
         }
+    public void mic_rec_stop() {
+        GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(sendtest_btn);
+        Glide.clear(sendtest_btn);
+        Glide.with(root.getContext()).load(R.drawable.mic_rec_stop).signature(new StringSignature(UUID.randomUUID().toString())).into(gifImage);
+    }
     }
 
 

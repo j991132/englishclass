@@ -35,6 +35,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.signature.StringSignature;
 import com.google.gson.Gson;
 import com.social.englishclass.AudioApplication;
 import com.social.englishclass.R;
@@ -58,6 +61,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -86,7 +90,7 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
     private  byte [] speechData = null;
     int lenSpeech = 0;
     boolean isRecording = false;
-    boolean forceStop = false;
+    public static boolean forceStop = false;
     String result;
     private int pos;
     private SoundPool soundPool;
@@ -215,7 +219,8 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
                     task.execute();
 
                 } else {
-                    sendtest_btn.setImageResource(R.drawable.mic_rec);
+//                    sendtest_btn.setImageResource(R.drawable.mic_rec);
+                    mic_rec_stop();
                     try {
                         new Thread(new Runnable() {
                             public void run() {
@@ -713,4 +718,11 @@ public class PlaceholderFragment extends Fragment implements SurfaceHolder.Callb
             speechData = null;
         }
     }
+    public void mic_rec_stop() {
+        GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(sendtest_btn);
+        Glide.clear(sendtest_btn);
+        Glide.with(root.getContext()).load(R.drawable.mic_rec_stop).signature(new StringSignature(UUID.randomUUID().toString())).into(gifImage);
+    }
+
+
 }
