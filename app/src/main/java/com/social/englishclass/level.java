@@ -764,6 +764,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                 filepath = PlaceholderFragment.filepatharr[viewPager.getCurrentItem()];
 //                filepath = "";
             }
+            Log.e("업로드시 얻어지는 파일패스   ", "" + filepath);
 //업로드 진행 Dialog 보이기
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("업로드중...");

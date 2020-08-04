@@ -2,16 +2,19 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.social.englishclass"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 29
         multiDexEnabled true
-        versionCode 1
-        versionName "1.0"
+        versionCode 6
+        versionName "1.0.1"
+        ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -38,14 +41,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.4.0'
     implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation 'com.google.firebase:firebase-messaging:20.1.6'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0+'
+    implementation 'com.android.support:recyclerview-v7:29.0.0+'
     implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.github.adrielcafe:AndroidAudioConverter:0.0.8'
+
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'commons-lang:commons-lang:2.6'
     implementation 'androidx.cardview:cardview:1.0.0'

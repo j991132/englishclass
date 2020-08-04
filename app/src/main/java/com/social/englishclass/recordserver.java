@@ -153,7 +153,9 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
                 Log.e("mRecyclerView 에 뿌려짐 ", " "+mRecyclerView);
 
 //                mProgressCircle.setVisibility(View.INVISIBLE);
-                progressDialog.dismiss();
+                try {
+                    progressDialog.dismiss();
+                }catch (Exception e){}
 
             }
 

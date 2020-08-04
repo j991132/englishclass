@@ -77,10 +77,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import cafe.adriel.androidaudioconverter.AndroidAudioConverter;
-import cafe.adriel.androidaudioconverter.callback.IConvertCallback;
-import cafe.adriel.androidaudioconverter.callback.ILoadCallback;
-import cafe.adriel.androidaudioconverter.model.AudioFormat;
+
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -179,19 +176,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
         speedselect();
         registerBroadcast();
         updateUI();
-//오디오파일 변환 라이브러리 로드
-        AndroidAudioConverter.load(this, new ILoadCallback() {
-            @Override
-            public void onSuccess() {
-                // Great!
-                Log.e("라이브러리", "로드성공"  );
-            }
-            @Override
-            public void onFailure(Exception error) {
-                // FFmpeg is not supported by device
-                Log.e("라이브러리", "로드실패"  );
-            }
-        });
+
 
     }
 
@@ -494,7 +479,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                         e.printStackTrace();
                     }
 //                      wavtomp3(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "1.wav"));
-                    wavtomp3(afterFileName);
+
 //                    beforeFileName.renameTo(afterFileName);
                     beforesendtest.renameTo(aftersendtest);
 //                    updatadata(FileName+"_"+time);
@@ -510,7 +495,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
                     }
 //                    wavtomp3(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", "1.wav"));
 //wav to mp3
-                    wavtomp3(afterFileName);
+
 //                    beforeFileName.renameTo(afterFileName);
                     beforesendtest.renameTo(aftersendtest);
                     fname = String.valueOf(afterFileName);
@@ -1060,35 +1045,7 @@ public class englishlesson extends AppCompatActivity implements View.OnClickList
             output.write(value.charAt(i));
         }
     }
-//    wav를 mp3로 바꾸기
-    private void wavtomp3(File file){
-        IConvertCallback callback = new IConvertCallback() {
-            @Override
-            public void onSuccess(File convertedFile) {
-                // So fast? Love it!
 
-                Log.e("mp3변환", "성공"  );
-            }
-            @Override
-            public void onFailure(Exception error) {
-                // Oops! Something went wrong
-                Log.e("mp3변환", "실패" + error);
-            }
-        };
-        AndroidAudioConverter.with(this)
-                // Your current audio file
-                .setFile(file)
-
-                // Your desired audio format
-                .setFormat(AudioFormat.MP3)
-
-                // An callback to know when conversion is finished
-                .setCallback(callback)
-
-                // Start conversion
-                .convert();
-        Log.e("mp3변환", "변환했음 마지막부분"  );
-    }
 public void sendtest(String file){
     StringBuffer strBuffer = new StringBuffer();
     try{
