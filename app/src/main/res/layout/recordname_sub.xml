@@ -25,6 +25,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textColor="#050505"
+        android:textSize="18sp"
+        android:textStyle="bold"
         android:text="TextView" />
 
     <LinearLayout
@@ -37,13 +40,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="녹음재생" />
+            android:text="녹음재생"
+            android:backgroundTint="#FF8585"
+            android:textColor="#050505"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/recordname_sub_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="#FCE35F"
+            android:textColor="#050505"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:text="이름바꾸기" />
 
         <Button
@@ -51,6 +62,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="#6ED635"
+            android:textColor="#050505"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:text="선생님께 전송" />
 
     </LinearLayout>

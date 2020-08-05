@@ -402,7 +402,7 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
         recordname_sub_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AudioApplication.getInstance().getServiceInterface().recordname_sub_play(afterFileName);
+                AudioApplication.getInstance().getServiceInterface().recordname_sub_play(file);
             }
         });
         recordname_sub_change.setOnClickListener(new View.OnClickListener() {
