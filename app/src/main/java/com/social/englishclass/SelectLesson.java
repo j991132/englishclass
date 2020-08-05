@@ -100,6 +100,11 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         login_number = login_intent.getStringExtra("login_number");
         token = login_intent.getStringExtra("token");
 
+        Button teacher_btn =(Button)findViewById(R.id.teacher_btn);
+        if(!login_name.contains("teacher") || !login_name.contains("60830") ){
+            teacher_btn.setVisibility(View.GONE);
+        }
+
         //녹음버튼 관련
         startbtn = (ImageButton) findViewById(R.id.btnRecord);
         stopbtn = (ImageButton) findViewById(R.id.btnStop);
@@ -220,6 +225,10 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         lessonDialog("Lesson 12 - Would You Like to Come to My Graduation?");
                         lesson = "12";
                         break;
+                    case R.id.teacher_btn:
+                        intent = new Intent(SelectLesson.this, TeacherPage.class);
+                        startActivity(intent);
+                        break;
                 }
             }
         };
@@ -235,7 +244,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         btn10.setOnClickListener(Listener);
         btn11.setOnClickListener(Listener);
         btn12.setOnClickListener(Listener);
-
+        teacher_btn.setOnClickListener(Listener);
 
     }
 
