@@ -9,6 +9,7 @@ import android.os.IBinder;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class AudioServiceInterface {
@@ -58,6 +59,11 @@ public class AudioServiceInterface {
     public void pcmplay() {
         if (mService != null) {
             mService.pcmplay();
+        }
+    }
+    public void recordname_sub_play(File file) {
+        if (mService != null) {
+            mService.recordname_sub_play(file);
         }
     }
 

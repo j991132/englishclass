@@ -85,7 +85,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
     private int pause, index;
-    private File beforeFileName, afterFileName;
+    private File beforeFileName, afterFileName, changeFileName;
     private Long duration;
     public static Dialog recordlistdialog, deletedialog;
     private String folder, fname, login_name, token, login_school, filepath;
@@ -98,6 +98,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
     public  ViewPager viewPager;
     public static MediaPlayer mediaPlayer;
     private static boolean isPrepared ;
+    private TextView recordname_sub_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -483,6 +484,9 @@ public class level extends AppCompatActivity implements View.OnClickListener {
 
 //                afterFileName.delete();
                 recordname.dismiss();
+
+                //이름변경 확인버튼시 서브다이얼로그 시작
+                recordname_sub(afterFileName);
             }
         }); //ok버튼 끝
 
@@ -495,7 +499,215 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         }); //취소버튼 끝
         recordname.show();
     }
+    public void recordname_sub(File file) {
+        //이름변경 확인버튼시 서브다이얼로그 시작
+        final Dialog recordname_sub = new Dialog(this);
+        recordname_sub.setContentView(R.layout.recordname_sub);
+        recordname_sub.setCancelable(false);
 
+        recordname_sub_title = (TextView) recordname_sub.findViewById(R.id.recordname_sub_title);
+        Button recordname_sub_play = (Button) recordname_sub.findViewById(R.id.recordname_sub_play);
+        Button recordname_sub_change = (Button) recordname_sub.findViewById(R.id.recordname_sub_change);
+        Button recordname_sub_send = (Button) recordname_sub.findViewById(R.id.recordname_sub_send);
+        ImageButton recordname_sub_cancle_btn = (ImageButton) recordname_sub.findViewById(R.id.recordname_sub_cancle_btn);
+
+        recordname_sub_title.setText("현재 파일 :  " + file.getName());
+
+//버튼처리
+        recordname_sub_cancle_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    AudioApplication.getInstance().getServiceInterface().recordstopplay();
+                }catch (Exception e){}
+
+                recordname_sub.dismiss();
+            }
+        }); //취소버튼 끝
+        recordname_sub_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AudioApplication.getInstance().getServiceInterface().recordname_sub_play(afterFileName);
+            }
+        });
+        recordname_sub_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recordname_sub_changename();
+
+            }
+        });
+        recordname_sub_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Uri fileuri = Uri.fromFile(afterFileName);
+                Log.e("파일패스에서 얻어지는 uri   ", "" + fileuri);
+                uploadfile(afterFileName.getName().toString().substring(0, afterFileName.getName().toString().lastIndexOf(".")), fileuri);
+            }
+        });
+
+        recordname_sub.show();
+    }
+
+    public void recordname_sub_changename() {
+        //다이얼로그생성
+        final Dialog recordname_sub_changename = new Dialog(this);
+        recordname_sub_changename.setContentView(R.layout.recordname);
+        recordname_sub_changename.setCancelable(false);
+        Button okbtn = (Button) recordname_sub_changename.findViewById(R.id.ok);
+        Button canclebtn = (Button) recordname_sub_changename.findViewById(R.id.cancle);
+        final EditText edit = (EditText) recordname_sub_changename.findViewById(R.id.edittext);
+        //확인버튼
+        okbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String FileName = login_name + "_" + edit.getText().toString();
+//파일명에 날짜시간 넣기
+                SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
+                String time = format.format(System.currentTimeMillis());
+
+                Log.d("이전파일이름", String.valueOf(afterFileName));
+                File newFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName + "_" + time + ".3gp");
+
+                Log.d("수정된파일이름", String.valueOf(newFileName));
+
+                if (newFileName.exists()) {
+
+                    metadata(String.valueOf(newFileName));
+//                    beforeFileName.renameTo(exisitFileName);
+                    afterFileName.renameTo(newFileName);
+                    Log.e("재생시간", String.valueOf(duration));
+                    updatadata(FileName + "_" + time);
+
+                } else {
+
+                    Log.e("재생시간", String.valueOf(duration));
+
+                    afterFileName.renameTo(newFileName);
+                    metadata(String.valueOf(newFileName));
+
+                    ContentValues values = new ContentValues();
+
+                    String recext = newFileName.getName().toString().substring(0, newFileName.getName().toString().lastIndexOf(".")) + ".3gp";
+                    String recextpath = newFileName.getPath().toString().substring(0, newFileName.getPath().toString().lastIndexOf(".")) + ".3gp";
+                    File rec = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", recext);
+                    Log.e("mp3 확장자 얻기 위한 이름   ", "" + recext);
+                    values.put(MediaStore.Audio.Media.DISPLAY_NAME, rec.getName());
+                    values.put(MediaStore.Audio.Media.TITLE, FileName + "_" + time);
+                    values.put(MediaStore.Audio.Media.DURATION, duration);
+                    Log.e("녹음 중지 시 저장되는 이름   ", newFileName.getName());
+                    values.put(MediaStore.Audio.Media.DATA, rec.getPath());
+                    Log.e("녹음 중지 시 저장되는 경로   ", newFileName.getPath());
+                    values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/*");
+
+                    getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+                    try {
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/englishclass/record/" +afterFileName.getName() )));
+
+                    } catch (Exception e) {
+                        Log.e("브로드캐스트 저장소 갱신", "오류", e);
+                    }
+                }
+
+                Toast.makeText(getApplicationContext(), "이름이 변경되었습니다." + newFileName.getName(), Toast.LENGTH_SHORT).show();
+                recordname_sub_title.setText("현재 파일 :  " + newFileName.getName());
+                afterFileName = newFileName;
+
+                recordname_sub_changename.dismiss();
+
+            }
+        }); //ok버튼 끝
+
+        //취소버튼
+        canclebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recordname_sub_changename.dismiss();
+            }
+        }); //취소버튼 끝
+        recordname_sub_changename.show();
+    }
+    public void deletedialog_changename(String filename) {
+
+        //다이얼로그생성
+        final Dialog deletedialog_changename = new Dialog(this);
+        deletedialog_changename.setContentView(R.layout.recordname);
+        deletedialog_changename.setCancelable(false);
+        Button okbtn = (Button) deletedialog_changename.findViewById(R.id.ok);
+        Button canclebtn = (Button) deletedialog_changename.findViewById(R.id.cancle);
+        final EditText edit = (EditText) deletedialog_changename.findViewById(R.id.edittext);
+        //확인버튼
+        okbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String FileName = login_name + "_" + edit.getText().toString();
+//파일명에 날짜시간 넣기
+                SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
+                String time = format.format(System.currentTimeMillis());
+                File preFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filename + ".3gp");
+                Log.d("이전파일이름", String.valueOf(afterFileName));
+                changeFileName = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", FileName + "_" + time + ".3gp");
+
+                Log.d("수정된파일이름", String.valueOf(changeFileName));
+
+                if (changeFileName.exists()) {
+
+                    metadata(String.valueOf(changeFileName));
+//                    beforeFileName.renameTo(exisitFileName);
+                    preFileName.renameTo(changeFileName);
+                    Log.e("재생시간", String.valueOf(duration));
+                    updatadata(FileName + "_" + time);
+
+                } else {
+
+                    Log.e("재생시간", String.valueOf(duration));
+
+                    preFileName.renameTo(changeFileName);
+                    metadata(String.valueOf(changeFileName));
+
+                    ContentValues values = new ContentValues();
+
+                    String recext = changeFileName.getName().toString().substring(0, changeFileName.getName().toString().lastIndexOf(".")) + ".3gp";
+                    String recextpath = changeFileName.getPath().toString().substring(0, changeFileName.getPath().toString().lastIndexOf(".")) + ".3gp";
+                    File rec = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", recext);
+                    Log.e("mp3 확장자 얻기 위한 이름   ", "" + recext);
+                    values.put(MediaStore.Audio.Media.DISPLAY_NAME, rec.getName());
+                    values.put(MediaStore.Audio.Media.TITLE, FileName + "_" + time);
+                    values.put(MediaStore.Audio.Media.DURATION, duration);
+                    Log.e("녹음 중지 시 저장되는 이름   ",changeFileName.getName());
+                    values.put(MediaStore.Audio.Media.DATA, rec.getPath());
+                    Log.e("녹음 중지 시 저장되는 경로   ", changeFileName.getPath());
+                    values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/*");
+
+                    getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+                    try {
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/englishclass/record/" +preFileName.getName() )));
+
+                    } catch (Exception e) {
+                        Log.e("브로드캐스트 저장소 갱신", "오류", e);
+                    }
+                }
+
+                Toast.makeText(getApplicationContext(), "이름이 변경되었습니다." + changeFileName.getName(), Toast.LENGTH_SHORT).show();
+
+
+
+                deletedialog_changename.dismiss();
+                deletedialog.dismiss();
+                deletedialog(changeFileName.getName().toString().substring(0, changeFileName.getName().toString().lastIndexOf(".")), Uri.parse(changeFileName.getPath()));
+            }
+        }); //ok버튼 끝
+
+        //취소버튼
+        canclebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deletedialog_changename.dismiss();
+            }
+        }); //취소버튼 끝
+        deletedialog_changename.show();
+    }
     public void metadata(String filePath) {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(filePath);

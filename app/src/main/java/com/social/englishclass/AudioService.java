@@ -200,6 +200,16 @@ public class AudioService extends Service {
 
     }
 
+    public void recordname_sub_play(File file){
+        try {
+            mMediaPlayer.setDataSource(file.getPath());
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mMediaPlayer.prepareAsync();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mMediaPlayer.start();
+    }
     public void pcmplay(){
         String filename = Environment.getExternalStorageDirectory().getAbsolutePath()+"/englishclass/record/KeywordRecording.pcm";
         isPlaying = true;
