@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".TeacherPage"></activity>
+        <activity android:name=".Chart"></activity>
+        <activity android:name=".TeacherPage" />
         <activity android:name=".SpeakingTest" />
         <activity
             android:name=".Dialogflow"

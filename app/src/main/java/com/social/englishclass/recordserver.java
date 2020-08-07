@@ -115,7 +115,7 @@ public class recordserver extends AppCompatActivity implements View.OnClickListe
 
                     Upload upload = postSnapshot.getValue(Upload.class);
                     mUploads.add(upload);
-                    //                       Log.e("mUPloads 에 추가됨 ", " "+mUploads);
+                                           Log.e("mUPloads 에 추가됨 ", " "+mUploads);
                 }
                 //시간역순 정렬
                 Collections.sort(mUploads, sortByTotalCall);

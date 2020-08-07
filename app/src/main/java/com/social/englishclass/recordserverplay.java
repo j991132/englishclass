@@ -250,7 +250,7 @@ if(login_name != null && login_school !=null) {
                 if(comment.getText().toString().equals(""))
 
                     return;
-                sendPostToFCM(comment.getText().toString());
+                sendPostToFCM(login_name+" : "+comment.getText().toString());
                 Log.e("코멘트 메세지  ", ""+comment.getText().toString());
 //4종류 평가 전송
                 umd_test umd = new umd_test(stress, accent, speed, pronunciation);
