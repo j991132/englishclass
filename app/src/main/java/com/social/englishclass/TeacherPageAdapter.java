@@ -28,7 +28,7 @@ public class TeacherPageAdapter extends RecyclerView.Adapter<TeacherPageAdapter.
     @NonNull
     @Override
     public TeacherPageAdapter.TeacherViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(android.R.layout.simple_list_item_1, parent, false);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.teacherpage_item, parent, false);
         return new TeacherViewHolder(v);
     }
 
@@ -51,7 +51,7 @@ public class TeacherPageAdapter extends RecyclerView.Adapter<TeacherPageAdapter.
         private TeacherViewHolder(final View view) {
             super(view);
 
-            mTxtTitle = (TextView) view.findViewById(android.R.id.text1);
+            mTxtTitle = (TextView) view.findViewById(R.id.teacherpage_text);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -52,7 +52,7 @@ import java.util.TimerTask;
 public class SpeakingTest extends AppCompatActivity implements View.OnClickListener {
 
     private Intent intent;
-    public static String lesson, lesson_type;
+    public static String lesson, lesson_type, line;
     private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server, dictionary_btn, extrawork_btn;
     boolean isRecording = false;
     private int pause;
@@ -78,6 +78,7 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
         login_name = login_intent.getStringExtra("login_name");
         lesson = login_intent.getStringExtra("lesson");
         lesson_type = login_intent.getStringExtra("lesson_type");
+        line = login_intent.getStringExtra("line");
 
         //녹음버튼 관련
         startbtn = (ImageButton) findViewById(R.id.btnRecord);
@@ -239,10 +240,15 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
 
                  */
 // 녹음서버 목록 보여주는 엑티비티 띄우기
-                Intent intent = new Intent(this, recordserver.class);
-                intent.putExtra("login_school", login_school);
-                intent.putExtra("login_name", login_name);
-                startActivity(intent);
+                if (line.equals("1")) {
+                    Intent intent = new Intent(this, recordserver.class);
+                    intent.putExtra("login_school", login_school);
+                    intent.putExtra("login_name", login_name);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(getApplicationContext(), "인터넷에 로그인 되어있지 않습니다.\n다시 로그인 하여 주세요", Toast.LENGTH_SHORT).show();
+                }
+
 
                 break;
 
@@ -775,6 +781,7 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
 //        folder = "/storage/emulated/0/englishclass/record";
         Button btn_send_firebase = (Button) deletedialog.findViewById(R.id.btn_send_firebase);
         Button btn_send_test = (Button) deletedialog.findViewById(R.id.btn_send_test);
+        Button btn_change_name = (Button) deletedialog.findViewById(R.id.change_name_btn);
         btn_send_test.setVisibility(View.GONE);
         Button deletebtn = (Button) deletedialog.findViewById(R.id.deletebtn);
         Button deletecanclebtn = (Button) deletedialog.findViewById(R.id.deletecanclebtn);
@@ -783,12 +790,30 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
         btn_send_firebase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue + ext);
-                Uri fileuri = Uri.fromFile(deletefile);
-                Log.e("파일패스에서 얻어지는 uri   ", "" + fileuri);
-                uploadfile(filenamevalue, fileuri);
+
+                if (line.equals("1")) {
+                    File deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue + ext);
+                    Uri fileuri = Uri.fromFile(deletefile);
+                    Log.e("파일패스에서 얻어지는 uri   ", "" + fileuri);
+                    uploadfile(filenamevalue, fileuri);
+                }else {
+                    Toast.makeText(getApplicationContext(), "인터넷에 로그인 되어있지 않습니다.\n다시 로그인 하여 주세요", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         }); //파이어베이스 업로드 끝
+
+        //이름바꾸기
+        btn_change_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                deletedialog_changename(filenamevalue);
+
+
+            }
+        });
 /*
 //영어발음평가 전송
         btn_send_test.setOnClickListener(new View.OnClickListener() {

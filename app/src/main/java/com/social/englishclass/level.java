@@ -88,7 +88,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
     private File beforeFileName, afterFileName, changeFileName;
     private Long duration;
     public static Dialog recordlistdialog, deletedialog;
-    private String folder, fname, login_name, token, login_school, filepath;
+    private String folder, fname, login_name, token, login_school, filepath, line;
     private AudioAdapter mAdapter, recordAdapter, serchAdapter;
     public String serchfilename, ext;
     public static String  level_text;
@@ -112,6 +112,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         lesson = intent.getStringExtra("lesson");
         lesson_type = intent.getStringExtra("lesson_type");
         level_text = intent.getStringExtra("level_text");
+        line = intent.getStringExtra("line");
 //뷰매칭
         TextView level_title = (TextView)findViewById(R.id.level_text);
         level_title.setText(level_text);
@@ -352,11 +353,16 @@ public class level extends AppCompatActivity implements View.OnClickListener {
   */
 
 // 녹음서버 목록 보여주는 엑티비티 띄우기
-                Intent intent = new Intent(this, recordserver.class);
-                intent.putExtra("login_school", login_school);
-                intent.putExtra("login_name", login_name);
-                startActivity(intent);
-                finish();
+                if (line.equals("1")) {
+                    Intent intent = new Intent(this, recordserver.class);
+                    intent.putExtra("login_school", login_school);
+                    intent.putExtra("login_name", login_name);
+                    startActivity(intent);
+//                    finish();
+                }else {
+                    Toast.makeText(getApplicationContext(), "인터넷에 로그인 되어있지 않습니다.\n다시 로그인 하여 주세요", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
 
             case R.id.dictionary_btn:
@@ -696,6 +702,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                 deletedialog_changename.dismiss();
                 deletedialog.dismiss();
                 deletedialog(changeFileName.getName().toString().substring(0, changeFileName.getName().toString().lastIndexOf(".")), Uri.parse(changeFileName.getPath()));
+
             }
         }); //ok버튼 끝
 
@@ -900,20 +907,40 @@ public class level extends AppCompatActivity implements View.OnClickListener {
 //        folder = "/storage/emulated/0/englishclass/record";
         Button btn_send_firebase = (Button) deletedialog.findViewById(R.id.btn_send_firebase);
         Button btn_send_test = (Button) deletedialog.findViewById(R.id.btn_send_test);
+        Button btn_change_name = (Button) deletedialog.findViewById(R.id.change_name_btn);
         btn_send_test.setVisibility(View.GONE);
         Button deletebtn = (Button) deletedialog.findViewById(R.id.deletebtn);
         Button deletecanclebtn = (Button) deletedialog.findViewById(R.id.deletecanclebtn);
         Log.e("지워질 파일이름   ", filenamevalue);
+        Log.e("레벨 액티비티의 딜리트 다이얼로그", "실행됨");
 //파이어베이스 업로드
         btn_send_firebase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue + ext);
-                Uri fileuri = Uri.fromFile(deletefile);
-                Log.e("파일패스에서 얻어지는 uri   ", "" + fileuri);
-                uploadfile(filenamevalue, fileuri);
+
+                if (line.equals("1")) {
+                    File deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue + ext);
+                    Uri fileuri = Uri.fromFile(deletefile);
+                    Log.e("파일패스에서 얻어지는 uri   ", "" + fileuri);
+                    uploadfile(filenamevalue, fileuri);
+                }else {
+                    Toast.makeText(getApplicationContext(), "인터넷에 로그인 되어있지 않습니다.\n다시 로그인 하여 주세요", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         }); //파이어베이스 업로드 끝
+
+        //이름바꾸기
+        btn_change_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                deletedialog_changename(filenamevalue);
+
+
+            }
+        });
 /*
 //영어발음평가 전송
         btn_send_test.setOnClickListener(new View.OnClickListener() {
@@ -1067,6 +1094,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         AudioApplication.getInstance().getServiceInterface().stop();
         AudioApplication.getInstance().getServiceInterface().recrecordstop();
         AudioApplication.getInstance().getServiceInterface().clearPlayList();
+
         finish();
 
     }

@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
@@ -62,7 +63,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
 
     private Intent intent;
     private Dialog lesson_dialog, level_dialog, listenandrepeat_dialog, letsread_dialog, readandtalk_dialog;
-    public static String lesson, lesson_type;
+    public static String lesson, lesson_type, line;
     private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server, dictionary_btn, extrawork_btn;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
@@ -97,14 +98,25 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         Intent login_intent = getIntent();
         login_school = login_intent.getStringExtra("login_school");
         login_name = login_intent.getStringExtra("login_name");
+        Log.e("인텐트 로그인네임 값", "" + login_name);
         login_number = login_intent.getStringExtra("login_number");
         token = login_intent.getStringExtra("token");
+        line = login_intent.getStringExtra("line");
+        Log.e("인텐트 라인 값", "" + line);
 
-        Button teacher_btn =(Button)findViewById(R.id.teacher_btn);
-        if(!login_name.contains("teacher") || !login_name.contains("60830") ){
-            teacher_btn.setVisibility(View.GONE);
+        ImageButton teacher_btn = (ImageButton) findViewById(R.id.teacher_btn);
+        if (login_name.contains("teacher") || login_name.contains("60830")) {
+        } else {
+            teacher_btn.setVisibility(View.INVISIBLE);
         }
-
+        TextView login_info = (TextView) findViewById(R.id.login_info);
+        if (line.equals("1")) {
+            login_info.setText(login_name + " (On Line)");
+            login_info.setTextColor(Color.parseColor("green"));
+        } else {
+            login_info.setText(login_name + " (Off Line)");
+            login_info.setTextColor(Color.parseColor("red"));
+        }
         //녹음버튼 관련
         startbtn = (ImageButton) findViewById(R.id.btnRecord);
         stopbtn = (ImageButton) findViewById(R.id.btnStop);
@@ -337,6 +349,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
+                        intent.putExtra("line", line);
                         startActivity(intent);
                         readandtalk_dialog.dismiss();
                         break;
@@ -350,7 +363,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         lesson_type = "rt2";
                         intent.putExtra("lesson_type", lesson_type);
-
+                        intent.putExtra("line", line);
                         startActivity(intent);
                         readandtalk_dialog.dismiss();
                         break;
@@ -363,7 +376,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         lesson_type = "rt3";
                         intent.putExtra("lesson_type", lesson_type);
-
+                        intent.putExtra("line", line);
                         startActivity(intent);
                         readandtalk_dialog.dismiss();
                         break;
@@ -402,6 +415,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
+                        intent.putExtra("line", line);
                         startActivity(intent);
 
                         letsread_dialog.dismiss();
@@ -413,6 +427,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", "let_lv2");
+                        intent.putExtra("line", line);
                         startActivity(intent);
                         letsread_dialog.dismiss();
                         break;
@@ -423,6 +438,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", "let_lv2");
+                        intent.putExtra("line", line);
                         startActivity(intent);
                         letsread_dialog.dismiss();
                         break;
@@ -467,6 +483,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
                         intent.putExtra("level_text", level_num);
+                        intent.putExtra("line", line);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -479,6 +496,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
                         intent.putExtra("level_text", level_num);
+                        intent.putExtra("line", line);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -491,6 +509,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
                         intent.putExtra("level_text", level_num);
+                        intent.putExtra("line", line);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -503,6 +522,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
                         intent.putExtra("level_text", level_num);
+                        intent.putExtra("line", line);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
                         level_dialog.dismiss();
@@ -722,13 +742,15 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                 thread.start();
 */
 
-
+                if (line.equals("1")) {
 // 녹음서버 목록 보여주는 엑티비티 띄우기
-                Intent intent = new Intent(this, recordserver.class);
-                intent.putExtra("login_school", login_school);
-                intent.putExtra("login_name", login_name);
-                startActivity(intent);
-
+                    Intent intent = new Intent(this, recordserver.class);
+                    intent.putExtra("login_school", login_school);
+                    intent.putExtra("login_name", login_name);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(getApplicationContext(), "인터넷에 로그인 되어있지 않습니다.\n다시 로그인 하여 주세요", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case R.id.dictionary_btn:
@@ -892,7 +914,8 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
                 try {
                     AudioApplication.getInstance().getServiceInterface().recordstopplay();
-                }catch (Exception e){}
+                } catch (Exception e) {
+                }
 
                 recordname_sub.dismiss();
             }
@@ -976,7 +999,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
 
                     getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
                     try {
-                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/englishclass/record/" +afterFileName.getName() )));
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/englishclass/record/" + afterFileName.getName())));
 
                     } catch (Exception e) {
                         Log.e("브로드캐스트 저장소 갱신", "오류", e);
@@ -1001,6 +1024,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         }); //취소버튼 끝
         recordname_sub_changename.show();
     }
+
     public void deletedialog_changename(String filename) {
 
         //다이얼로그생성
@@ -1048,14 +1072,14 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                     values.put(MediaStore.Audio.Media.DISPLAY_NAME, rec.getName());
                     values.put(MediaStore.Audio.Media.TITLE, FileName + "_" + time);
                     values.put(MediaStore.Audio.Media.DURATION, duration);
-                    Log.e("녹음 중지 시 저장되는 이름   ",changeFileName.getName());
+                    Log.e("녹음 중지 시 저장되는 이름   ", changeFileName.getName());
                     values.put(MediaStore.Audio.Media.DATA, rec.getPath());
                     Log.e("녹음 중지 시 저장되는 경로   ", changeFileName.getPath());
                     values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/*");
 
                     getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
                     try {
-                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/englishclass/record/" +preFileName.getName() )));
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/englishclass/record/" + preFileName.getName())));
 
                     } catch (Exception e) {
                         Log.e("브로드캐스트 저장소 갱신", "오류", e);
@@ -1063,7 +1087,6 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                 }
 
                 Toast.makeText(getApplicationContext(), "이름이 변경되었습니다." + changeFileName.getName(), Toast.LENGTH_SHORT).show();
-
 
 
                 deletedialog_changename.dismiss();
@@ -1081,6 +1104,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         }); //취소버튼 끝
         deletedialog_changename.show();
     }
+
     public void metadata(String filePath) {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(filePath);
@@ -1279,14 +1303,23 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         Button deletebtn = (Button) deletedialog.findViewById(R.id.deletebtn);
         Button deletecanclebtn = (Button) deletedialog.findViewById(R.id.deletecanclebtn);
         Log.e("지워질 파일이름   ", filenamevalue);
+        Log.e("딜리트 다이얼로그 실행됨   ", "딜리트");
 //파이어베이스 업로드
         btn_send_firebase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue + ext);
-                Uri fileuri = Uri.fromFile(deletefile);
-                Log.e("파일패스에서 얻어지는 uri   ", "" + fileuri);
-                uploadfile(filenamevalue, fileuri);
+
+                if (line.equals("1")) {
+                    File deletefile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/record", filenamevalue + ext);
+                    Uri fileuri = Uri.fromFile(deletefile);
+                    Log.e("파일패스에서 얻어지는 uri   ", "" + fileuri);
+                    uploadfile(filenamevalue, fileuri);
+                }else {
+                    Toast.makeText(getApplicationContext(), "인터넷에 로그인 되어있지 않습니다.\n다시 로그인 하여 주세요", Toast.LENGTH_SHORT).show();
+                }
+
+
+
             }
         }); //파이어베이스 업로드 끝
 //이름바꾸기
@@ -1345,6 +1378,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
 
 
         deletedialog.show();
+
     }
 
     //파이어베이스 업로드
@@ -1372,7 +1406,8 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                             progressDialog.dismiss();
                             try {
                                 deletedialog.dismiss();
-                            }catch (Exception e){}
+                            } catch (Exception e) {
+                            }
 
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                         }
@@ -1447,6 +1482,13 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         AudioApplication.getInstance().getServiceInterface().clearPlayList();
         finish();
 
+    }
+    @Override
+    protected void onResume() {
+try {
+    deletedialog.dismiss();
+}catch (Exception e){}
+        super.onResume();
     }
 }
 

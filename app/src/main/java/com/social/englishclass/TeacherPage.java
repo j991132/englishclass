@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TeacherPage extends AppCompatActivity implements View.OnClickListener{
+public class TeacherPage extends AppCompatActivity implements View.OnClickListener {
 
     private RecyclerView mRecyclerView;
     private TeacherPageAdapter mAdapter;
@@ -38,7 +38,7 @@ public class TeacherPage extends AppCompatActivity implements View.OnClickListen
     private List mUsers;
     private ImageButton search_loginid_btn;
     private EditText search_loginid_text;
-    public static String login_name, login_school;
+    public static String login_name, login_school, search;
     String filename;
     private ProgressDialog progressDialog;
 
@@ -51,11 +51,11 @@ public class TeacherPage extends AppCompatActivity implements View.OnClickListen
         login_school = intent.getStringExtra("login_school");
         login_name = intent.getStringExtra("login_name");
 
-        search_loginid_btn = (ImageButton)findViewById(R.id.search_loginid_btn);
+        search_loginid_btn = (ImageButton) findViewById(R.id.search_loginid_btn);
         search_loginid_btn.setOnClickListener(this);
-        search_loginid_text = (EditText)findViewById(R.id.search_loginid_text);
+        search_loginid_text = (EditText) findViewById(R.id.search_loginid_text);
         mRecyclerView = (RecyclerView) findViewById(R.id.teacherpage_recyclerview);
-        GridLayoutManager layoutManager = new GridLayoutManager(this,3);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         mRecyclerView.setLayoutManager(layoutManager);
 
         progressDialog = new ProgressDialog(TeacherPage.this);
@@ -64,8 +64,59 @@ public class TeacherPage extends AppCompatActivity implements View.OnClickListen
         mUsers = new ArrayList<>();
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("users");
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+        load_login_list();
 
+
+    }//온크리에이트 끝
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.search_loginid_btn:
+                search = search_loginid_text.getText().toString();
+                if(search.equals("")){
+                    load_login_list();
+                }else {
+                    search_server();
+                }
+                break;
+        }
+    }
+
+    //해당 차일드의 스트링값을 모두 가져와서 포함된 것만 검색
+    private void search_server(){
+        mUsers.clear();
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Boolean found;
+
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    String searchname = ds.getKey();
+                    found = searchname.contains(search);
+                    Log.e("검색어 포함 결과", searchname+"/"+found);
+
+                    if(found){
+
+                        mUsers.add(ds.getKey());
+
+                    }
+                }
+//                mAdapter = new recordserverAdapter(recordserver.this, mUploads);
+
+                mRecyclerView.setAdapter(mAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        mDatabaseRef.addListenerForSingleValueEvent(eventListener);
+    }
+
+    private void load_login_list(){
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
 
 
             @Override
@@ -76,7 +127,7 @@ public class TeacherPage extends AppCompatActivity implements View.OnClickListen
 
 
                     mUsers.add(postSnapshot.getKey());
-                 Log.e("mUsers 에 추가됨 ", " "+postSnapshot.getKey());
+                    Log.e("mUsers 에 추가됨 ", " " + postSnapshot.getKey());
                 }
 
 
@@ -86,7 +137,8 @@ public class TeacherPage extends AppCompatActivity implements View.OnClickListen
 
                 try {
                     progressDialog.dismiss();
-                }catch (Exception e){}
+                } catch (Exception e) {
+                }
 
             }
 
@@ -98,12 +150,12 @@ public class TeacherPage extends AppCompatActivity implements View.OnClickListen
 
 
         });
-
-
-    }//온크리에이트 끝
-
+    }
     @Override
-    public void onClick(View view) {
+    protected void onDestroy () {
+        super.onDestroy();
+        progressDialog = null;
+        finish();
 
     }
 }

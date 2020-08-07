@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent.putExtra("login_name", schoolID + userdata.userID);
                                 intent.putExtra("login_number", userdata.userID);
                                 intent.putExtra("token", userdata.fcmToken);
+                                intent.putExtra("line", "1");
                                 startActivity(intent);
                                 finish();
                             } else {
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent.putExtra("login_school", schoolID);
                                 intent.putExtra("login_name", schoolID + userdata.userID);
                                 intent.putExtra("token", userdata.fcmToken);
+                                intent.putExtra("line", "2");
                                 startActivity(intent);
                                 finish();
                             }
