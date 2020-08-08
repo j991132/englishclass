@@ -73,7 +73,7 @@ public class TeacherPage extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.search_loginid_btn:
-                search = search_loginid_text.getText().toString();
+                search = search_loginid_text.getText().toString().trim();
                 if(search.equals("")){
                     load_login_list();
                 }else {

@@ -48,17 +48,22 @@ public class Chart extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Boolean found;
                 mumd_test.clear();
-//                int i =0;
+                int i =0;
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     String searchname = postSnapshot.getKey();
                     found = searchname.contains(login_id);
 
                     if(found){
-                        umd_test umdTest = postSnapshot.getValue(umd_test.class);
-                        mumd_test.add(umdTest);
-                        umd_test umd_data = mumd_test.get(0);
+//                        String key = postSnapshot.get.toString();
+//umd_test의 해당파일명 아래의 자동생성키 목록 아래의 4종류 평가 값을 담는다.
+                        umd_test key =postSnapshot.getChildren().iterator().next().getValue(umd_test.class);
+//                        String key = mDatabaseRef.child(searchname).push().getKey();
+                        Log.e("자동생성 키", ""+key.getaccent()+key.getpronunciation()+key.getspeed()+key.getstress());
+//                        umd_test umdTest = postSnapshot.getValue(umd_test.class);
+                        mumd_test.add(key);
+                        umd_test umd_data = mumd_test.get(i);
                         Log.e("mumd_test 에 추가됨 ", "searchname"+searchname+"  값 "+umd_data.getaccent());
-
+                        i++;
                     }
 
 
