@@ -85,37 +85,49 @@ public class Chart extends AppCompatActivity {
 
                     switch (v.getId()) {
                         case R.id.radio_all_btn:
-
+                            entry_chart_accent.addAll(entry_chart_accent_delete);
+                            entry_chart_pronunciation.addAll(entry_chart_pronunciation_delete);
+                         entry_chart_speed.addAll(entry_chart_speed_delete);
+                         entry_chart_stress.addAll(entry_chart_stress_delete);
+                            lineChart.invalidate();
                             break;
                         case R.id.radio_accent_btn:
 
-
+                            entry_chart_accent.addAll(entry_chart_accent_delete);
                             entry_chart_pronunciation.clear();
                             entry_chart_speed.clear();
                             entry_chart_stress.clear();
                             lineChart.invalidate();
-                        entry_chart_pronunciation = entry_chart_pronunciation_delete;
-                         entry_chart_speed = entry_chart_speed_delete;
-                         entry_chart_stress = entry_chart_stress_delete;
+//                        entry_chart_pronunciation.addAll(entry_chart_pronunciation_delete);
+//                         entry_chart_speed.addAll(entry_chart_speed_delete);
+//                         entry_chart_stress.addAll(entry_chart_stress_delete);
 
 
                             break;
                         case R.id.radio_pronunciation_btn:
-
+                            entry_chart_pronunciation.addAll(entry_chart_pronunciation_delete);
                             entry_chart_accent.clear();
                             entry_chart_speed.clear();
                             entry_chart_stress.clear();
                             lineChart.invalidate();
-                            entry_chart_accent = entry_chart_accent_delete;
-                            entry_chart_speed = entry_chart_speed_delete;
-                            entry_chart_stress = entry_chart_stress_delete;
+//                            entry_chart_accent.addAll(entry_chart_accent_delete);
+//                            entry_chart_speed.addAll(entry_chart_speed_delete);
+//                            entry_chart_stress.addAll(entry_chart_stress_delete);
 
                             break;
                         case R.id.radio_speed_btn:
-
+                            entry_chart_speed.addAll(entry_chart_speed_delete);
+                            entry_chart_accent.clear();
+                            entry_chart_pronunciation.clear();
+                            entry_chart_stress.clear();
+                            lineChart.invalidate();
                             break;
                         case R.id.radio_stress_btn:
-
+                            entry_chart_stress.addAll(entry_chart_stress_delete);
+                            entry_chart_accent.clear();
+                            entry_chart_pronunciation.clear();
+                            entry_chart_speed.clear();
+                            lineChart.invalidate();
                             break;
                     }
                 }
@@ -285,10 +297,10 @@ public void chartdata_load(){
 
 //                    i++;
             }
-            entry_chart_accent_delete = entry_chart_accent;
-            entry_chart_pronunciation_delete = entry_chart_pronunciation;
-            entry_chart_speed_delete = entry_chart_speed;
-            entry_chart_stress_delete = entry_chart_stress;
+            entry_chart_accent_delete.addAll(entry_chart_accent);
+            entry_chart_pronunciation_delete.addAll(entry_chart_pronunciation);
+            entry_chart_speed_delete.addAll(entry_chart_speed);
+            entry_chart_stress_delete.addAll(entry_chart_stress);
 //x축 설정
 
 
