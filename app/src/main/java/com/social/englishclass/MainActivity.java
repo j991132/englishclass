@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
                         howtouse_next_btn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (howtopagenum == 8) {
+                                if (howtopagenum == 9) {
                                     Toast.makeText(getApplicationContext(), "사용 방법 마지막 화면 입니다.", Toast.LENGTH_LONG).show();
                                 } else {
                                     howtopagenum = howtopagenum + 1;
