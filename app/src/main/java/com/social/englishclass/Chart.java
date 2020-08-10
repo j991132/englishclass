@@ -30,8 +30,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Chart extends AppCompatActivity {
@@ -303,9 +305,11 @@ public void chartdata_load(){
             entry_chart_stress_delete.addAll(entry_chart_stress);
 //x축 설정
 
-
+//            Collections.sort(list_x_axis_name);
             x_name = new String[list_x_axis_name.size()];
             x_name = list_x_axis_name.toArray(x_name);
+
+            Log.e("x축 네임", ""+ x_name.toString());
 
             XAxis xAxis=lineChart.getXAxis();
             xAxis.setGranularity(1f);
@@ -415,4 +419,6 @@ public void speed_chart(){
         lineDataSet_stress.setColor(Color.parseColor("#FFB400")); // LineChart에서 Line Color 설정
         chartData.addDataSet(lineDataSet_stress);
     }
+
+
 }

@@ -345,10 +345,11 @@ if(recordserverAdapter.reset ){
                         Upload upload = postSnapshot.getValue(Upload.class);
                         mUploads.add(upload);
  //                       Log.e("mUPloads 에 추가됨 ", " "+mUploads);
-//시간역순 정렬
-                        Collections.sort(mUploads, sortByTotalCall);
+
 
                     }
+                    //시간역순 정렬
+                    Collections.sort(mUploads, sortByTotalCall);
  /*
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
