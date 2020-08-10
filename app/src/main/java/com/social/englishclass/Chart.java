@@ -41,6 +41,7 @@ public class Chart extends AppCompatActivity {
     private String login_id;
     private DatabaseReference mDatabaseRef;
     private List<umd_test> mumd_test;
+    private chartdata[] mchartdata;
     private ProgressDialog progressDialog;
     private LineChart lineChart;
     private List<String> list_x_axis_name;
@@ -146,6 +147,7 @@ public class Chart extends AppCompatActivity {
 
 
         mumd_test = new ArrayList<>();
+//        mchartdata = new ArrayList<>();
         list_x_axis_name = new ArrayList<String>();
 
         lineChart = (LineChart) findViewById(R.id.chart);   //layout의 id
@@ -159,13 +161,14 @@ public class Chart extends AppCompatActivity {
 
     }
 public void chartdata_load(){
-    mDatabaseRef.addValueEventListener(new ValueEventListener() {
+    mDatabaseRef.orderByKey().addValueEventListener(new ValueEventListener() {
 
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             Boolean found;
             mumd_test.clear();
+            mchartdata = new chartdata[20];
             int i =0;
             float accent_y=0;
             float pronunciation_y=0;
@@ -184,6 +187,8 @@ public void chartdata_load(){
                     Log.e("자동생성 키", ""+key.getaccent()+key.getpronunciation()+key.getspeed()+key.getstress());
 //                        umd_test umdTest = postSnapshot.getValue(umd_test.class);
                     mumd_test.add(key);
+                    mchartdata[i] = new chartdata(key.getstress(),key.getaccent(),key.getspeed(),key.getpronunciation(),searchname.substring(searchname.lastIndexOf("_")+1));
+//                    mchartdata.add(key.getstress(),key.getaccent(),key.getspeed(),key.getpronunciation(),searchname);
                     umd_test umd_data = mumd_test.get(i);
                     Log.e("mumd_test 에 추가됨 ", "searchname"+searchname+"  값 "+umd_data.getaccent());
                     list_x_axis_name.add(searchname.substring(searchname.lastIndexOf("_")+1));
