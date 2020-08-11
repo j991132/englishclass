@@ -76,9 +76,10 @@ public class Chart extends AppCompatActivity {
         progressDialog.show();
 
         TextView chart_title = (TextView)findViewById(R.id.chart_title);
-        chart_title.setText(login_id+" 's Chart");
+
 
         RadioButton radio_all_btn = (RadioButton)findViewById(R.id.radio_all_btn);
+        radio_all_btn.isSelected();
         RadioButton radio_accent_btn = (RadioButton)findViewById(R.id.radio_accent_btn);
         RadioButton radio_pronunciation_btn = (RadioButton)findViewById(R.id.radio_pronunciation_btn);
         RadioButton radio_speed_btn = (RadioButton)findViewById(R.id.radio_speed_btn);
@@ -192,9 +193,9 @@ public void chartdata_load(){
                     Log.e("자동생성 키", ""+key.getaccent()+key.getpronunciation()+key.getspeed()+key.getstress());
 //                        umd_test umdTest = postSnapshot.getValue(umd_test.class);
                     mumd_test.add(key);
-                    umd_chart.add(u_key);
+//                    umd_chart.add(u_key);
 
-                    mchartdata[i] = new chartdata(key.getstress(),key.getaccent(),key.getspeed(),key.getpronunciation(),searchname.substring(searchname.lastIndexOf("_")+1));
+//                    mchartdata[i] = new chartdata(key.getstress(),key.getaccent(),key.getspeed(),key.getpronunciation(),searchname.substring(searchname.lastIndexOf("_")+1));
 //                    mchartdata.add(key.getstress(),key.getaccent(),key.getspeed(),key.getpronunciation(),searchname);
                     umd_test umd_data = mumd_test.get(i);
                     Log.e("mumd_test 에 추가됨 ", "searchname"+searchname+"  값 "+umd_data.getaccent());
@@ -320,11 +321,11 @@ public void chartdata_load(){
 //            Arrays.sort(mchartdata);
 
 
-                  for (int j=0; j<i;j++) {
+//                  for (int j=0; j<i;j++) {
 
-                      chartdata umd_chart_data = mchartdata[j];
-                      Log.e("합쳐진 umd_chart 배열",""+ umd_chart_data.getfilename()+umd_chart_data.getaccent());
-                }
+//                      chartdata umd_chart_data = mchartdata[j];
+//                      Log.e("합쳐진 umd_chart 배열",""+ umd_chart_data.getfilename()+umd_chart_data.getaccent());
+//                }
 
 
 
@@ -333,8 +334,8 @@ public void chartdata_load(){
             entry_chart_speed_delete.addAll(entry_chart_speed);
             entry_chart_stress_delete.addAll(entry_chart_stress);
 //x축 설정
-
-//            Collections.sort(list_x_axis_name);
+//x축 이름 정렬
+            Collections.sort(list_x_axis_name);
             x_name = new String[list_x_axis_name.size()];
             x_name = list_x_axis_name.toArray(x_name);
 
