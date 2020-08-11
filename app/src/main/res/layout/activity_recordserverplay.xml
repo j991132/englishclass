@@ -223,7 +223,7 @@
                         android:shadowDx="5.0"
                         android:shadowDy="5.0"
                         android:shadowRadius="5.0"
-                        android:text="강        세"
+                        android:text="강       세"
                         android:textColor="#FC1717"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -280,7 +280,7 @@
                         android:shadowRadius="5.0"
                         android:text="머뭇거림"
                         android:textColor="#C529FC"
-                        android:textSize="16.5sp"
+                        android:textSize="16.3sp"
                         android:textStyle="bold" />
 
                     <TextView

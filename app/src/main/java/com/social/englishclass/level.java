@@ -1020,8 +1020,13 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(FileName).setValue(upload);
                             progressDialog.dismiss();
-                            deletedialog.dismiss();
+                            try {
+                                deletedialog.dismiss();
+                            } catch (Exception e) {
+                            }
+
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

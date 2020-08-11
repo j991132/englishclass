@@ -792,7 +792,7 @@ public void play(float a) {
     @Override
     protected void onPause() {
 
-        finish();
+//        finish();
         super.onPause();
     }
     @Override
