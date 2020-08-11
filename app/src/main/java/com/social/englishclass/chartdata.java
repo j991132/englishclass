@@ -1,6 +1,8 @@
 package com.social.englishclass;
 
-public class chartdata {
+import android.util.Log;
+
+public class chartdata implements Comparable<chartdata>{
 
 
     private String stress;
@@ -59,4 +61,23 @@ public class chartdata {
     }
 
 
+    @Override
+    public int compareTo(chartdata chartdata) {
+        if (Integer.parseInt(this.filename.substring(0,4)+this.filename.substring(6,8)+this.filename.substring(10,12)) < Integer.parseInt(chartdata.filename.substring(0,4)+chartdata.filename.substring(6,8)+chartdata.filename.substring(10,12))) {
+            Log.e("파일명 인트화",""+ this.filename.substring(0,4)+this.filename.substring(6,8)+this.filename.substring(10,12));
+            return -1;
+
+        } else if (Integer.parseInt(this.filename.substring(0,4)+this.filename.substring(6,8)+this.filename.substring(10,12)) == Integer.parseInt(chartdata.filename.substring(0,4)+chartdata.filename.substring(6,8)+chartdata.filename.substring(10,12))) {
+
+            return 0;
+
+        } else {
+
+            return 1;
+
+
+
+
+    }
+}
 }

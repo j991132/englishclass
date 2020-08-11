@@ -105,10 +105,10 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         Log.e("인텐트 라인 값", "" + line);
 
         ImageButton teacher_btn = (ImageButton) findViewById(R.id.teacher_btn);
-        if (login_name.contains("teacher") || login_name.contains("60830")) {
-        } else {
-            teacher_btn.setVisibility(View.INVISIBLE);
-        }
+//        if (login_name.contains("teacher") || login_name.contains("60830")) {
+//        } else {
+//            teacher_btn.setVisibility(View.INVISIBLE);
+//        }
         TextView login_info = (TextView) findViewById(R.id.login_info);
         if (line.equals("1")) {
             login_info.setText(login_name + " (On Line)");

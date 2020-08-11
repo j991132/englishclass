@@ -30,8 +30,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -42,6 +44,7 @@ public class Chart extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private List<umd_test> mumd_test;
     private chartdata[] mchartdata;
+    private List<chartdata> umd_chart;
     private ProgressDialog progressDialog;
     private LineChart lineChart;
     private List<String> list_x_axis_name;
@@ -147,7 +150,7 @@ public class Chart extends AppCompatActivity {
 
 
         mumd_test = new ArrayList<>();
-//        mchartdata = new ArrayList<>();
+        umd_chart = new ArrayList<>();
         list_x_axis_name = new ArrayList<String>();
 
         lineChart = (LineChart) findViewById(R.id.chart);   //layout의 id
@@ -168,6 +171,7 @@ public void chartdata_load(){
         public void onDataChange(DataSnapshot dataSnapshot) {
             Boolean found;
             mumd_test.clear();
+            umd_chart.clear();
             mchartdata = new chartdata[20];
             int i =0;
             float accent_y=0;
@@ -183,15 +187,21 @@ public void chartdata_load(){
 //                        String key = postSnapshot.get.toString();
 //umd_test의 해당파일명 아래의 자동생성키 목록 아래의 4종류 평가 값을 담는다.
                     umd_test key =postSnapshot.getChildren().iterator().next().getValue(umd_test.class);
+                    chartdata u_key = postSnapshot.getChildren().iterator().next().getValue(chartdata.class);
 //                        String key = mDatabaseRef.child(searchname).push().getKey();
                     Log.e("자동생성 키", ""+key.getaccent()+key.getpronunciation()+key.getspeed()+key.getstress());
 //                        umd_test umdTest = postSnapshot.getValue(umd_test.class);
                     mumd_test.add(key);
+                    umd_chart.add(u_key);
+
                     mchartdata[i] = new chartdata(key.getstress(),key.getaccent(),key.getspeed(),key.getpronunciation(),searchname.substring(searchname.lastIndexOf("_")+1));
 //                    mchartdata.add(key.getstress(),key.getaccent(),key.getspeed(),key.getpronunciation(),searchname);
                     umd_test umd_data = mumd_test.get(i);
                     Log.e("mumd_test 에 추가됨 ", "searchname"+searchname+"  값 "+umd_data.getaccent());
                     list_x_axis_name.add(searchname.substring(searchname.lastIndexOf("_")+1));
+//                    System.arraycopy(list_x_axis_name,0,umd_chart,umd_chart.size(),list_x_axis_name.size());
+
+
                     if(umd_data.getaccent() !=null) {
                         switch (umd_data.getaccent()) {
                             case "상":
@@ -218,6 +228,9 @@ public void chartdata_load(){
                         }
                     }
                     entry_chart_accent.add(new Entry(i, accent_y));
+//                    String file = searchname.substring(searchname.lastIndexOf("_")+1);
+//                    entry_chart_accent.add(new Entry(Integer.parseInt(file.substring(2,4)+file.substring(6,8)+file.substring(10,12)), accent_y));
+                    Log.e("엔트리 차트 악센트 배열",""+entry_chart_accent);
                     if(umd_data.getpronunciation() !=null) {
                         switch (umd_data.getpronunciation()) {
                             case "상":
@@ -304,6 +317,17 @@ public void chartdata_load(){
 
 //                    i++;
             }
+//            Arrays.sort(mchartdata);
+
+
+                  for (int j=0; j<i;j++) {
+
+                      chartdata umd_chart_data = mchartdata[j];
+                      Log.e("합쳐진 umd_chart 배열",""+ umd_chart_data.getfilename()+umd_chart_data.getaccent());
+                }
+
+
+
             entry_chart_accent_delete.addAll(entry_chart_accent);
             entry_chart_pronunciation_delete.addAll(entry_chart_pronunciation);
             entry_chart_speed_delete.addAll(entry_chart_speed);
@@ -424,6 +448,14 @@ public void speed_chart(){
         lineDataSet_stress.setColor(Color.parseColor("#FFB400")); // LineChart에서 Line Color 설정
         chartData.addDataSet(lineDataSet_stress);
     }
+    private final static Comparator<chartdata> sortByfilename= new Comparator<chartdata>() {
 
+
+        @Override
+        public int compare(chartdata object1, chartdata object2) {
+            return Collator.getInstance().compare(object1.getfilename(), object2.getfilename());
+        }
+
+    };
 
 }
