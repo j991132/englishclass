@@ -70,7 +70,6 @@ public class Chart extends AppCompatActivity {
 
         Intent intent = getIntent();
         login_id = intent.getStringExtra("login_id");
-
         progressDialog = new ProgressDialog(Chart.this);
         progressDialog.setMessage("서버에서 평가목록을 불러오는 중입니다...\n잠시만 기다려주세요");
         progressDialog.show();
