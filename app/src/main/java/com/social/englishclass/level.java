@@ -91,7 +91,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
     private String folder, fname, login_name, token, login_school, filepath, line;
     private AudioAdapter mAdapter, recordAdapter, serchAdapter;
     public String serchfilename, ext;
-    public static String  level_text;
+    public static String  level_text, login_number;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
@@ -113,6 +113,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         lesson_type = intent.getStringExtra("lesson_type");
         level_text = intent.getStringExtra("level_text");
         line = intent.getStringExtra("line");
+        login_number = intent.getStringExtra("login_number");
 //뷰매칭
         TextView level_title = (TextView)findViewById(R.id.level_text);
         level_title.setText(level_text);
@@ -1020,6 +1021,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(FileName).setValue(upload);
                             progressDialog.dismiss();
+//녹음 오류시 예외처리
                             try {
                                 deletedialog.dismiss();
                             } catch (Exception e) {
