@@ -238,7 +238,12 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         lesson = "12";
                         break;
                     case R.id.teacher_btn:
-                        intent = new Intent(SelectLesson.this, TeacherPage.class);
+                        if(login_name.contains("teacher") || login_name.contains("박준원") ) {
+                            intent = new Intent(SelectLesson.this, TeacherPage.class);
+                        }else{
+                            intent = new Intent(SelectLesson.this, Chart.class);
+                            intent.putExtra("login_id", login_name);
+                        }
                         startActivity(intent);
                         break;
                 }
