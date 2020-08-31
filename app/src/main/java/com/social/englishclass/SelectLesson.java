@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.signature.StringSignature;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -104,7 +106,12 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
         line = login_intent.getStringExtra("line");
         Log.e("인텐트 라인 값", "" + line);
 
+//성장그래프 버튼
         ImageButton teacher_btn = (ImageButton) findViewById(R.id.teacher_btn);
+        GlideDrawableImageViewTarget gifImage1 = new GlideDrawableImageViewTarget(teacher_btn);
+        Glide.clear(teacher_btn);
+        Glide.with(this).load(R.drawable.charticon).signature(new StringSignature(UUID.randomUUID().toString())).into(gifImage1);
+
 //        if (login_name.contains("teacher") || login_name.contains("60830")) {
 //        } else {
 //            teacher_btn.setVisibility(View.INVISIBLE);
@@ -1482,7 +1489,8 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
 
     public void recording_btn() {
         GlideDrawableImageViewTarget gifImage = new GlideDrawableImageViewTarget(startbtn);
-        Glide.with(this).load(R.drawable.recording2).into(gifImage);
+        Glide.clear(startbtn);
+        Glide.with(this).load(R.drawable.recording2).signature(new StringSignature(UUID.randomUUID().toString())).into(gifImage);
     }
 
     @Override
