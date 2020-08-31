@@ -349,6 +349,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
+                        intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
                         readandtalk_dialog.dismiss();
@@ -415,6 +416,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
+                        intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
 
@@ -427,6 +429,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", "let_lv2");
+                        intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
                         letsread_dialog.dismiss();
@@ -438,6 +441,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("token", token);
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", "let_lv2");
+                        intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
                         letsread_dialog.dismiss();
@@ -483,6 +487,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
                         intent.putExtra("level_text", level_num);
+                        intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
@@ -496,6 +501,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
                         intent.putExtra("level_text", level_num);
+                        intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
@@ -509,6 +515,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
                         intent.putExtra("level_text", level_num);
+                        intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();
@@ -522,6 +529,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("lesson_type", lesson_type);
                         intent.putExtra("level_text", level_num);
+                        intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
 //                        lesson_dialog.dismiss();

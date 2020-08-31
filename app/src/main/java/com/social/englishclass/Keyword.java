@@ -88,8 +88,12 @@ public class Keyword extends AppCompatActivity {
         lesson = intent.getStringExtra("lesson");
         login_name = intent.getStringExtra("login_name");
         login_number = intent.getStringExtra("login_number");
-        String log_num = login_number.substring(0,5);
-        privite_number = Integer.parseInt(log_num);
+        if(!login_number.contains("teacher")) {
+            String log_num = login_number.substring(0, 5);
+            privite_number = Integer.parseInt(log_num);
+        }else{
+            privite_number = 60804;
+        }
 
 //        getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
         folder = "/storage/emulated/0/englishclass/lesson"+lesson+"keyword/sound";

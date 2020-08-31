@@ -78,8 +78,9 @@ public class LetsreadFragment extends Fragment {
         private PageViewModel pageViewModel;
         MediaPlayer mediaPlayer;
         public static String[] filepath = new String[30];
+    private String accessKey;
         private String filepath_sound, filepath_picture;
-        private static String lt, ln;
+        private static String lt, ln, log_n;
         private Button videostart_btn;
         private Spinner spinner;
         private ImageButton mBtnPlayPause, sendtest_btn;
@@ -101,11 +102,21 @@ public class LetsreadFragment extends Fragment {
         private  File imgFile;
     private SoundPool soundPool;
     int soundPlay1,soundPlay2,soundPlay3 ;
+    private static int  privite_number;
 
 
         public static LetsreadFragment newInstance(int index) {
             ln = SelectLesson.lesson;
             lt = SelectLesson.lesson_type;
+
+            log_n = level.login_number;
+            if(!log_n.contains("teacher")) {
+                String log_num = log_n.substring(0, 5);
+                privite_number = Integer.parseInt(log_num);
+            }else{
+                privite_number = 60804;
+            }
+
             LetsreadFragment fragment = new LetsreadFragment();
             Bundle bundle = new Bundle();
             bundle.putInt(ARG_SECTION_NUMBER, index);
@@ -503,7 +514,17 @@ public class LetsreadFragment extends Fragment {
         }
         public String sendDataAndGetResult () {
             String openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";
-            String accessKey = "68c063de-3739-4796-ba10-5c6c3152d760";
+//            String accessKey = "68c063de-3739-4796-ba10-5c6c3152d760";
+            if(privite_number%4 == 1) {
+                accessKey = "e91b9924-679e-49ca-9f90-71704d3ce8b0";
+            }else if(privite_number%4 == 2){
+                accessKey = "fcea3de7-d5d2-4441-8160-a46764c090ed";
+            }else if(privite_number%4 == 3){
+                accessKey = "0fe29a05-1d6a-4f79-b253-d24b673f6bc7";
+            }else {
+                accessKey = "68c063de-3739-4796-ba10-5c6c3152d760";
+            }
+            Log.e("서버키", ""+accessKey);
 //        String accessKey = editID.getText().toString().trim();
             String languageCode = "english";
             String audioContents;

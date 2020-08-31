@@ -80,7 +80,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
 
 
     private String current_lv;
-    public static String lesson_type, lesson;
+    public static String lesson_type, lesson, login_number;
     private ImageButton playbtn, stopplay, stopbtn, startbtn, btn_server, dictionary_btn, extrawork_btn;
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     boolean isRecording = false;
@@ -112,6 +112,7 @@ public class level extends AppCompatActivity implements View.OnClickListener {
         lesson = intent.getStringExtra("lesson");
         lesson_type = intent.getStringExtra("lesson_type");
         level_text = intent.getStringExtra("level_text");
+        login_number = intent.getStringExtra("login_number");
         line = intent.getStringExtra("line");
 //뷰매칭
         TextView level_title = (TextView)findViewById(R.id.level_text);
@@ -1020,7 +1021,11 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(FileName).setValue(upload);
                             progressDialog.dismiss();
-                            deletedialog.dismiss();
+//녹음 오류시 예외처리
+                            try {
+                                deletedialog.dismiss();
+                            } catch (Exception e) {
+                            }
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                         }
                     })
