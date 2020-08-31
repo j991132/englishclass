@@ -43,28 +43,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="억양" />
+                android:text="억양"
+                android:textColor="#FF0000"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/radio_pronunciation_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="발음" />
+                android:text="발음"
+                android:textColor="#249C00"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/radio_speed_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="머뭇거림" />
+                android:text="머뭇거림"
+                android:textColor="#0225FF"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/radio_stress_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="강세" />
+                android:text="강세"
+                android:textColor="#FD6E00"
+                android:textStyle="bold" />
         </RadioGroup>
     </LinearLayout>
 

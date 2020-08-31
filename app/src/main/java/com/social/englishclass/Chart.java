@@ -44,7 +44,7 @@ public class Chart extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private List<umd_test> mumd_test;
     private chartdata[] mchartdata;
-    private List<chartdata> umd_chart;
+    private ArrayList<chartdata> umd_chart;
     private ProgressDialog progressDialog;
     private LineChart lineChart;
     private List<String> list_x_axis_name;
@@ -150,7 +150,7 @@ public class Chart extends AppCompatActivity {
 
 
         mumd_test = new ArrayList<>();
-        umd_chart = new ArrayList<>();
+        umd_chart = new ArrayList<chartdata>();
         list_x_axis_name = new ArrayList<String>();
 
         lineChart = (LineChart) findViewById(R.id.chart);   //layout의 id
@@ -193,15 +193,16 @@ public void chartdata_load(){
 //                        umd_test umdTest = postSnapshot.getValue(umd_test.class);
                     mumd_test.add(key);
 //                    umd_chart.add(u_key);
-
+                    chartdata data = new chartdata(key.getstress(),key.getaccent(),key.getspeed(),key.getpronunciation(),searchname.substring(searchname.lastIndexOf("_")+1));
+                    umd_chart.add(data);
 //                    mchartdata[i] = new chartdata(key.getstress(),key.getaccent(),key.getspeed(),key.getpronunciation(),searchname.substring(searchname.lastIndexOf("_")+1));
 //                    mchartdata.add(key.getstress(),key.getaccent(),key.getspeed(),key.getpronunciation(),searchname);
                     umd_test umd_data = mumd_test.get(i);
                     Log.e("mumd_test 에 추가됨 ", "searchname"+searchname+"  값 "+umd_data.getaccent());
-                    list_x_axis_name.add(searchname.substring(searchname.lastIndexOf("_")+1));
+//                    list_x_axis_name.add(searchname.substring(searchname.lastIndexOf("_")+1));
 //                    System.arraycopy(list_x_axis_name,0,umd_chart,umd_chart.size(),list_x_axis_name.size());
 
-
+/*
                     if(umd_data.getaccent() !=null) {
                         switch (umd_data.getaccent()) {
                             case "상":
@@ -311,6 +312,8 @@ public void chartdata_load(){
                     }
                     entry_chart_stress.add(new Entry(i, stress_y));
 //                        entry_chart.add(new Entry(searchname.substring(searchname.lastIndexOf("_")+1), umd_data.getaccent()));
+
+ */
                     i++;
                 }
 
@@ -318,13 +321,123 @@ public void chartdata_load(){
 //                    i++;
             }
 //            Arrays.sort(mchartdata);
+            Collections.sort(umd_chart);
 
-
-//                  for (int j=0; j<i;j++) {
-
+            for (int j=0; j<i;j++) {
 //                      chartdata umd_chart_data = mchartdata[j];
-//                      Log.e("합쳐진 umd_chart 배열",""+ umd_chart_data.getfilename()+umd_chart_data.getaccent());
-//                }
+                Log.e("합쳐진 umd_chart 배열",""+ umd_chart.get(j).getfilename()+umd_chart.get(j).getaccent());
+
+// x값 y값 좌표 배열에 입력
+                if(umd_chart.get(j).getaccent() !=null) {
+                    switch (umd_chart.get(j).getaccent()) {
+                        case "상":
+                            accent_y = 3;
+                            break;
+                        case "좋아요.":
+                            accent_y = 3;
+                            break;
+                        case "중":
+                            accent_y = 2;
+                            break;
+                        case "괜찮아요.":
+                            accent_y = 2;
+                            break;
+                        case "하":
+                            accent_y = 1;
+                            break;
+                        case "힘내세요.":
+                            accent_y = 1;
+                            break;
+                        case "":
+                            accent_y = 1;
+                            break;
+                    }
+                }
+                entry_chart_accent.add(new Entry(j, accent_y ));
+//                    String file = searchname.substring(searchname.lastIndexOf("_")+1);
+//                    entry_chart_accent.add(new Entry(Integer.parseInt(file.substring(2,4)+file.substring(6,8)+file.substring(10,12)), accent_y));
+                Log.e("엔트리 차트 악센트 배열",""+entry_chart_accent);
+                if(umd_chart.get(j).getpronunciation() !=null) {
+                    switch (umd_chart.get(j).getpronunciation()) {
+                        case "상":
+                            pronunciation_y = 3;
+                            break;
+                        case "좋아요.":
+                            pronunciation_y = 3;
+                            break;
+                        case "중":
+                            pronunciation_y = 2;
+                            break;
+                        case "괜찮아요.":
+                            pronunciation_y = 2;
+                            break;
+                        case "하":
+                            pronunciation_y = 1;
+                            break;
+                        case "힘내세요.":
+                            pronunciation_y = 1;
+                            break;
+                        case "":
+                            pronunciation_y = 1;
+                            break;
+                    }
+                }
+                entry_chart_pronunciation.add(new Entry(j, pronunciation_y));
+
+                if(umd_chart.get(j).getspeed() !=null) {
+                    switch (umd_chart.get(j).getspeed()) {
+                        case "상":
+                            speed_y = 3;
+                            break;
+                        case "좋아요.":
+                            speed_y = 3;
+                            break;
+                        case "중":
+                            speed_y = 2;
+                            break;
+                        case "괜찮아요.":
+                            speed_y = 2;
+                            break;
+                        case "하":
+                            speed_y = 1;
+                            break;
+                        case "힘내세요.":
+                            speed_y = 1;
+                            break;
+                        case "":
+                            speed_y = 1;
+                            break;
+                    }
+                }
+                entry_chart_speed.add(new Entry(j, speed_y));
+                if(umd_chart.get(j).getstress() !=null) {
+                    switch (umd_chart.get(j).getstress()) {
+                        case "상":
+                            stress_y = 3;
+                            break;
+                        case "좋아요.":
+                            stress_y = 3;
+                            break;
+                        case "중":
+                            stress_y = 2;
+                            break;
+                        case "괜찮아요.":
+                            stress_y = 2;
+                            break;
+                        case "하":
+                            stress_y = 1;
+                            break;
+                        case "힘내세요.":
+                            stress_y = 1;
+                            break;
+                        case "":
+                            stress_y = 1;
+                            break;
+                    }
+                }
+                entry_chart_stress.add(new Entry(j, stress_y));
+                list_x_axis_name.add(umd_chart.get(j).getfilename());
+            }
 
 
 
@@ -334,7 +447,7 @@ public void chartdata_load(){
             entry_chart_stress_delete.addAll(entry_chart_stress);
 //x축 설정
 //x축 이름 정렬
-            Collections.sort(list_x_axis_name);
+//            Collections.sort(list_x_axis_name);
             x_name = new String[list_x_axis_name.size()];
             x_name = list_x_axis_name.toArray(x_name);
 

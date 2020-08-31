@@ -885,7 +885,7 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
                             String uploadId = mDatabaseRef.push().getKey();
                             mDatabaseRef.child(FileName).setValue(upload);
                             progressDialog.dismiss();
-//녹음 오류시 예외처리        ㅊ
+//녹음 오류시 예외처리
                             try {
                                 deletedialog.dismiss();
                             } catch (Exception e) {

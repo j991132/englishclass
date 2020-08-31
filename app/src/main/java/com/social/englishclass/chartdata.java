@@ -63,6 +63,7 @@ public class chartdata implements Comparable<chartdata>{
 
     @Override
     public int compareTo(chartdata chartdata) {
+           /*
         if (Integer.parseInt(this.filename.substring(0,4)+this.filename.substring(6,8)+this.filename.substring(10,12)) < Integer.parseInt(chartdata.filename.substring(0,4)+chartdata.filename.substring(6,8)+chartdata.filename.substring(10,12))) {
             Log.e("파일명 인트화",""+ this.filename.substring(0,4)+this.filename.substring(6,8)+this.filename.substring(10,12));
             return -1;
@@ -74,10 +75,13 @@ public class chartdata implements Comparable<chartdata>{
         } else {
 
             return 1;
+    }
 
+         */
 
+        return filename.compareTo(chartdata.getfilename());
 
 
     }
 }
-}
+
