@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         Button howtouse_btn = (Button) findViewById(R.id.howtouse_btn);
         RadioButton online_rbtn = (RadioButton) findViewById(R.id.online_rbtn);
         RadioButton offline_rbtn = (RadioButton) findViewById(R.id.offline_rbtn);
+        Button license_btn = (Button) findViewById(R.id.license_btn);
 //테스트중 넘어가기
 //        intent = new Intent(MainActivity.this, englishlesson.class);
 //        intent = new Intent(MainActivity.this, visualtest.class);
@@ -256,7 +257,11 @@ public class MainActivity extends AppCompatActivity {
                         });
                         howtousedialog.show();
                         break;
-
+                    case R.id.license_btn:
+                        final Dialog licensedialog = new Dialog(MainActivity.this);
+                        licensedialog.setContentView(R.layout.license_dialog);
+                        licensedialog.show();
+                        break;
                 }
             }
         };
@@ -265,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
         offline_rbtn.setOnClickListener(Listener);
         textdown_btn.setOnClickListener(Listener);
         howtouse_btn.setOnClickListener(Listener);
+        license_btn.setOnClickListener(Listener);
 
     }
 //textbook 데이터 다운받기 http 주소 이용
