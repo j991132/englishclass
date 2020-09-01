@@ -378,7 +378,7 @@ public class Chart extends AppCompatActivity {
                                 break;
                         }
                     }
-                    entry_chart_pronunciation.add(new Entry(j, pronunciation_y + 0.04f));
+                    entry_chart_pronunciation.add(new Entry(j, pronunciation_y + 0.06f));
 
                     if (umd_chart.get(j).getspeed() != null) {
                         switch (umd_chart.get(j).getspeed()) {
@@ -431,7 +431,7 @@ public class Chart extends AppCompatActivity {
                                 break;
                         }
                     }
-                    entry_chart_stress.add(new Entry(j, stress_y - 0.04f));
+                    entry_chart_stress.add(new Entry(j, stress_y - 0.06f));
                     list_x_axis_name.add(umd_chart.get(j).getfilename());
                 }
 
@@ -522,7 +522,7 @@ public class Chart extends AppCompatActivity {
     public void accent_chart() {
         //라인차트 설정(accent)
         LineDataSet lineDataSet_accent = new LineDataSet(entry_chart_accent, "억양");
-        lineDataSet_accent.setLineWidth(2); // 선 굵기
+        lineDataSet_accent.setLineWidth(5); // 선 굵기
         lineDataSet_accent.setCircleRadius(6); // 곡률
         lineDataSet_accent.setCircleColor(Color.parseColor("#CD1039")); // LineChart에서 Line Circle Color 설정
         lineDataSet_accent.setCircleHoleColor(Color.parseColor("#CD1039")); // LineChart에서 Line Hole Circle Color 설정
@@ -534,7 +534,7 @@ public class Chart extends AppCompatActivity {
     public void pronunciation_chart() {
         //라인차트 설정(pronunciation)
         LineDataSet lineDataSet_pronunciation = new LineDataSet(entry_chart_pronunciation, "발음");
-        lineDataSet_pronunciation.setLineWidth(2); // 선 굵기
+        lineDataSet_pronunciation.setLineWidth(5); // 선 굵기
         lineDataSet_pronunciation.setCircleRadius(6); // 곡률
         lineDataSet_pronunciation.setCircleColor(Color.parseColor("#5EC75E")); // LineChart에서 Line Circle Color 설정
         lineDataSet_pronunciation.setCircleHoleColor(Color.parseColor("#5EC75E")); // LineChart에서 Line Hole Circle Color 설정
@@ -546,7 +546,7 @@ public class Chart extends AppCompatActivity {
     public void speed_chart() {
         //라인차트 설정(speed)
         LineDataSet lineDataSet_speed = new LineDataSet(entry_chart_speed, "머뭇거림");
-        lineDataSet_speed.setLineWidth(2); // 선 굵기
+        lineDataSet_speed.setLineWidth(5); // 선 굵기
         lineDataSet_speed.setCircleRadius(6); // 곡률
         lineDataSet_speed.setCircleColor(Color.parseColor("#2828CD")); // LineChart에서 Line Circle Color 설정
         lineDataSet_speed.setCircleHoleColor(Color.parseColor("#2828CD")); // LineChart에서 Line Hole Circle Color 설정
@@ -558,7 +558,7 @@ public class Chart extends AppCompatActivity {
     public void stress_chart() {
 //라인차트 설정(stress)
         LineDataSet lineDataSet_stress = new LineDataSet(entry_chart_stress, "강세");
-        lineDataSet_stress.setLineWidth(2); // 선 굵기
+        lineDataSet_stress.setLineWidth(5); // 선 굵기
         lineDataSet_stress.setCircleRadius(6); // 곡률
         lineDataSet_stress.setCircleColor(Color.parseColor("#FFB400")); // LineChart에서 Line Circle Color 설정
         lineDataSet_stress.setCircleHoleColor(Color.parseColor("#FFB400")); // LineChart에서 Line Hole Circle Color 설정
