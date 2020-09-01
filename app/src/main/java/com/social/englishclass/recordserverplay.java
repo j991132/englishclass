@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class recordserverplay extends AppCompatActivity implements View.OnClickListener{
+public class recordserverplay extends AppCompatActivity implements View.OnClickListener {
 
     public static String filename;
     private String ext;
@@ -72,10 +72,10 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private ImageButton mBtnPlayPause;
     private Button save_btn, fold_btn;
     private TextView recplay_txt_title, text_stress, text_accent, text_speed, text_pronunciation;
-    private static boolean isPrepared ;
+    private static boolean isPrepared;
     public static boolean reset;
-    public static boolean pause=false;
-    private Spinner spinner,  umd_spiner;
+    public static boolean pause = false;
+    private Spinner spinner, umd_spiner;
     private float f;
     private EditText comment;
     ArrayList<String> arrayList;
@@ -101,36 +101,36 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         filename = intent.getStringExtra("filename");
         ext = intent.getStringExtra("ext");
 //화면 뷰 매칭
-       recplay_txt_title = (TextView)findViewById(R.id.recplay_txt_title);
+        recplay_txt_title = (TextView) findViewById(R.id.recplay_txt_title);
         mBtnPlayPause = (ImageButton) findViewById(R.id.recplay_btn_play_pause);
         mBtnPlayPause.setOnClickListener(this);
-        save_btn = (Button)findViewById(R.id.save_btn);
+        save_btn = (Button) findViewById(R.id.save_btn);
         save_btn.setOnClickListener(this);
-        fold_btn = (Button)findViewById(R.id.fold_btn);
+        fold_btn = (Button) findViewById(R.id.fold_btn);
         fold_btn.setOnClickListener(this);
-        comment = (EditText)findViewById(R.id.comment);
+        comment = (EditText) findViewById(R.id.comment);
         dictionary_btn = (ImageButton) findViewById(R.id.dictionary_btn);
         dictionary_btn.setOnClickListener(this);
         recplay_txt_title.setText(filename);
         speedselect_server();
 //        mMediaplayer = new MediaPlayer();
 //        mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        chat_view = (ListView)findViewById(R.id.chat_view);
-        text_stress = (TextView)findViewById(R.id.text_stress);
-        text_accent = (TextView)findViewById(R.id.text_accent);
-        text_speed = (TextView)findViewById(R.id.text_speed);
-        text_pronunciation = (TextView)findViewById(R.id.text_pronunciation);
+        chat_view = (ListView) findViewById(R.id.chat_view);
+        text_stress = (TextView) findViewById(R.id.text_stress);
+        text_accent = (TextView) findViewById(R.id.text_accent);
+        text_speed = (TextView) findViewById(R.id.text_speed);
+        text_pronunciation = (TextView) findViewById(R.id.text_pronunciation);
         LinearLayout test_layout1 = (LinearLayout) findViewById(R.id.t_test1);
         LinearLayout test_layout2 = (LinearLayout) findViewById(R.id.t_test2);
-        wave_fragment_layer = (LinearLayout)findViewById(R.id.wave_fragment_layer);
-        container = (FrameLayout)findViewById(R.id.container);
+        wave_fragment_layer = (LinearLayout) findViewById(R.id.wave_fragment_layer);
+        container = (FrameLayout) findViewById(R.id.container);
 
-if(login_name != null && login_school !=null) {
-    if (!login_name.contains("teacher")) {
-        test_layout1.setVisibility(View.GONE);
-        test_layout2.setVisibility(View.GONE);
-    }
-}
+        if (login_name != null && login_school != null) {
+            if (!login_name.contains("teacher")) {
+                test_layout1.setVisibility(View.GONE);
+                test_layout2.setVisibility(View.GONE);
+            }
+        }
         up_mid_down_select("eng_stress");
         up_mid_down_select("eng_accent");
         up_mid_down_select("eng_speed");
@@ -150,6 +150,7 @@ if(login_name != null && login_school !=null) {
         }
 */
     }//메인 끝
+
     public static class CustomWaveformFragment2 extends WaveformFragment {
 
         /**
@@ -163,9 +164,10 @@ if(login_name != null && login_school !=null) {
             return filepath;
 //            return "/storage/emulated/0/englishclass/lesson3/6-3-Look and Say.mp3";
         }
+
         @Override
         public String getFileTitle() {
-                String sourcefile = filepath.toString().substring(filepath.toString().lastIndexOf("/")+1);
+            String sourcefile = filepath.toString().substring(filepath.toString().lastIndexOf("/") + 1);
             Log.e("녹음파일에 대한 원본 이름", "" + sourcefile);
             return sourcefile;
 
@@ -184,6 +186,7 @@ if(login_name != null && login_school !=null) {
                     new Segment(58.4, 59.9, Color.rgb(184, 92, 184)));
         }
     }
+
     public static class CustomWaveformFragment extends WaveformFragment {
 
         /**
@@ -218,6 +221,7 @@ if(login_name != null && login_school !=null) {
                     new Segment(58.4, 59.9, Color.rgb(184, 92, 184)));
         }
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -225,20 +229,19 @@ if(login_name != null && login_school !=null) {
 
 //                togglePlay((float) 1.00);
                 // 플레이어 화면으로 이동할 코드가 들어갈 예정
-             if(mMediaplayer !=null) {
-                 if (mMediaplayer.isPlaying()) {
-                     Log.e("정지  ", "" + pause);
-                     mMediaplayer.pause();
-                     pause = true;
-                     updateUI();
-                 } else {
-                     Log.e("재생  ", "" + pause);
-                     play(f);
-                     pause = false;
-                     updateUI();
-                 }
-             }
-                else {
+                if (mMediaplayer != null) {
+                    if (mMediaplayer.isPlaying()) {
+                        Log.e("정지  ", "" + pause);
+                        mMediaplayer.pause();
+                        pause = true;
+                        updateUI();
+                    } else {
+                        Log.e("재생  ", "" + pause);
+                        play(f);
+                        pause = false;
+                        updateUI();
+                    }
+                } else {
                     mMediaplayer = new MediaPlayer();
                     mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     Log.e("파이어베이스 불러오기  ", "");
@@ -247,11 +250,11 @@ if(login_name != null && login_school !=null) {
                 break;
 // 피드백 저장버튼 클릭시
             case R.id.save_btn:
-                if(comment.getText().toString().equals(""))
+                if (comment.getText().toString().equals(""))
 
                     return;
-                sendPostToFCM(login_name+" : "+comment.getText().toString());
-                Log.e("코멘트 메세지  ", ""+comment.getText().toString());
+                sendPostToFCM(login_name + " : " + comment.getText().toString());
+                Log.e("코멘트 메세지  ", "" + comment.getText().toString());
 //4종류 평가 전송
                 umd_test umd = new umd_test(stress, accent, speed, pronunciation);
                 databaseReference.child("umd_test").child(filename).push().setValue(umd);
@@ -263,15 +266,15 @@ if(login_name != null && login_school !=null) {
                 comment.setText("");
 
 
-
-
                 break;
             case R.id.fold_btn:
-                if(wave_fragment_layer.getVisibility()==View.GONE){
+                if (wave_fragment_layer.getVisibility() == View.GONE) {
                     wave_fragment_layer.setVisibility(View.VISIBLE);
                     fold_btn.setText("그래프 접기");
-                }else {wave_fragment_layer.setVisibility(View.GONE);
-                fold_btn.setText("그래프 펼치기");}
+                } else {
+                    wave_fragment_layer.setVisibility(View.GONE);
+                    fold_btn.setText("그래프 펼치기");
+                }
                 break;
 
             case R.id.dictionary_btn:
@@ -282,8 +285,9 @@ if(login_name != null && login_school !=null) {
 
         }
     }//클릭 끝
-//파이어베이스에서 뷰에 해당하는 업로드시 저장된 로그인아이디 가져오기
-    private void getLoginId(){
+
+    //파이어베이스에서 뷰에 해당하는 업로드시 저장된 로그인아이디 가져오기
+    private void getLoginId() {
         firebaseDatabase.getReference("uploads")
                 .child(filename)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -295,9 +299,9 @@ if(login_name != null && login_school !=null) {
                             public void run() {
                                 try {
                                     login_name_fcm = upload.getUserId();
-                                    Log.e("파이어베이스 저장된 로그인아이디  ", ""+login_name_fcm);
+                                    Log.e("파이어베이스 저장된 로그인아이디  ", "" + login_name_fcm);
                                     filepath = upload.getFilepath();
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -310,8 +314,9 @@ if(login_name != null && login_school !=null) {
                     }
                 });
     }
-//파이어베이스에서 학교아이디 가져오기
-    private void getSchoolId(){
+
+    //파이어베이스에서 학교아이디 가져오기
+    private void getSchoolId() {
         firebaseDatabase.getReference("users")
                 .child(login_name)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -324,9 +329,9 @@ if(login_name != null && login_school !=null) {
                                 try {
                                     if (userSchoolData != null) {
                                         schoolID = userSchoolData.schoolID;
-                                        Log.e("파이어베이스 저장된 학교ID  ", ""+schoolID);
+                                        Log.e("파이어베이스 저장된 학교ID  ", "" + schoolID);
                                     }
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -339,11 +344,12 @@ if(login_name != null && login_school !=null) {
                     }
                 });
     }
- //파이어베이스에서 선생님의 로그인아이디 가져오기
-    private void getTeacherLoginId(){
+
+    //파이어베이스에서 선생님의 로그인아이디 가져오기
+    private void getTeacherLoginId() {
 
         firebaseDatabase.getReference("users")
-                .child(schoolID+"teacher")
+                .child(schoolID + "teacher")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -354,9 +360,9 @@ if(login_name != null && login_school !=null) {
                                 try {
                                     if (userTeacherData != null) {
                                         login_name_teacher = userTeacherData.fcmToken;
-                                        Log.e("파이어베이스 저장된 선생님 토큰  ", ""+login_name_teacher);
+                                        Log.e("파이어베이스 저장된 선생님 토큰  ", "" + login_name_teacher);
                                     }
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -369,75 +375,78 @@ if(login_name != null && login_school !=null) {
                     }
                 });
     }
-//푸쉬 알림 보내기
-    private  void  sendPostToFCM(final String msg){
+
+    //푸쉬 알림 보내기
+    private void sendPostToFCM(final String msg) {
         getTeacherLoginId();
 
-            firebaseDatabase.getReference("users")
-                    .child(login_name_fcm)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            final UserData userData = dataSnapshot.getValue(UserData.class);
-                            if(login_name.equals(login_name_fcm)){
-                                send_token = login_name_teacher;
-                            }else{
-                                send_token = userData.fcmToken;
-                            }
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        // FMC 메시지 생성 start
-                                        JSONObject root = new JSONObject();
-                                        JSONObject notification = new JSONObject();
-                                        notification.put("body", msg);
-                                        Log.e("전송하는 메세지  ", ""+notification+msg);
-                                        notification.put("title", "English Class");
+        firebaseDatabase.getReference("users")
+                .child(login_name_fcm)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final UserData userData = dataSnapshot.getValue(UserData.class);
+                        if (login_name.equals(login_name_fcm)) {
+                            send_token = login_name_teacher;
+                        } else {
+                            send_token = userData.fcmToken;
+                        }
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    // FMC 메시지 생성 start
+                                    JSONObject root = new JSONObject();
+                                    JSONObject notification = new JSONObject();
+                                    notification.put("body", login_name+" : "+msg);
+                                    Log.e("전송하는 메세지  ", "" + notification + msg);
+                                    notification.put("title", "Textbook Shadowing Lap");
 //                                        notification.put("title", getString(R.string.app_name));
-                                        root.put("notification", notification);
+                                    root.put("notification", notification);
 
-                                        root.put("to", send_token);
-                                            Log.e("로그인 아이디,  저장된 아이디,put", "//"+login_name+"//"+login_name_fcm+"//"+send_token);
+                                    root.put("to", send_token);
+                                    Log.e("로그인 아이디,  저장된 아이디,put", "//" + login_name + "//" + login_name_fcm + "//" + send_token);
 
-                                        // FMC 메시지 생성 end
+                                    // FMC 메시지 생성 end
 
-                                        URL Url = new URL(FCM_MESSAGE_URL);
-                                        HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
-                                        conn.setRequestMethod("POST");
-                                        conn.setDoOutput(true);
-                                        conn.setDoInput(true);
-                                        conn.addRequestProperty("Authorization", "key=" + SERVER_KEY);
-                                        conn.setRequestProperty("Accept", "application/json");
-                                        conn.setRequestProperty("Content-type", "application/json");
-                                        OutputStream os = conn.getOutputStream();
-                                        os.write(root.toString().getBytes("utf-8"));
-                                        os.flush();
-                                        conn.getResponseCode();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                    URL Url = new URL(FCM_MESSAGE_URL);
+                                    HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
+                                    conn.setRequestMethod("POST");
+                                    conn.setDoOutput(true);
+                                    conn.setDoInput(true);
+                                    conn.addRequestProperty("Authorization", "key=" + SERVER_KEY);
+                                    conn.setRequestProperty("Accept", "application/json");
+                                    conn.setRequestProperty("Content-type", "application/json");
+                                    OutputStream os = conn.getOutputStream();
+                                    os.write(root.toString().getBytes("utf-8"));
+                                    os.flush();
+                                    conn.getResponseCode();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            }).start();
-                        }
+                            }
+                        }).start();
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
-        }
+                    }
+                });
+    }
 
-//메세지 추가 메서드
-private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
-    ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
-    adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
-}
-//메세지 삭제 메서드
-private void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
-    ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
-    adapter.remove(chatDTO.getUserName() + " : " + chatDTO.getMessage());
-}
+    //메세지 추가 메서드
+    private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
+        ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
+        adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
+    }
+
+    //메세지 삭제 메서드
+    private void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
+        ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
+        adapter.remove(chatDTO.getUserName() + " : " + chatDTO.getMessage());
+    }
+
     //평가 셋팅 메서드
     private void add_umd_test(DataSnapshot dataSnapshot) {
         umd_test umd_data = dataSnapshot.getValue(umd_test.class);
@@ -447,76 +456,77 @@ private void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapt
         text_pronunciation.setText(umd_data.getpronunciation());
 
     }
-//파이어 DB 에서 챗 내용 가져오기
-private void openChat() {
-    // 리스트 어댑터 생성 및 세팅
-    final ArrayAdapter<String> adapter
 
-            = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
-    chat_view.setAdapter(adapter);
+    //파이어 DB 에서 챗 내용 가져오기
+    private void openChat() {
+        // 리스트 어댑터 생성 및 세팅
+        final ArrayAdapter<String> adapter
 
-    // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
-    databaseReference.child("chat").child(filename).addChildEventListener(new ChildEventListener() {
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            addMessage(dataSnapshot, adapter);
+                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+        chat_view.setAdapter(adapter);
 
-            Log.e("LOG", "s:"+s);
-        }
+        // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
+        databaseReference.child("chat").child(filename).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                addMessage(dataSnapshot, adapter);
 
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.e("LOG", "s:" + s);
+            }
 
-        }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-            removeMessage(dataSnapshot, adapter);
-        }
+            }
 
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                removeMessage(dataSnapshot, adapter);
+            }
 
-        }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
 
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
-    });
+            }
+        });
 // 상중하 평가 불러오기
-databaseReference.child("umd_test").child(filename).addChildEventListener(new ChildEventListener() {
-    @Override
-    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        add_umd_test(dataSnapshot);
-        Log.e("LOG", "s:"+s);
+        databaseReference.child("umd_test").child(filename).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                add_umd_test(dataSnapshot);
+                Log.e("LOG", "s:" + s);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                add_umd_test(dataSnapshot);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
-    @Override
-    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-        add_umd_test(dataSnapshot);
-    }
-
-    @Override
-    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-    }
-
-    @Override
-    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-    }
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-    }
-});
-}
-//wave를 위한 파이어베이스에서 녹음파일 주소 가져오기
-    public void getrecuri(String Filename){
+    //wave를 위한 파이어베이스에서 녹음파일 주소 가져오기
+    public void getrecuri(String Filename) {
         //다운로드 진행 Dialog 보이기
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("다운로드중...");
@@ -524,11 +534,11 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
 
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         pathReference = mStorageRef.child(Filename);
-        try{
+        try {
             File path = new File("/storage/emulated/0/englishclass/record/");
             final File file = new File(path, Filename);
-            try{
-                if (!path.exists()){
+            try {
+                if (!path.exists()) {
                     path.mkdirs();
                 }
                 file.createNewFile();
@@ -537,31 +547,31 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
                 fileDownloadTask.addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Log.e("다운로드받은 녹음파일 ","경로입력전");
-                                downfile = "/storage/emulated/0/englishclass/record/"+Filename;
+                        Log.e("다운로드받은 녹음파일 ", "경로입력전");
+                        downfile = "/storage/emulated/0/englishclass/record/" + Filename;
                         Log.e("다운로드받은 녹음파일 ", "" + downfile);
                         Log.e("레슨타입 let 가 아닐때  녹음파일 ", "" + filepath);
- //웨이브곡선 프래그먼트
-                        if((filepath != null && filepath.contains("_let_p")) ||  (filepath != null && filepath.contains("_rt_k"))){
+                        //웨이브곡선 프래그먼트
+                        if ((filepath != null && filepath.contains("_let_p")) || (filepath != null && filepath.contains("_rt_k"))) {
 //                            if(filepath.contains("ll") || filepath.contains("ls") || filepath.contains("lr") || filepath.equals("") ){
 //                                wave_fragment_layer.setVisibility(View.GONE);
-                                getSupportFragmentManager().beginTransaction()
-                                        .add(R.id.container, new CustomWaveformFragment2())
-                                        .add(R.id.container2, new CustomWaveformFragment())
-                                        .commit();
-                            }else {
-                                    container.setVisibility(View.GONE);
-                                getSupportFragmentManager().beginTransaction()
+                            getSupportFragmentManager().beginTransaction()
+                                    .add(R.id.container, new CustomWaveformFragment2())
+                                    .add(R.id.container2, new CustomWaveformFragment())
+                                    .commit();
+                        } else {
+                            container.setVisibility(View.GONE);
+                            getSupportFragmentManager().beginTransaction()
 
-                                        .add(R.id.container2, new CustomWaveformFragment())
-                                        .commit();
-                            }
+                                    .add(R.id.container2, new CustomWaveformFragment())
+                                    .commit();
+                        }
                         progressDialog.dismiss();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("다운로드실패 ", "" );
+                        Log.e("다운로드실패 ", "");
                         progressDialog.dismiss();
                     }
                 }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
@@ -572,14 +582,15 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
                         progressDialog.setMessage("Downloaded " + ((int) progress) + "% ...");
                     }
                 });
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-// 파이어베이스에서 스트리밍하기
+
+    // 파이어베이스에서 스트리밍하기
     public void getaudiourl(final String Filename) {
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
 
@@ -630,22 +641,24 @@ databaseReference.child("umd_test").child(filename).addChildEventListener(new Ch
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e("조회 실패2  ", "파일이름"+Filename);
+                        Log.e("조회 실패2  ", "파일이름" + Filename);
                     }
                 });
     }
-//플레이버튼 ui 업데이트
-private void updateUI() {
-    if (mMediaplayer.isPlaying()) {
 
-        mBtnPlayPause.setImageResource(R.drawable.pause);
-    } else {
-        mBtnPlayPause.setImageResource(R.drawable.play);
+    //플레이버튼 ui 업데이트
+    private void updateUI() {
+        if (mMediaplayer.isPlaying()) {
+
+            mBtnPlayPause.setImageResource(R.drawable.pause);
+        } else {
+            mBtnPlayPause.setImageResource(R.drawable.play);
+        }
     }
-}
-//상중하 평가 스피너 버튼
-    private void up_mid_down_select(final String spiner_name){
-        int resID = getResources().getIdentifier(spiner_name,"id", "com.social.englishclass");
+
+    //상중하 평가 스피너 버튼
+    private void up_mid_down_select(final String spiner_name) {
+        int resID = getResources().getIdentifier(spiner_name, "id", "com.social.englishclass");
         final ArrayList<String> umd_arrayList;
         ArrayAdapter<String> umd_arrayAdapter;
         umd_arrayList = new ArrayList<>();
@@ -654,32 +667,32 @@ private void updateUI() {
         umd_arrayList.add("괜찮아요.");
         umd_arrayList.add("힘내세요.");
 
-        umd_arrayAdapter = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_spinner_dropdown_item, umd_arrayList);
+        umd_arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, umd_arrayList);
 
-        umd_spiner = (Spinner)findViewById(resID);
+        umd_spiner = (Spinner) findViewById(resID);
         umd_spiner.setAdapter(umd_arrayAdapter);
         umd_spiner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (umd_arrayList.get(i)) {
                     case "좋아요.":
-switch (spiner_name){
-    case "eng_stress":
-        stress = "좋아요.";
-        break;
-    case "eng_accent":
-        accent = "좋아요.";
-        break;
-    case "eng_speed":
-        speed = "좋아요.";
-        break;
-    case "eng_pronunciation":
-        pronunciation = "좋아요.";
-        break;
-}
+                        switch (spiner_name) {
+                            case "eng_stress":
+                                stress = "좋아요.";
+                                break;
+                            case "eng_accent":
+                                accent = "좋아요.";
+                                break;
+                            case "eng_speed":
+                                speed = "좋아요.";
+                                break;
+                            case "eng_pronunciation":
+                                pronunciation = "좋아요.";
+                                break;
+                        }
                         break;
                     case "괜찮아요.":
-                        switch (spiner_name){
+                        switch (spiner_name) {
                             case "eng_stress":
                                 stress = "괜찮아요.";
                                 break;
@@ -695,7 +708,7 @@ switch (spiner_name){
                         }
                         break;
                     case "힘내세요.":
-                        switch (spiner_name){
+                        switch (spiner_name) {
                             case "eng_stress":
                                 stress = "힘내세요.";
                                 break;
@@ -720,7 +733,8 @@ switch (spiner_name){
             }
         });
     }
-//스피너 선택버튼 만들기
+
+    //스피너 선택버튼 만들기
     private void speedselect_server() {
         arrayList = new ArrayList<>();
         arrayList.add("재생속도");
@@ -778,31 +792,33 @@ switch (spiner_name){
 
         });
     }
-//재생속도 변경
-public void play(float a) {
+
+    //재생속도 변경
+    public void play(float a) {
 
 
-    if (isPrepared) {
+        if (isPrepared) {
 
-        mMediaplayer.setPlaybackParams((mMediaplayer.getPlaybackParams().setSpeed(a)));
-        mMediaplayer.start();
+            mMediaplayer.setPlaybackParams((mMediaplayer.getPlaybackParams().setSpeed(a)));
+            mMediaplayer.start();
 
+        }
     }
-}
+
     @Override
     protected void onPause() {
 
 //        finish();
         super.onPause();
     }
+
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         try {
             mMediaplayer.stop();
             mMediaplayer.release();
             mMediaplayer = null;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
