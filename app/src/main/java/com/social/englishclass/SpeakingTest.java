@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
@@ -891,7 +892,13 @@ public class SpeakingTest extends AppCompatActivity implements View.OnClickListe
                             } catch (Exception e) {
                             }
 
-                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                            Toast toast =  Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT);
+                            View view = toast.getView();
+                            view.setBackgroundColor(Color.RED);
+                            TextView toastMessage = (TextView) toast.getView().findViewById(android.R.id.message);
+                            toastMessage.setTextColor(Color.WHITE);
+                            toast.show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

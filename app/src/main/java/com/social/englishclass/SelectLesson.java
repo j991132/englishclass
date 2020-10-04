@@ -1429,7 +1429,13 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                             } catch (Exception e) {
                             }
 
-                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                            Toast toast =  Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT);
+                            View view = toast.getView();
+                            view.setBackgroundColor(Color.RED);
+                            TextView toastMessage = (TextView) toast.getView().findViewById(android.R.id.message);
+                            toastMessage.setTextColor(Color.WHITE);
+                            toast.show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

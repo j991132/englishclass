@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -1027,8 +1028,12 @@ public class level extends AppCompatActivity implements View.OnClickListener {
                             } catch (Exception e) {
                             }
 
-                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-
+                            Toast toast =  Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT);
+                            View view = toast.getView();
+                            view.setBackgroundColor(Color.RED);
+                            TextView toastMessage = (TextView) toast.getView().findViewById(android.R.id.message);
+                            toastMessage.setTextColor(Color.WHITE);
+                            toast.show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
