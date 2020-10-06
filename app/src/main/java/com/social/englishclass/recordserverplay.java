@@ -3,6 +3,8 @@ package com.social.englishclass;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -37,6 +39,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.social.englishclass.view.Feedback_RecyclerViewAdapter;
 
 import org.json.JSONObject;
 
@@ -89,6 +92,10 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private FrameLayout container;
     private ImageButton dictionary_btn;
 
+    private RecyclerView mRecyclerView;  //챗 리스트 리사이클러 뷰
+    private Feedback_RecyclerViewAdapter mAdapter;
+    private List<ChatDTO> mChatDTO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +131,11 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         LinearLayout test_layout2 = (LinearLayout) findViewById(R.id.t_test2);
         wave_fragment_layer = (LinearLayout) findViewById(R.id.wave_fragment_layer);
         container = (FrameLayout) findViewById(R.id.container);
+
+        mRecyclerView = (RecyclerView)findViewById(R.id.feedback_recyclerview);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
 
         if (login_name != null && login_school != null) {
             if (!login_name.contains("teacher")) {
@@ -464,6 +476,10 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 
                 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
         chat_view.setAdapter(adapter);
+
+//리사이클러뷰 생성
+            mAdapter = new Feedback_RecyclerViewAdapter(recordserverplay.this, mChatDTO);
+            mRecyclerView.setAdapter(mAdapter);
 
         // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
         databaseReference.child("chat").child(filename).addChildEventListener(new ChildEventListener() {
