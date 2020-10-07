@@ -451,6 +451,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
         ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
         adapter.add(chatDTO.getUserName() + " : " + chatDTO.getMessage());
+        mChatDTO.add(chatDTO);
     }
 
     //메세지 삭제 메서드
@@ -477,6 +478,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
                 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
         chat_view.setAdapter(adapter);
 
+        mChatDTO = new ArrayList<>();
 //리사이클러뷰 생성
             mAdapter = new Feedback_RecyclerViewAdapter(recordserverplay.this, mChatDTO);
             mRecyclerView.setAdapter(mAdapter);

@@ -41,7 +41,11 @@ public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_
 
     @Override
     public int getItemCount() {
-        return mChatDTO.size();
+        if(mChatDTO != null) {
+            return mChatDTO.size();
+        }else{
+            return 0;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

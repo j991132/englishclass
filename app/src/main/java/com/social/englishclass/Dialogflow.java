@@ -168,14 +168,15 @@ if(lesson_type.equals("rt2")){
 //                    v = new Voice("en-us-x-sfg#female_2-local", new Locale("en","US"),400,200,true, a);
 
   //      textToSpeech.setVoice(v);
-                    textToSpeech.setPitch(1.2f);
-                    textToSpeech.setSpeechRate(0.9f);
+                    textToSpeech.setPitch(1.3f);
+                    textToSpeech.setSpeechRate(1f);
                     Log.e("TTS 상태 에러아님",""+status);
                     textToSpeech.setLanguage(Locale.US);
                 }
             }
-        }, "com.google.android.tts");
-//        });
+//구글 tts 를 쓰면 인터넷 사용해야되서 그런가 반응속도가 늦다
+//        }, "com.google.android.tts");
+        });
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
