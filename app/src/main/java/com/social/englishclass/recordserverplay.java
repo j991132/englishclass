@@ -123,6 +123,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 //        mMediaplayer = new MediaPlayer();
 //        mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         chat_view = (ListView) findViewById(R.id.chat_view);
+        chat_view.setVisibility(View.GONE);
+
         text_stress = (TextView) findViewById(R.id.text_stress);
         text_accent = (TextView) findViewById(R.id.text_accent);
         text_speed = (TextView) findViewById(R.id.text_speed);
@@ -297,6 +299,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 
         }
     }//클릭 끝
+
+
 
     //파이어베이스에서 뷰에 해당하는 업로드시 저장된 로그인아이디 가져오기
     private void getLoginId() {

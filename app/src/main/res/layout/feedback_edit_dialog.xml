@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <EditText
+        android:id="@+id/feedback_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/feedback_text_del_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="삭  제"
+            android:textColor="#000000" />
+
+        <Button
+            android:id="@+id/feedback_text_edit_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수  정"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+</LinearLayout>

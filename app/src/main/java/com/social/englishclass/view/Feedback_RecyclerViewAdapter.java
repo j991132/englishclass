@@ -1,16 +1,24 @@
 package com.social.englishclass.view;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.social.englishclass.ChatDTO;
 import com.social.englishclass.R;
+import com.social.englishclass.recordserverplay;
 
 import java.util.List;
 
@@ -18,6 +26,9 @@ public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_
 
     private static Context mContext;
     private List<ChatDTO> mChatDTO;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    private String edittext;
 
     public Feedback_RecyclerViewAdapter(Context context, List<ChatDTO> chatdto){
         mContext = context;
@@ -51,11 +62,51 @@ public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private TextView mFeedback_text;
+        private ImageButton feedback_edit_btn;
 
         private ViewHolder(final View view){
             super(view);
 
             mFeedback_text = (TextView) view.findViewById(R.id.feedback_text);
+            feedback_edit_btn = (ImageButton)view.findViewById(R.id.feedback_edit_btn);
+
+            feedback_edit_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e(" 수정하기 버튼 클릭   ", "수정버튼 눌림");
+//다이얼로그 띄우기
+                    Dialog feedback_dialog = new Dialog(view.getContext());
+                    feedback_dialog.setContentView(R.layout.feedback_edit_dialog);
+
+                    EditText feedback_edit_text = (EditText)feedback_dialog.findViewById(R.id.feedback_edit_text);
+                    Button feedback_text_del_btn = (Button)feedback_dialog.findViewById(R.id.feedback_text_del_btn);
+                    Button feedback_text_edit_ok = (Button)feedback_dialog.findViewById(R.id.feedback_text_edit_ok);
+
+                    feedback_edit_text.setText(mFeedback_text.getText().toString().substring(mFeedback_text.getText().toString().lastIndexOf(": ")+2));
+
+                    feedback_text_del_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.e("   버튼 클릭   ", "삭제버튼 눌림");
+                            feedback_dialog.dismiss();
+                        }
+                    });
+
+                    feedback_text_edit_ok.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.e("   버튼 클릭   ", "수정 완료 버튼 눌림");
+                            edittext = feedback_edit_text.getText().toString();
+                            Log.e("   로그인 아이디   ", ""+mFeedback_text.getText().toString().substring(0, mFeedback_text.getText().toString().lastIndexOf(" : ")));
+                            Log.e("   텍스트 내용   ", ""+edittext);
+                            ChatDTO chat = new ChatDTO(mFeedback_text.getText().toString().substring(0, mFeedback_text.getText().toString().lastIndexOf(" : ")), edittext);
+                            databaseReference.child("chat").child(recordserverplay.filename).setValue(chat);
+                            feedback_dialog.dismiss();
+                        }
+                    });
+                    feedback_dialog.show();
+                }
+            });
         }
     }
 }
