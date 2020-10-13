@@ -260,7 +260,7 @@ if(recordserverAdapter.reset ){
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Boolean found;
-                String search = search_server_text.getText().toString();
+                String search = search_server_text.getText().toString().trim();
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     String searchname = ds.child("name").getValue(String.class);
                     found = searchname.contains(search);

@@ -12,15 +12,22 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.social.englishclass.ChatDTO;
 import com.social.englishclass.R;
 import com.social.englishclass.recordserverplay;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_RecyclerViewAdapter.ViewHolder> {
 
@@ -63,6 +70,7 @@ public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_
 
         private TextView mFeedback_text;
         private ImageButton feedback_edit_btn;
+        private String editkey;
 
         private ViewHolder(final View view){
             super(view);
@@ -74,6 +82,37 @@ public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_
                 @Override
                 public void onClick(View view) {
                     Log.e(" 수정하기 버튼 클릭   ", "수정버튼 눌림");
+
+                    Query q = databaseReference.child("chat").child(recordserverplay.filename).orderByChild("message").equalTo(mFeedback_text.getText().toString().substring(mFeedback_text.getText().toString().lastIndexOf(": ")+2));
+
+                    q.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            Log.e("쿼리2",""+dataSnapshot.getKey());
+                            editkey = dataSnapshot.getKey();
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
 //다이얼로그 띄우기
                     Dialog feedback_dialog = new Dialog(view.getContext());
                     feedback_dialog.setContentView(R.layout.feedback_edit_dialog);
@@ -100,7 +139,15 @@ public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_
                             Log.e("   로그인 아이디   ", ""+mFeedback_text.getText().toString().substring(0, mFeedback_text.getText().toString().lastIndexOf(" : ")));
                             Log.e("   텍스트 내용   ", ""+edittext);
                             ChatDTO chat = new ChatDTO(mFeedback_text.getText().toString().substring(0, mFeedback_text.getText().toString().lastIndexOf(" : ")), edittext);
-                            databaseReference.child("chat").child(recordserverplay.filename).setValue(chat);
+//                            databaseReference.child("chat").child(recordserverplay.filename).setValue(chat);
+//                            String key = databaseReference.child("chat").child(recordserverplay.filename).getKey();
+
+
+
+                            Map<String,Object> childUpdates = new HashMap<>();
+                            childUpdates.put(editkey, chat);
+//                            Log.e("   키값   ", ""+key);
+                            databaseReference.child("chat").child(recordserverplay.filename).updateChildren(childUpdates);
                             feedback_dialog.dismiss();
                         }
                     });

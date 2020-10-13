@@ -96,6 +96,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private Feedback_RecyclerViewAdapter mAdapter;
     private List<ChatDTO> mChatDTO;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -458,6 +459,16 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         mChatDTO.add(chatDTO);
     }
 
+    //메세지 수정 메서드
+    private void editMessage(DataSnapshot dataSnapshot) {
+
+//        mChatDTO.clear();
+
+        ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
+        mChatDTO.add(chatDTO);
+
+    }
+
     //메세지 삭제 메서드
     private void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
         ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
@@ -498,7 +509,17 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.e("LOG", "데이터 바뀜" );
+//                mChatDTO.removeAll(mChatDTO);
+//                mChatDTO = new ArrayList<>();
+//                ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
+//                mChatDTO.add(chatDTO);
+               mAdapter.notifyItemChanged(0);
 
+
+//                editMessage(dataSnapshot);
+//                Log.e("LOG", "수정된 데이터 리사이클뷰 반영" + chatDTO.getMessage());
+                Log.e("LOG", "수정된 데이터 리사이클뷰 반영" + mChatDTO);
             }
 
             @Override
