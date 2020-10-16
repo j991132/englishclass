@@ -118,12 +118,13 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
 //        }
         TextView login_info = (TextView) findViewById(R.id.login_info);
         if (line.equals("1")) {
-            login_info.setText(login_name + " (On Line)");
+            login_info.setText(login_name.substring(login_name.indexOf("초")+1) + " (On Line)");
             login_info.setTextColor(Color.parseColor("green"));
         } else {
-            login_info.setText(login_name + " (Off Line)");
+            login_info.setText(login_name.substring(login_name.indexOf("초")+1) + " (Off Line)");
             login_info.setTextColor(Color.parseColor("red"));
         }
+
         //녹음버튼 관련
         startbtn = (ImageButton) findViewById(R.id.btnRecord);
         stopbtn = (ImageButton) findViewById(R.id.btnStop);

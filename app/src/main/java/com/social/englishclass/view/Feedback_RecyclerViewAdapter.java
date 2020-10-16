@@ -50,10 +50,11 @@ public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_
     }
 
     @Override
-    public void onBindViewHolder( Feedback_RecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(Feedback_RecyclerViewAdapter.ViewHolder holder, int position) {
 
         ChatDTO chatDTOCurrent = mChatDTO.get(position);
         holder.mFeedback_text.setText(chatDTOCurrent.getUserName() + " : " + chatDTOCurrent.getMessage());
+
 
     }
 
@@ -76,7 +77,13 @@ public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_
             super(view);
 
             mFeedback_text = (TextView) view.findViewById(R.id.feedback_text);
+
             feedback_edit_btn = (ImageButton)view.findViewById(R.id.feedback_edit_btn);
+
+
+            if(!recordserverplay.login_name.contains("teacher") && !recordserverplay.login_name.contains("박준원")){
+                feedback_edit_btn.setVisibility(View.INVISIBLE);
+            }
 
             feedback_edit_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -123,10 +130,15 @@ public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_
 
                     feedback_edit_text.setText(mFeedback_text.getText().toString().substring(mFeedback_text.getText().toString().lastIndexOf(": ")+2));
 
+
+
                     feedback_text_del_btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             Log.e("   버튼 클릭   ", "삭제버튼 눌림");
+
+                            databaseReference.child("chat").child(recordserverplay.filename).child(editkey).removeValue();
+
                             feedback_dialog.dismiss();
                         }
                     });
@@ -154,6 +166,7 @@ public class Feedback_RecyclerViewAdapter extends RecyclerView.Adapter<Feedback_
                     feedback_dialog.show();
                 }
             });
+
         }
     }
 }

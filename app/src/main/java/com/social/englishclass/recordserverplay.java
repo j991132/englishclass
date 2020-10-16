@@ -60,7 +60,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private String accent;
     private String speed;
     private String pronunciation;
-    private String login_name;
+    public static String login_name;
     private String login_name_fcm;
     private static String filepath;
     private String login_name_teacher;
@@ -512,9 +512,12 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
                 Log.e("LOG", "데이터 바뀜" );
 //                mChatDTO.removeAll(mChatDTO);
 //                mChatDTO = new ArrayList<>();
-//                ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
+                ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
+
 //                mChatDTO.add(chatDTO);
-               mAdapter.notifyItemChanged(0);
+                mChatDTO.set(mAdapter.getItemCount()-1, chatDTO);   //디비에 바뀐 데이터를 읽어와서 현재 리스트에 set으로 다시 써준다
+//               mAdapter.notifyItemChanged(mAdapter.getItemCount());
+               mAdapter.notifyDataSetChanged();
 
 
 //                editMessage(dataSnapshot);
@@ -525,6 +528,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 removeMessage(dataSnapshot, adapter);
+                mChatDTO.remove(mAdapter.getItemCount()-1);
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
