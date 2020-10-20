@@ -7,12 +7,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,7 +50,9 @@ import com.social.englishclass.view.Feedback_RecyclerViewAdapter;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -72,7 +80,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private Uri uri;
     private static Uri muri;
     private StorageReference mStorageRef, pathReference;
-    private ImageButton mBtnPlayPause;
+    private ImageButton mBtnPlayPause, stt_btn;
     private Button save_btn, fold_btn;
     private TextView recplay_txt_title, text_stress, text_accent, text_speed, text_pronunciation;
     private static boolean isPrepared;
@@ -95,6 +103,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
     private RecyclerView mRecyclerView;  //챗 리스트 리사이클러 뷰
     private Feedback_RecyclerViewAdapter mAdapter;
     private List<ChatDTO> mChatDTO;
+    private SpeechRecognizer mRecognizer;
 
 
     @Override
@@ -114,6 +123,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         mBtnPlayPause.setOnClickListener(this);
         save_btn = (Button) findViewById(R.id.save_btn);
         save_btn.setOnClickListener(this);
+        stt_btn = (ImageButton) findViewById(R.id.stt_btn);
+        stt_btn.setOnClickListener(this);
         fold_btn = (Button) findViewById(R.id.fold_btn);
         fold_btn.setOnClickListener(this);
         comment = (EditText) findViewById(R.id.comment);
@@ -135,7 +146,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         wave_fragment_layer = (LinearLayout) findViewById(R.id.wave_fragment_layer);
         container = (FrameLayout) findViewById(R.id.container);
 
-        mRecyclerView = (RecyclerView)findViewById(R.id.feedback_recyclerview);
+        mRecyclerView = (RecyclerView) findViewById(R.id.feedback_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -297,10 +308,12 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
                 Intent intent_dic = new Intent(Intent.ACTION_VIEW, Uri.parse("https://en.dict.naver.com/#/main"));
                 startActivity(intent_dic);
                 break;
+            case R.id.stt_btn:
+                speek();
+                break;
 
         }
     }//클릭 끝
-
 
 
     //파이어베이스에서 뷰에 해당하는 업로드시 저장된 로그인아이디 가져오기
@@ -415,7 +428,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
                                     // FMC 메시지 생성 start
                                     JSONObject root = new JSONObject();
                                     JSONObject notification = new JSONObject();
-                                    notification.put("body", login_name+" : "+msg);
+                                    notification.put("body",  msg);
                                     Log.e("전송하는 메세지  ", "" + notification + msg);
                                     notification.put("title", "Textbook Shadowing Lap");
 //                                        notification.put("title", getString(R.string.app_name));
@@ -495,8 +508,8 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 
         mChatDTO = new ArrayList<>();
 //리사이클러뷰 생성
-            mAdapter = new Feedback_RecyclerViewAdapter(recordserverplay.this, mChatDTO);
-            mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new Feedback_RecyclerViewAdapter(recordserverplay.this, mChatDTO);
+        mRecyclerView.setAdapter(mAdapter);
 
         // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
         databaseReference.child("chat").child(filename).addChildEventListener(new ChildEventListener() {
@@ -509,15 +522,15 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.e("LOG", "데이터 바뀜" );
+                Log.e("LOG", "데이터 바뀜");
 //                mChatDTO.removeAll(mChatDTO);
 //                mChatDTO = new ArrayList<>();
                 ChatDTO chatDTO = dataSnapshot.getValue(ChatDTO.class);
 
 //                mChatDTO.add(chatDTO);
-                mChatDTO.set(mAdapter.getItemCount()-1, chatDTO);   //디비에 바뀐 데이터를 읽어와서 현재 리스트에 set으로 다시 써준다
+                mChatDTO.set(mAdapter.getItemCount() - 1, chatDTO);   //디비에 바뀐 데이터를 읽어와서 현재 리스트에 set으로 다시 써준다
 //               mAdapter.notifyItemChanged(mAdapter.getItemCount());
-               mAdapter.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
 
 
 //                editMessage(dataSnapshot);
@@ -528,7 +541,7 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 removeMessage(dataSnapshot, adapter);
-                mChatDTO.remove(mAdapter.getItemCount()-1);
+                mChatDTO.remove(mAdapter.getItemCount() - 1);
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -873,4 +886,153 @@ public class recordserverplay extends AppCompatActivity implements View.OnClickL
         finish();
         super.onBackPressed();
     }
+
+    private void speek() {
+        Log.i("speek", "Call");
+        Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        i.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
+        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");
+        i.putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/THREE_GPP");
+        i.putExtra("android.speech.extra.GET_AUDIO", true);
+
+        mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mRecognizer.setRecognitionListener(mlistener);
+        mRecognizer.startListening(i);
+    }
+
+    private RecognitionListener mlistener = new RecognitionListener() {
+        @Override
+        public void onReadyForSpeech(Bundle bundle) {
+            Toast.makeText(getApplicationContext(), "음성인식을 시작합니다.", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onBeginningOfSpeech() {
+
+        }
+
+        @Override
+        public void onRmsChanged(float v) {
+
+        }
+
+        @Override
+        public void onBufferReceived(byte[] bytes) {
+
+        }
+
+        @Override
+        public void onEndOfSpeech() {
+
+        }
+
+        @Override
+        public void onError(int error) {
+            String message;
+            switch (error) {
+                case SpeechRecognizer.ERROR_AUDIO:
+                    message = "오디오 에러";
+                    break;
+                case SpeechRecognizer.ERROR_CLIENT:
+                    message = "클라이언트 에러";
+                    break;
+                case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                    message = "퍼미션 없음";
+                    break;
+                case SpeechRecognizer.ERROR_NETWORK:
+                    message = "네트워크 에러";
+                    break;
+                case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
+                    message = "네트웍 타임아웃";
+                    break;
+                case SpeechRecognizer.ERROR_NO_MATCH:
+                    message = "찾을 수 없음";
+                    break;
+                case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
+                    message = "RECOGNIZER가 바쁨";
+                    break;
+                case SpeechRecognizer.ERROR_SERVER:
+                    message = "서버가 이상함";
+                    break;
+                case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
+                    message = "말하는 시간초과";
+                    break;
+                default:
+                    message = "알 수 없는 오류임";
+                    break;
+            }
+            Toast.makeText(getApplicationContext(), "에러가 발생하였습니다. : " + message, Toast.LENGTH_SHORT).show();
+
+
+        }
+
+        @Override
+        public void onResults(Bundle results) {
+            ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            for (int i = 0; i < matches.size(); i++) {
+                comment.setText(matches.get(i));
+            }
+/*
+            Uri audioUri = results.getData();
+
+            ContentResolver contentResolver = getContentResolver();
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+                inputStream = contentResolver.openInputStream(audioUri);
+                outputStream = null;
+
+                File targetFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/englishclass/feedback");
+                if (!targetFile.exists()) {
+                    targetFile.mkdirs();
+                }
+//            String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".amr";
+                outputStream = new FileOutputStream(targetFile + "/");
+
+                int read = 0;
+                byte[] bytes = new byte[1024];
+
+                while ((read = inputStream.read(bytes)) != -1) {
+                    outputStream.write(bytes, 0, read);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (outputStream != null) {
+                    try {
+                        // outputStream.flush();
+                        outputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+ */
+        }
+
+        @Override
+        public void onPartialResults(Bundle bundle) {
+
+        }
+
+        @Override
+        public void onEvent(int i, Bundle bundle) {
+
+        }
+    };
+
+
+
+
 }//메인 끝

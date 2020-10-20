@@ -93,8 +93,9 @@ public class Keyword extends AppCompatActivity {
         if(!login_number.contains("teacher")) {
             String log_num = login_number.substring(0, 5);
             privite_number = Integer.parseInt(log_num);
+            Log.e("로그인 넘버",""+privite_number);
         }else{
-            privite_number = 60804;
+            privite_number = 60810;
         }
 
 //        getApplicationContext().getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
@@ -292,25 +293,45 @@ public class Keyword extends AppCompatActivity {
     public String sendDataAndGetResult () {
         String openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Pronunciation";
         if(!login_number.contains("teacher")) {
-            if (privite_number % 10 == 1) {
+            if (privite_number % 20 == 1) {
                 accessKey = "e91b9924-679e-49ca-9f90-71704d3ce8b0";
-            } else if (privite_number % 10 == 2) {
+            } else if (privite_number % 20 == 2) {
                 accessKey = "fcea3de7-d5d2-4441-8160-a46764c090ed";
-            } else if (privite_number % 10 == 3) {
+            } else if (privite_number % 20 == 3) {
                 accessKey = "0fe29a05-1d6a-4f79-b253-d24b673f6bc7";
-            } else if (privite_number % 10 == 4) {
+            } else if (privite_number % 20 == 4) {
                 accessKey = "a19c4cb4-8f43-4532-bf34-405058350d59";
-            }else if (privite_number % 10 == 5) {
+            }else if (privite_number % 20 == 5) {
                 accessKey = "626179b2-bb88-41d2-af39-3deb30e54abb";
-            }else if (privite_number % 10 == 6) {
+            }else if (privite_number % 20 == 6) {
                 accessKey = "1424d226-6627-4a10-8503-580304ec72e7";
-            }else if (privite_number % 10 == 7) {
+            }else if (privite_number % 20 == 7) {
                 accessKey = "1105b048-80f8-477d-8103-96afff61b4bc";
-            }else if (privite_number % 10 == 8) {
+            }else if (privite_number % 20 == 8) {
                 accessKey = "801e22fd-32fc-425b-9bf6-e9ecd7b22edd";
-            }else if (privite_number % 10 == 9) {
+            }else if (privite_number % 20 == 9) {
                 accessKey = "c8012dd7-4fad-473a-863b-7b53aba80156";
-            } else {
+            } else if (privite_number % 20 == 10) {
+                accessKey = "1d4e8f38-3505-493e-b8cc-07a2006dda44";
+            }else if (privite_number % 20 == 11) {
+                accessKey = "047aa397-520f-4ca4-81f8-40f7fdd08d0b";
+            }else if (privite_number % 20 == 12) {
+                accessKey = "a4bc378b-235d-4f2d-a994-726833fdca04";
+            }else if (privite_number % 20 == 13) {
+                accessKey = "3183dfba-9bfc-40af-9851-9bf8ea200841";
+            }else if (privite_number % 20 == 14) {
+                accessKey = "9546deba-d607-470b-a600-d9e6f5375feb";
+            }else if (privite_number % 20 == 15) {
+                accessKey = "86afd2ba-50a3-48a1-a15f-f043e7834399";
+            }else if (privite_number % 20 == 16) {
+                accessKey = "89b4d631-ca8d-4d2a-9af5-c0125b4e0da4";
+            }else if (privite_number % 20 == 17) {
+                accessKey = "f96bbb2e-939a-415f-9e47-ce6d7b28b8e4";
+            }else if (privite_number % 20 == 18) {
+                accessKey = "2fa3dee2-4b4d-4bb8-bec0-0f125fe76a17";
+            }else if (privite_number % 20 == 19) {
+                accessKey = "e23edebf-24ab-4de4-a060-b1deabb5d8ff";
+            }else {
                 accessKey = "68c063de-3739-4796-ba10-5c6c3152d760";
             }
         }else{
