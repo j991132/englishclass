@@ -336,7 +336,7 @@ public class WaveformView extends View {
         int measuredHeight = getMeasuredHeight();
         int start = mOffset;
         int width = mLenByZoomLevel[mZoomLevel] - start;
-        int ctr = measuredHeight / 1;        // 그래프 반쪽 =1,  양쪽 = 2
+        int ctr = measuredHeight / 2;        // 그래프 반쪽 =1,  양쪽 = 2
 
         if (width > measuredWidth)
             width = measuredWidth;

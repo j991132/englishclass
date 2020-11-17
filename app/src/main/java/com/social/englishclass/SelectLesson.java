@@ -365,7 +365,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
-                        readandtalk_dialog.dismiss();
+//                        readandtalk_dialog.dismiss();
                         break;
                     case R.id.readandtalk2_btn:
                         //엑티비티 이동
@@ -379,7 +379,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson_type", lesson_type);
                         intent.putExtra("line", line);
                         startActivity(intent);
-                        readandtalk_dialog.dismiss();
+//                        readandtalk_dialog.dismiss();
                         break;
 
                     case R.id.readandtalk3_btn:
@@ -392,7 +392,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson_type", lesson_type);
                         intent.putExtra("line", line);
                         startActivity(intent);
-                        readandtalk_dialog.dismiss();
+//                        readandtalk_dialog.dismiss();
                         break;
                 }
             }
@@ -433,7 +433,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("line", line);
                         startActivity(intent);
 
-                        letsread_dialog.dismiss();
+//                        letsread_dialog.dismiss();
                         break;
                     case R.id.let_level2_btn:
                         intent.putExtra("lv_num", "0");
@@ -445,7 +445,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
-                        letsread_dialog.dismiss();
+//                        letsread_dialog.dismiss();
                         break;
                     case R.id.let_level3_btn:
                         intent.putExtra("lv_num", "1");
@@ -457,7 +457,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("login_number", login_number);
                         intent.putExtra("line", line);
                         startActivity(intent);
-                        letsread_dialog.dismiss();
+//                        letsread_dialog.dismiss();
                         break;
 
 
@@ -635,12 +635,12 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                     case R.id.listenandrepeat1_btn:
                         levelDialog("Lesson " + lesson + " - Listen And Repeat");
                         lesson_type = "lr1";
-                        listenandrepeat_dialog.dismiss();
+//                        listenandrepeat_dialog.dismiss();
                         break;
                     case R.id.listenandrepeat2_btn:
                         levelDialog("Lesson " + lesson + " - Listen And Repeat");
                         lesson_type = "lr2";
-                        listenandrepeat_dialog.dismiss();
+//                        listenandrepeat_dialog.dismiss();
                         break;
                 }
             }
