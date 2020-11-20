@@ -586,7 +586,7 @@ public class SelectLesson extends AppCompatActivity implements View.OnClickListe
                         intent.putExtra("lesson", lesson);
                         intent.putExtra("login_number", login_number);
                         startActivity(intent);
-                        lesson_dialog.dismiss();
+//                        lesson_dialog.dismiss();
                         break;
                     case R.id.lookandlisten_btn:
                         levelDialog("Lesson " + lesson + " - Look And Listen");
